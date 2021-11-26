@@ -74,16 +74,10 @@ SOCKET Udp::create(const char *szHost, int nPort)
 		m_SockAddrBind.sin_family = AF_INET;
 		m_SockAddrBind.sin_port = htons(nPort);
 
-/*
-		m_SockAddrBind.sin_family = AF_INET;
-		m_SockAddrBind.sin_port = 0;
-*/
 		m_SockAddrBind.sin_addr.s_addr = INADDR_ANY;
 
 		strcpy(strLocalIp, "0.0.0.0");
 		pLocalName = gethostbyname(strLocalIp);
-
-		//pLocalName = gethostbyname(NULL); //uso mi interface
 
 		if(pLocalName)
 		{
@@ -92,9 +86,15 @@ SOCKET Udp::create(const char *szHost, int nPort)
 			
 			if (-1 == (nBind = bind(m_sck, (struct sockaddr *)&m_SockAddrBind, sizeof(struct sockaddr_in))))
 			{
+
+#if !defined(_PART_OFF_GAME_)
 				int nErr = WSAGetLastError();
+#endif
 				close();
+
+#if !defined(_PART_OFF_GAME_)
 				throw std::exception(win_strerror(nErr));
+#endif
 			}
 		}
 	}
@@ -103,7 +103,7 @@ SOCKET Udp::create(const char *szHost, int nPort)
 
 }
 
-int	Udp::snd(void *pBuff, int nLen, SOCKET sk)
+int	Udp::snd(void *pBuff, int nLen, SOCKET sk) const
 {
 	return sendto(-1==sk?m_sck:sk, (char*)pBuff, nLen, 0, (struct sockaddr *)&m_SockAddrSndRcv, sizeof(struct sockaddr_in));
 }
@@ -123,7 +123,7 @@ void Udp::peerName(char *strHostIp, SOCKET sk)
 	}
 }
 
-int	Udp::rcv(void *pBuff, int nLen, SOCKET sk)
+int	Udp::rcv(void *pBuff, int nLen, SOCKET sk) const 
 {
 	int nSockLen = sizeof(struct sockaddr_in);
 

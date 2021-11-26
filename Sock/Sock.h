@@ -8,7 +8,6 @@ private:
 
 	static WSADATA *m_stpWSockData;
 	
-	typedef void(*TPLOGFUNCTION)(const char *, size_t);
 	typedef void(*TPACCEPTFUNCTION)(SOCKET *, char *strFrom, void *pParam);
 protected:
 	SOCKET		m_sck;
@@ -16,8 +15,6 @@ protected:
 	char		m_strIP[MAX_CHAR_HOST];
 	char		m_strDSN[MAX_CHAR_HOST];
 	char		m_strLocal[MAX_CHAR_HOST];
-
-	TPLOGFUNCTION	m_log;
 
 private:
 	void			startup();
@@ -54,16 +51,14 @@ public:
 	virtual SOCKET		create(const char *szHost, int nPort) = 0;
 	virtual bool		connect(const char *szHost, int nPort) = 0;
 	virtual bool		connect() = 0;
-	virtual int			snd(void *pBuff, int nLen, SOCKET sk = -1) = 0;
-	virtual int			rcv(void *pBuff, int nLen, SOCKET sk = -1) = 0;
+	virtual int			snd(void *pBuff, int nLen, SOCKET sk = -1) const = 0;
+	virtual int			rcv(void *pBuff, int nLen, SOCKET sk = -1) const = 0;
 
 	bool			listen(TPACCEPTFUNCTION acceptFn, int nPort, const char *szIP, void *pParamAcceptFn);
 
 	static  WSADATA *WSData() { return m_stpWSockData; }
-	static  unsigned long	lastError();
-
-	inline void	setLogCallback(TPLOGFUNCTION log) { m_log = log; }
-	inline SOCKET sock() { return m_sck; };
+	static  unsigned long lastError();
+	inline SOCKET sock() const { return m_sck; };
 
 };
 

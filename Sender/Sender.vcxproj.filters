@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="resources">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="Sources">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
@@ -13,14 +9,18 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Util">
-      <UniqueIdentifier>{c2be2350-07fa-4333-be72-98aef2a62c0e}</UniqueIdentifier>
+    <Filter Include="resources">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="Sock">
-      <UniqueIdentifier>{98588555-d67d-41e2-8bdc-dd54d09a6fa5}</UniqueIdentifier>
+      <UniqueIdentifier>{0641b8e5-a94e-4e86-a652-5d8c6c29b6c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{4c979f64-6aef-4334-a295-788d5cc34bdc}</UniqueIdentifier>
     </Filter>
     <Filter Include="Networking">
-      <UniqueIdentifier>{f514d415-a053-4f8d-87c0-66f9d94c6179}</UniqueIdentifier>
+      <UniqueIdentifier>{96c1050a-62ce-475e-b385-2f34d414c3bf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -33,14 +33,8 @@
     <ClInclude Include="Resource.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Server.h">
+    <ClInclude Include="Sender.h">
       <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\format.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Util\format.h">
-      <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="..\Sock\Sock.h">
       <Filter>Sock</Filter>
@@ -48,22 +42,22 @@
     <ClInclude Include="..\Sock\Udp.h">
       <Filter>Sock</Filter>
     </ClInclude>
-    <ClInclude Include="..\Networking\ListenerMngr.h">
-      <Filter>Networking</Filter>
+    <ClInclude Include="..\Util\format.h">
+      <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="..\Networking\Setting.h">
+    <ClInclude Include="..\Networking\ListenerMngr.h">
       <Filter>Networking</Filter>
     </ClInclude>
     <ClInclude Include="..\Networking\Sender.h">
       <Filter>Networking</Filter>
     </ClInclude>
+    <ClInclude Include="..\Networking\Setting.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Server.cpp">
+    <ClCompile Include="SenderApp.cpp">
       <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Util\format.c">
-      <Filter>Util</Filter>
     </ClCompile>
     <ClCompile Include="..\Sock\Sock.cpp">
       <Filter>Sock</Filter>
@@ -71,18 +65,21 @@
     <ClCompile Include="..\Sock\Udp.cpp">
       <Filter>Sock</Filter>
     </ClCompile>
-    <ClCompile Include="..\Networking\ListenerMngr.cpp">
-      <Filter>Networking</Filter>
+    <ClCompile Include="..\Util\format.c">
+      <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="..\Networking\Setting.cpp">
+    <ClCompile Include="..\Networking\ListenerMngr.cpp">
       <Filter>Networking</Filter>
     </ClCompile>
     <ClCompile Include="..\Networking\Sender.cpp">
       <Filter>Networking</Filter>
     </ClCompile>
+    <ClCompile Include="..\Networking\Setting.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Server.rc">
+    <ResourceCompile Include="Sender.rc">
       <Filter>resources</Filter>
     </ResourceCompile>
   </ItemGroup>
@@ -90,7 +87,7 @@
     <Image Include="small.ico">
       <Filter>resources</Filter>
     </Image>
-    <Image Include="Server.ico">
+    <Image Include="Sender.ico">
       <Filter>resources</Filter>
     </Image>
   </ItemGroup>

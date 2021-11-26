@@ -25,14 +25,18 @@ namespace NET
     bool ListenerMngr::create() const
     {
         bool bRet = false;
+#if !defined(_PART_OFF_GAME_)        
         try
+#endif
         {
             bRet = SOCKET_ERROR != m_pTcp->create(m_Settings.m_szHost, m_Settings.m_nPort);
         }
+#if !defined(_PART_OFF_GAME_)
         catch (std::exception& e)
         {
             OutputDebugString(e.what());
         }
+#endif
 
         return bRet;
     }

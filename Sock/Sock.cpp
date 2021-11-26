@@ -18,7 +18,6 @@ Sock::Sock(SOCKET sk)
 {
 	startup();
 	m_sck = sk;
-	m_log = NULL;
 }
 
 Sock::Sock()
@@ -41,7 +40,6 @@ void Sock::startup()
 
 	m_strIP[0] = 0;
 	m_strDSN[0] = 0;
-	m_log = NULL; 
 }
 
 void Sock::cleanup()
@@ -57,7 +55,7 @@ void Sock::cleanup()
 
 Sock::~Sock()
 {
-	cleanup();
+	Sock::cleanup();
 }
 
 bool Sock::listen(TPACCEPTFUNCTION acceptFn, int nPort, const char *szIP, void *pParamAcceptFn)
@@ -90,13 +88,6 @@ bool Sock::listen(TPACCEPTFUNCTION acceptFn, int nPort, const char *szIP, void *
 						SOCKET					sckNew = SOCKET_ERROR;
 						struct sockaddr_in		Their;	
 
-						if(m_log)
-						{
-							char str[1024];
-							sprintf(str, "Sock::listen %s:%d", inet_ntoa(me.sin_addr), nPort);
-							m_log(str, strlen(str));
-						}
-
 						if(m_sck == SOCKET_ERROR)
 							return true;	//cerraron el socket
 						
@@ -128,26 +119,24 @@ unsigned long Sock::lastError()
 bool Sock::sendLastError(const char *szTag)
 {
 
-	if(m_log)
-	{
-		LPVOID	lpMsgBuf = NULL;		
-		char	error_s[2048];
+	LPVOID	lpMsgBuf = NULL;		
+	char	error_s[2048];
 
-		FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | 
-				FORMAT_MESSAGE_FROM_SYSTEM | 
-				FORMAT_MESSAGE_IGNORE_INSERTS,
-				NULL,
-				lastError(),
-				MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), 
-				(LPTSTR)&lpMsgBuf, 0, NULL );
+	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | 
+			FORMAT_MESSAGE_FROM_SYSTEM | 
+			FORMAT_MESSAGE_IGNORE_INSERTS,
+			NULL,
+			lastError(),
+			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), 
+			(LPTSTR)&lpMsgBuf, 0, NULL );
 
 	
-		sprintf(error_s, "Sock::Err %s %s", szTag, (char*)lpMsgBuf);
-		LocalFree(lpMsgBuf);
-		
-		m_log(error_s, strlen(error_s));
-	}
+	sprintf(error_s, "Sock::Err %s %s\n", szTag, (char*)lpMsgBuf);
 
+	OutputDebugString(error_s);
+
+	LocalFree(lpMsgBuf);
+		
 	return false; //para usar en los return
 }
 

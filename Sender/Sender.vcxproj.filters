@@ -45,9 +45,6 @@
     <ClInclude Include="..\Util\format.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="..\Networking\ListenerMngr.h">
-      <Filter>Networking</Filter>
-    </ClInclude>
     <ClInclude Include="..\Networking\Sender.h">
       <Filter>Networking</Filter>
     </ClInclude>
@@ -67,9 +64,6 @@
     </ClCompile>
     <ClCompile Include="..\Util\format.c">
       <Filter>Util</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Networking\ListenerMngr.cpp">
-      <Filter>Networking</Filter>
     </ClCompile>
     <ClCompile Include="..\Networking\Sender.cpp">
       <Filter>Networking</Filter>

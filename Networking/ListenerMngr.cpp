@@ -2,9 +2,14 @@
 #include <stdio.h>
 
 #include <memory>
+#if !defined(_PART_OFF_GAME_)        
 #include <stdexcept>
+#endif
+#include <string>
 
 #include <winsock2.h>
+
+#include "../Util/format.h"
 
 #include "../Sock/Sock.h"
 #include "../Sock/Udp.h"
@@ -16,9 +21,9 @@ namespace NET
 {
 
     ListenerMngr::ListenerMngr(Setting& settings) :
-        m_Settings {settings},
-        m_pTcp{ std::make_unique<Udp>() }
-
+        m_Settings{ settings },
+        m_pTcp{ std::make_unique<Udp>() },
+        m_byRcvBuff { std::make_unique<unsigned char>(Setting::max_buff) }
     {
     }
 
@@ -43,15 +48,21 @@ namespace NET
 
     void ListenerMngr::start() const
     {
-        unsigned char by[Setting::max_buff];
         int nRcv = -1;
+        unsigned char* pby = m_byRcvBuff.get();
+        
         while (0 != nRcv)
         {
-            if ((nRcv = m_pTcp->rcv(by, Setting::max_buff)) > 0)
+            if ((nRcv = m_pTcp->rcv(pby, Setting::max_buff)) > 0)
             {
-                if (check(by))
+                if (check(pby))
                 {
                     //TODO create a new thread 
+                    char* s = new char[nRcv * 3];
+                    hexToAscii(pby, nRcv, s);
+                    OutputDebugString(s);
+                    OutputDebugString("\n");
+                    delete[] s;
                 }
             }
         }

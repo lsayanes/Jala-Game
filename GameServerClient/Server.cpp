@@ -56,7 +56,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MSG msg;
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SERVER));
 
-    NET::Setting settings(40000, 1000, "127.0.0.1");
+    NET::Setting settings(40000, 1000, nullptr);
 
     NET::ListenerMngr* pMngr = new NET::ListenerMngr(settings);
     if (pMngr->create())

@@ -45,6 +45,7 @@ namespace NET {
 
     void Sender::start()
     {
+        char str[1024];
         unsigned char by[Setting::max_buff];
         int nRcv = -1;
 
@@ -57,6 +58,8 @@ namespace NET {
             if ((nRcv = m_pTcp->snd(by, Setting::max_buff)) > 0)
             {
                 addPktSent();
+                sprintf(str, "Sent { Seq :%lu Pkt :%lu }\n ", m_ulPktSeq, m_ulPktSent);
+                OutputDebugString(str);
             }
         }
     };

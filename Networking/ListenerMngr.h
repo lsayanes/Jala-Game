@@ -7,7 +7,9 @@ namespace NET
 	{
 	private:
 
-		std::unique_ptr<Udp> m_pTcp;
+		std::unique_ptr<Udp> m_pTcp{};
+		std::unique_ptr<unsigned char> m_byRcvBuff{};
+
 		const  Setting&	m_Settings;
 	public:
 

@@ -149,7 +149,6 @@
   <ItemGroup>
     <ClInclude Include="..\format.h" />
     <ClInclude Include="..\Networking\ListenerMngr.h" />
-    <ClInclude Include="..\Networking\Sender.h" />
     <ClInclude Include="..\Networking\Setting.h" />
     <ClInclude Include="..\Sock\Sock.h" />
     <ClInclude Include="..\Sock\Udp.h" />
@@ -161,7 +160,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Networking\ListenerMngr.cpp" />
-    <ClCompile Include="..\Networking\Sender.cpp" />
     <ClCompile Include="..\Networking\Setting.cpp" />
     <ClCompile Include="..\Sock\Sock.cpp" />
     <ClCompile Include="..\Sock\Udp.cpp" />

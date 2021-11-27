@@ -25,7 +25,7 @@ namespace NET
 		const int	m_nPort;
 
 
-		static constexpr unsigned long max_buff{ 1024 };
+		static constexpr size_t max_buff{ 1024 };
 
 	};
 

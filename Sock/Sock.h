@@ -20,11 +20,16 @@ private:
 	void			startup();
 
 protected:
-	bool			sendLastError(const char *szTag);
+	bool			debugLastError(const char *szTag);
 public:
 	
-	Sock(SOCKET sk);
-	Sock();
+	explicit Sock();
+
+	Sock(const Sock&) = delete;
+	Sock(Sock&&) = delete;
+	Sock& operator=(const Sock&) = delete;
+	Sock& operator=(Sock&&) = delete;
+	
 	virtual ~Sock();
 
 	static void cleanup();
@@ -58,6 +63,10 @@ public:
 
 	static  WSADATA *WSData() { return m_stpWSockData; }
 	static  unsigned long lastError();
+	static  bool local(char* str);
+	static	bool getLocalIp(char *str);
+
+	
 	inline SOCKET sock() const { return m_sck; };
 
 };

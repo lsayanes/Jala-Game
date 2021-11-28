@@ -55,7 +55,7 @@ namespace NET {
             std::memcpy(&by[m_pktSentOffset], &m_ulPktSent, sizeof(m_ulPktSent));
             std::memcpy(&by[m_dataOffset], "\xAA\xBB\xCC", 3);
 
-            if ((nRcv = m_pTcp->snd(by, Setting::max_buff)) > 0)
+            if ((nRcv = m_pTcp->snd(by, m_dataOffset + 3)) > 0)
             {
                 addPktSent();
                 sprintf(str, "Sent { Seq :%lu Pkt :%lu }\n ", m_ulPktSeq, m_ulPktSent);

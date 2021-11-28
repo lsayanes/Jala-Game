@@ -14,13 +14,13 @@
 
 WSADATA *Sock::m_stpWSockData = NULL;
 
-Sock::Sock(SOCKET sk)
-{
-	startup();
-	m_sck = sk;
-}
 
-Sock::Sock()
+Sock::Sock():
+	m_strIP{0},
+	m_strDSN{0},
+	m_strLocal{0},
+	m_sck{INVALID_SOCKET}
+
 {
 	startup();
 }
@@ -98,13 +98,13 @@ bool Sock::listen(TPACCEPTFUNCTION acceptFn, int nPort, const char *szIP, void *
 				}
 			}
 			else
-				sendLastError("listen");
+				debugLastError("listen");
 		}
 		else 
-			sendLastError("bind");
+			debugLastError("bind");
 	}
 	else 
-		sendLastError("setsockopt");
+		debugLastError("setsockopt");
 
 
 	return false;
@@ -116,7 +116,7 @@ unsigned long Sock::lastError()
 	return WSAGetLastError();
 }
 
-bool Sock::sendLastError(const char *szTag)
+bool Sock::debugLastError(const char *szTag)
 {
 
 	LPVOID	lpMsgBuf = NULL;		
@@ -153,7 +153,7 @@ const char *Sock::toIP(const char *szDNS)
 		sprintf(m_strIP, "%s", inet_ntoa(*((struct in_addr *)Host->h_addr)));
 	else 
 	{
-		sendLastError("gethostbyname");
+		debugLastError("gethostbyname");
 		return NULL;
 	}
 	
@@ -175,7 +175,7 @@ const char *Sock::toDNS(const char *szIP)
 	}
 	else 
 	{
-		sendLastError("gethostbyname"); 
+		debugLastError("gethostbyname");
 		return NULL;
 	}
 	
@@ -188,10 +188,36 @@ const char *Sock::local()
 	WSASetLastError(0);			
 		
 	if(SOCKET_ERROR == gethostname(m_strLocal, sizeof(m_strLocal))) 
-		sendLastError("gethostname");
+		debugLastError("gethostname");
 
 	return m_strLocal;
 };
+
+bool Sock::local(char* str)
+{
+	str[0] = 0;
+	return (SOCKET_ERROR == gethostname(str, sizeof(str)));
+}
+
+bool Sock::getLocalIp(char* str)
+{
+
+	struct			hostent* Host;
+
+	if (Sock::local(str))
+	{
+		Host = gethostbyname(str);
+		str[0] = 0;
+		if (NULL != Host)
+		{
+			sprintf(str, "%s", inet_ntoa(*((struct in_addr*)Host->h_addr)));
+			return true;
+		}
+	}
+
+
+	return false;
+}
 
 bool Sock::localIp(char* pstr)
 {
@@ -216,7 +242,7 @@ bool Sock::setTimeoutSnd(int nMillisec, SOCKET sck)
 
 void Sock::close(SOCKET sck)
 {
-	closesocket(-1==sck?m_sck:sck);
+	closesocket(INVALID_SOCKET==sck?m_sck:sck);
 	m_sck = SOCKET_ERROR;
 }
 
@@ -235,8 +261,8 @@ bool Sock::down(bool bSnd, bool bRcv, SOCKET sck)
 
 	if(-1 != nHow) 
 	{
-		if(SOCKET_ERROR == shutdown(-1==sck?m_sck:sck, nHow))
-			sendLastError("down");
+		if(SOCKET_ERROR == shutdown(INVALID_SOCKET==sck?m_sck:sck, nHow))
+			debugLastError("down");
 		else
 			bRet = true;
 	}

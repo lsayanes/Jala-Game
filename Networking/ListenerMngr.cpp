@@ -23,7 +23,7 @@ namespace NET
     ListenerMngr::ListenerMngr(Setting& settings) :
         m_Settings{ settings },
         m_pTcp{ std::make_unique<Udp>() },
-        m_byRcvBuff { std::make_unique<unsigned char>(Setting::max_buff) }
+        m_byRcvBuff { std::make_unique<unsigned char[]>(Setting::max_buff) }
     {
     }
 
@@ -58,8 +58,9 @@ namespace NET
                 if (check(pby))
                 {
                     //TODO create a new thread 
-                    char* s = new char[nRcv * 3];
-                    hexToAscii(pby, nRcv, s);
+                    char* s{ new char[nRcv * 3] };
+                    nRcv = hexToAscii(pby, nRcv, s);
+                    s[nRcv] = 0;
                     OutputDebugString(s);
                     OutputDebugString("\n");
                     delete[] s;

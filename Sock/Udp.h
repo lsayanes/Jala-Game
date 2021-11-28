@@ -7,7 +7,6 @@ private:
 	struct sockaddr_in	m_SockAddrSndRcv;
 
 public:
-	Udp(SOCKET sk);
 	Udp();
 	~Udp();
 

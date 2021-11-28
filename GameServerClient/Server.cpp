@@ -56,7 +56,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MSG msg;
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SERVER));
 
-    NET::Setting settings(40000, 1000, nullptr);
+    NET::Setting settings(2021, 1000, "127.0.0.1");
 
     NET::ListenerMngr* pMngr = new NET::ListenerMngr(settings);
     if (pMngr->create())
@@ -66,8 +66,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         
         while (GetMessage(&msg, nullptr, 0, 0))
         {
-
-
             if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
             {
                 TranslateMessage(&msg);

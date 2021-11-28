@@ -22,11 +22,9 @@ using namespace std;
 #include "Udp.h"
 
 
-Udp::Udp():Sock()
-{
-}
-
-Udp::Udp(SOCKET sk):Sock(sk)
+Udp::Udp():
+	m_SockAddrBind{},
+	m_SockAddrSndRcv{}
 {
 }
 
@@ -39,10 +37,10 @@ SOCKET Udp::create(const char *szHost, int nPort)
 	m_sck = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 	int nBind = -1;
 
-	if(SOCKET_ERROR != m_sck)
+	if(INVALID_SOCKET != m_sck)
 	{
-		char strServerIp[256];
-		char strLocalIp[256];
+		char strServerIp[256] = "\x0";
+		char strLocalIp[256] = "\x0";
 		struct hostent *pServerName;
 		struct hostent *pLocalName;
 
@@ -77,7 +75,7 @@ SOCKET Udp::create(const char *szHost, int nPort)
 		m_SockAddrBind.sin_addr.s_addr = INADDR_ANY;
 
 		strcpy(strLocalIp, "0.0.0.0");
-		pLocalName = gethostbyname(strLocalIp);
+		pLocalName = gethostbyname(static_cast<const char*>(strLocalIp));
 
 		if(pLocalName)
 		{
@@ -105,17 +103,17 @@ SOCKET Udp::create(const char *szHost, int nPort)
 
 int	Udp::snd(void *pBuff, int nLen, SOCKET sk) const
 {
-	return sendto(-1==sk?m_sck:sk, (char*)pBuff, nLen, 0, (struct sockaddr *)&m_SockAddrSndRcv, sizeof(struct sockaddr_in));
+	return sendto(INVALID_SOCKET==sk?m_sck:sk, (char*)pBuff, nLen, 0, (struct sockaddr *)&m_SockAddrSndRcv, sizeof(struct sockaddr_in));
 }
 
 void Udp::peerName(char *strHostIp, SOCKET sk)
 {
 	SOCKET nSk = sk;
-	if (nSk < 0)
-		nSk = (int)m_sck;
+	if (INVALID_SOCKET == nSk)
+		nSk = m_sck;
 	
 	strHostIp[0] = 0;
-	if (nSk > 0)
+	if (INVALID_SOCKET != nSk)
 	{
 		int nSockLen = sizeof(struct sockaddr_in);
 		getpeername(nSk, (SOCKADDR *)&m_SockAddrSndRcv, &nSockLen);
@@ -125,16 +123,17 @@ void Udp::peerName(char *strHostIp, SOCKET sk)
 
 int	Udp::rcv(void *pBuff, int nLen, SOCKET sk) const 
 {
-	int nSockLen = sizeof(struct sockaddr_in);
-
 	SOCKET nSk = sk;
-	if(nSk < 0)
-		nSk = (int)m_sck;
+	if(INVALID_SOCKET == nSk)
+		nSk = m_sck;
 
 	int nRet = 0;
 
-	if (nSk > 0)
-		nRet = recvfrom(nSk, (char*)pBuff, nLen, 0, (struct sockaddr *)&m_SockAddrSndRcv, &nSockLen);
+	if (INVALID_SOCKET != nSk)
+	{
+		int nSockLen = sizeof(struct sockaddr_in);
+		nRet = recvfrom(nSk, (char*)pBuff, nLen, 0, (struct sockaddr*)&m_SockAddrSndRcv, &nSockLen);
+	}
 
 	return nRet;
 }

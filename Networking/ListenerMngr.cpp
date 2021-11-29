@@ -17,7 +17,7 @@
 #include "Setting.h"
 #include "ListenerMngr.h"
 
-namespace NET
+namespace net
 {
 
     ListenerMngr::ListenerMngr(Setting& settings) :

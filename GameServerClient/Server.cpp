@@ -14,6 +14,8 @@
 #include "../Networking/Setting.h"
 #include "../Networking/ListenerMngr.h"
 
+#include "../System/Device.h"
+#include "../System/FrameBuffer.h"
 
 #include "Server.h"
 
@@ -21,6 +23,7 @@
 
 // Variables globales:
 HINSTANCE hInst;                                // instancia actual
+HWND       hWnd;                                //Windows
 WCHAR szTitle[MAX_LOADSTRING];                  // Texto de la barra de título
 WCHAR szWindowClass[MAX_LOADSTRING];            // nombre de clase de la ventana principal
 
@@ -56,12 +59,20 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MSG msg;
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SERVER));
 
-    NET::Setting settings(2021, 1000, "127.0.0.1");
+    size_t w, h;
+    long b;
+    draw::Device::getVideoMode(w, h, b);
 
-    NET::ListenerMngr* pMngr = new NET::ListenerMngr(settings);
+    draw::FrameBuffer fb{ hWnd };
+
+    fb.create(w, h, b);
+
+    net::Setting settings(2021, 1000, "127.0.0.1");
+    net::ListenerMngr* pMngr = new net::ListenerMngr(settings);
+
     if (pMngr->create())
     {
-        std::thread t(&NET::ListenerMngr::start, pMngr);
+        std::thread t(&net::ListenerMngr::start, pMngr);
         t.detach();
         
         while (GetMessage(&msg, nullptr, 0, 0))
@@ -120,7 +131,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    hInst = hInstance; // Almacenar identificador de instancia en una variable global
 
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+   hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
       CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
@@ -167,10 +178,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     case WM_PAINT:
         {
-            PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hWnd, &ps);
-            // TODO: Agregar cualquier código de dibujo que use hDC aquí...
-            EndPaint(hWnd, &ps);
         }
         break;
     case WM_DESTROY:

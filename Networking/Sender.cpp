@@ -14,7 +14,7 @@
 #include "Sender.h"
 
 
-namespace NET {
+namespace net {
 
     Sender::Sender(const Setting& settings) :
         m_Settings{ settings },

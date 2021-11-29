@@ -22,6 +22,12 @@
     <Filter Include="Networking">
       <UniqueIdentifier>{f514d415-a053-4f8d-87c0-66f9d94c6179}</UniqueIdentifier>
     </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{e4558f9c-58f4-4776-8b40-23fd02b23f0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\Windows">
+      <UniqueIdentifier>{52a130eb-6c68-4217-b82a-5841db46065d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -54,6 +60,12 @@
     <ClInclude Include="..\Networking\Setting.h">
       <Filter>Networking</Filter>
     </ClInclude>
+    <ClInclude Include="..\System\FrameBuffer.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\System\Device.h">
+      <Filter>System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Server.cpp">
@@ -73,6 +85,12 @@
     </ClCompile>
     <ClCompile Include="..\Networking\Setting.cpp">
       <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\System\Windows\FrameBuffer.cpp">
+      <Filter>System\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\System\Windows\Device.cpp">
+      <Filter>System\Windows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

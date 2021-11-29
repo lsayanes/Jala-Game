@@ -1,6 +1,6 @@
 #pragma once
 
-namespace NET
+namespace net
 {
 
 	struct Setting

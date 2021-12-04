@@ -165,8 +165,8 @@
     <ClCompile Include="..\Networking\Setting.cpp" />
     <ClCompile Include="..\Sock\Sock.cpp" />
     <ClCompile Include="..\Sock\Udp.cpp" />
+    <ClCompile Include="..\System\FrameBuffer.cpp" />
     <ClCompile Include="..\System\Windows\Device.cpp" />
-    <ClCompile Include="..\System\Windows\FrameBuffer.cpp" />
     <ClCompile Include="..\Util\format.c" />
     <ClCompile Include="Server.cpp" />
   </ItemGroup>

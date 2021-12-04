@@ -6,8 +6,8 @@
 
 #include <memory>
 
-#include "../Device.h"
-#include "../FrameBuffer.h"
+#include "Device.h"
+#include "FrameBuffer.h"
 
 namespace draw
 {

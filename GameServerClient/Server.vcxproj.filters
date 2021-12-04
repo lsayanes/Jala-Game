@@ -86,11 +86,11 @@
     <ClCompile Include="..\Networking\Setting.cpp">
       <Filter>Networking</Filter>
     </ClCompile>
-    <ClCompile Include="..\System\Windows\FrameBuffer.cpp">
-      <Filter>System\Windows</Filter>
-    </ClCompile>
     <ClCompile Include="..\System\Windows\Device.cpp">
       <Filter>System\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\System\FrameBuffer.cpp">
+      <Filter>System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

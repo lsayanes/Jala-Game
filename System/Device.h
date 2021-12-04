@@ -10,6 +10,13 @@ namespace draw
 		void		 *m_DeviceContext;
 		bool		m_bFullScreen;
 
+		void		*m_BackBufferHandle;
+
+		size_t				m_stWidth;
+		size_t				m_stlHeight;
+		unsigned char		m_byBitPerPixel;
+	private:
+		bool createBackbuffer(size_t stWidth, size_t stlHeight, unsigned short unPlanes, unsigned char byBitPerPixel, unsigned char *pbyBuff);
 	protected:
 		explicit Device(void *pWndHandle);
 
@@ -28,11 +35,15 @@ namespace draw
 		 bool setVideoMode(
 			size_t	stWidth,
 			size_t	stHeight,
-			long	lPixel,
+			 unsigned char& byPixel,
 			bool	bFullScreen
 		);
 
 		void	retoreVideo() const;
+
+		bool getVideoMode();
+		bool create();
+		bool create(size_t stWidth, size_t stlHeight, unsigned char byBitPerPixel);
 
 
 #if defined(_WINDOWS)
@@ -45,7 +56,7 @@ namespace draw
 		static bool	getVideoMode(
 			size_t& lWidth,
 			size_t& lHeight,
-			long& lBitPixel
+			unsigned char& byBitPixel
 
 		);
 

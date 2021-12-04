@@ -21,10 +21,16 @@ namespace net
 {
 
     ListenerMngr::ListenerMngr(Setting& settings) :
+        m_bListening{false},
         m_Settings{ settings },
         m_pTcp{ std::make_unique<Udp>() },
         m_byRcvBuff { std::make_unique<unsigned char[]>(Setting::max_buff) }
     {
+    }
+
+    ListenerMngr::~ListenerMngr()
+    {
+        m_bListening = false;
     }
 
     bool ListenerMngr::create() const
@@ -46,12 +52,14 @@ namespace net
         return bRet;
     }
 
-    void ListenerMngr::start() const
+    void ListenerMngr::start() 
     {
         int nRcv = -1;
         unsigned char* pby = m_byRcvBuff.get();
+
+        m_bListening = true ;
         
-        while (0 != nRcv)
+        while (m_bListening)
         {
             if ((nRcv = m_pTcp->rcv(pby, Setting::max_buff)) > 0)
             {
@@ -69,6 +77,7 @@ namespace net
         }
     };
 
+  
     bool ListenerMngr::check(const unsigned char* pRcv) const
     {
         //TODO check protocol

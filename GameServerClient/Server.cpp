@@ -60,32 +60,34 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SERVER));
 
     size_t w, h;
-    long b;
+    unsigned char b;
     draw::Device::getVideoMode(w, h, b);
 
-    draw::FrameBuffer fb{ hWnd };
+    draw::FrameBuffer frameBuffer{ hWnd };
 
-    fb.create(w, h, b);
-
-    net::Setting settings(2021, 1000, "127.0.0.1");
-    net::ListenerMngr* pMngr = new net::ListenerMngr(settings);
-
-    if (pMngr->create())
+    if (frameBuffer.create(w, h, b))
     {
-        std::thread t(&net::ListenerMngr::start, pMngr);
-        t.detach();
-        
-        while (GetMessage(&msg, nullptr, 0, 0))
+        net::Setting settings(2021, 1000, "127.0.0.1");
+        net::ListenerMngr* pMngr = new net::ListenerMngr(settings);
+
+        if (pMngr->create())
         {
-            if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+            std::thread t(&net::ListenerMngr::start, pMngr);
+            t.detach();
+
+            while (GetMessage(&msg, nullptr, 0, 0))
             {
-                TranslateMessage(&msg);
-                DispatchMessage(&msg);
+                if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+                {
+                    TranslateMessage(&msg);
+                    DispatchMessage(&msg);
+                }
             }
         }
+
+        delete pMngr;
     }
 
-    delete pMngr;
     return (int) msg.wParam;
 }
 

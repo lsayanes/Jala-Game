@@ -43,29 +43,28 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
-    // TODO: Colocar código aquí.
+    MSG msg;
+    BOOL result;
 
-    // Inicializar cadenas globales
+    size_t width, height;
+    unsigned char bitpx;
+
+
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
     LoadStringW(hInstance, IDC_SERVER, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance);
 
-    // Realizar la inicialización de la aplicación:
+
     if (!InitInstance (hInstance, nCmdShow))
     {
         return FALSE;
     }
 
-    MSG msg;
-    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SERVER));
+    draw::Device::getVideoMode(width, height, bitpx);
 
-    size_t w, h;
-    unsigned char b;
-    draw::Device::getVideoMode(w, h, b);
+    draw::FrameBuffer frameBuffer{ width, height,  hWnd };
 
-    draw::FrameBuffer frameBuffer{ hWnd };
-
-    if (frameBuffer.create(w, h, b))
+    if (frameBuffer.isOk())
     {
         net::Setting settings(2021, 1000, "127.0.0.1");
         net::ListenerMngr* pMngr = new net::ListenerMngr(settings);
@@ -75,13 +74,33 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             std::thread t(&net::ListenerMngr::start, pMngr);
             t.detach();
 
-            while (GetMessage(&msg, nullptr, 0, 0))
+            bool bRun = true;
+
+            while (bRun)
             {
-                if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+                frameBuffer.fill(RGB(255, 0, 0));
+                frameBuffer.setSystemText(10, 10, "running");
+                
+                while (::PeekMessage(&msg, nullptr, 0, 0, PM_NOREMOVE))
                 {
-                    TranslateMessage(&msg);
-                    DispatchMessage(&msg);
+                    result = ::GetMessage(&msg, nullptr, 0, 0);
+                    if (result == 0)
+                    {
+                        ::PostQuitMessage(msg.wParam);
+                        bRun = false;
+                        break;
+                    }
+                    else if (result == -1)
+                    {
+                    }
+                    else
+                    {
+                        ::TranslateMessage(&msg);
+                        ::DispatchMessage(&msg);
+                    }
                 }
+
+                frameBuffer.flip();
             }
         }
 
@@ -176,10 +195,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             default:
                 return DefWindowProc(hWnd, message, wParam, lParam);
             }
-        }
-        break;
-    case WM_PAINT:
-        {
         }
         break;
     case WM_DESTROY:

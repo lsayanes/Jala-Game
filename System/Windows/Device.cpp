@@ -15,10 +15,10 @@ namespace draw
 		m_bFullScreen{false},
 		m_BackBufferHandle{nullptr},
 		m_stWidth{ 0 },
-		m_stlHeight{ 0 },
+		m_stHeight{ 0 },
 		m_byBitPerPixel{ 0 }
 	{
-	
+		getVideoMode();
 	}
 
 	Device::~Device() 
@@ -45,7 +45,7 @@ namespace draw
 			ReleaseDC(WHANDLE, WDEVCON);
 			m_DeviceContext = nullptr;
 		}
-	};
+	}
 
 	bool Device::setVideoMode(
 								size_t	stWidth,
@@ -97,25 +97,9 @@ namespace draw
 
 	}
 
-	/*
-	https://msdn.microsoft.com/en-us/library/windows/desktop/ms683200(v=vs.85).aspx
-	*/
-
-
-	HMODULE Device::getCurrentModule()
-	{
-		HMODULE hModule = NULL;
-		GetModuleHandleEx(
-			GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS,
-			(LPCTSTR)getCurrentModule,
-			&hModule);
-
-		return hModule;
-	}
-
 	bool Device::getVideoMode()
 	{
-		return Device::getVideoMode(m_stWidth, m_stlHeight, m_byBitPerPixel);
+		return Device::getVideoMode(m_stWidth, m_stHeight, m_byBitPerPixel);
 	}
 	
 	bool Device::createBackbuffer(size_t stWidth, size_t stlHeight, unsigned short unPlanes, unsigned char byBitPerPixel, unsigned char* pbyBuff)
@@ -144,25 +128,53 @@ namespace draw
 
 	}
 
-	bool Device::create()
+	bool Device::create(size_t stWidth, size_t stHeight, unsigned char byBitPerPixel, unsigned char* pbyBuff)
 	{
-		return create(m_stWidth, m_stlHeight, m_byBitPerPixel);
-	}
-
-
-
-	bool Device::create(size_t stWidth, size_t stHeight, unsigned char byBitPerPixel)
-	{
-		if (createBackbuffer(stWidth, stHeight, 1, byBitPerPixel, nullptr))
+		if (createBackbuffer(stWidth, stHeight, 1, byBitPerPixel, pbyBuff))
 		{
 			m_stWidth = stWidth;
-			m_stlHeight = stHeight;
+			m_stHeight = stHeight;
 			m_byBitPerPixel = byBitPerPixel;
 
 			return true;
 		}
 
 		return false;
+	}
+
+	void Device::setSystemText(int x, int y, const char* sz) const
+	{
+		TextOut(static_cast<HDC>(m_BackBufferHandle), x, y, sz, strlen(sz));
+	}
+
+	void Device::flip()
+	{
+
+		HDC hdc;
+
+		if (WHANDLE && !IsIconic(WHANDLE))
+		{
+			hdc = static_cast<HDC>(beginPain());
+			BitBlt(hdc, 0, 0, m_stWidth, m_stHeight, static_cast<HDC>(m_BackBufferHandle), 0, 0, SRCCOPY);
+			endPaint();
+		}
+
+	};
+
+
+	/*
+		https://msdn.microsoft.com/en-us/library/windows/desktop/ms683200(v=vs.85).aspx
+	*/
+
+	HMODULE Device::getCurrentModule()
+	{
+		HMODULE hModule = NULL;
+		GetModuleHandleEx(
+			GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS,
+			(LPCTSTR)getCurrentModule,
+			&hModule);
+
+		return hModule;
 	}
 
 

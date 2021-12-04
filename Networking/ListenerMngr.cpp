@@ -6,6 +6,8 @@
 #include <stdexcept>
 #endif
 #include <string>
+#include <chrono>
+#include <thread>
 
 #include <winsock2.h>
 
@@ -73,6 +75,10 @@ namespace net
                     OutputDebugString("\n");
                     delete[] s;
                 }
+            }
+            else
+            {
+             //   std::this_thread::sleep_for(std::chrono::milliseconds(1));
             }
         }
     };

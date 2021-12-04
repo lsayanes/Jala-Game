@@ -13,12 +13,15 @@ namespace draw
 		void		*m_BackBufferHandle;
 
 		size_t				m_stWidth;
-		size_t				m_stlHeight;
+		size_t				m_stHeight;
 		unsigned char		m_byBitPerPixel;
-	private:
-		bool createBackbuffer(size_t stWidth, size_t stlHeight, unsigned short unPlanes, unsigned char byBitPerPixel, unsigned char *pbyBuff);
+
 	protected:
-		explicit Device(void *pWndHandle);
+		
+		explicit Device(void* pWndHandle);
+		
+		bool createBackbuffer(size_t stWidth, size_t stlHeight, unsigned short unPlanes, unsigned char byBitPerPixel, unsigned char *pbyBuff);
+
 
 		virtual bool	isOk() const = 0;
 		virtual void	*beginPain();
@@ -31,7 +34,6 @@ namespace draw
 
 		virtual ~Device();
 	
-	public:
 		 bool setVideoMode(
 			size_t	stWidth,
 			size_t	stHeight,
@@ -42,9 +44,12 @@ namespace draw
 		void	retoreVideo() const;
 
 		bool getVideoMode();
-		bool create();
-		bool create(size_t stWidth, size_t stlHeight, unsigned char byBitPerPixel);
+		bool create(size_t stWidth, size_t stlHeight, unsigned char byBitPerPixel, unsigned char* pbyBuff);
+	
+	public:
 
+		void setSystemText(int x, int y, const char* sz) const;
+		void flip();
 
 #if defined(_WINDOWS)
 		static HMODULE	getCurrentModule();

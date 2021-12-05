@@ -5,6 +5,7 @@
 
 #include <memory>
 #include <thread>
+#include <string>
 
 #include <winsock2.h>
 
@@ -75,12 +76,21 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             t.detach();
 
             bool bRun = true;
+            
+            auto lasttime = std::chrono::steady_clock::now();
 
+            uint64_t ullFps = 0;
+            char str[128] = "\x0";
+                
             while (bRun)
             {
-                frameBuffer.fill(RGB(255, 0, 0));
-                frameBuffer.setSystemText(10, 10, "running");
-                
+                frameBuffer.fill(255, 255, 255);
+
+                for(size_t x = 0; x < width; x+=10)
+                    frameBuffer.pixel(x, 100, 0, 0, 0);
+
+                frameBuffer.setSystemText(0, 20, str);
+
                 while (::PeekMessage(&msg, nullptr, 0, 0, PM_NOREMOVE))
                 {
                     result = ::GetMessage(&msg, nullptr, 0, 0);
@@ -101,6 +111,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                 }
 
                 frameBuffer.flip();
+                ullFps++;
+
+                if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - lasttime).count() > 1000)
+                {
+                    sprintf(str, "fps: %llu", ullFps);
+                    ullFps = 0;
+                    lasttime = std::chrono::steady_clock::now();
+                    
+                }
             }
         }
 

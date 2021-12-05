@@ -9,8 +9,9 @@ namespace draw
 		size_t									m_stWidth;
 		size_t									m_stHeight;
 		const size_t							m_stComponents;
-		std::unique_ptr<unsigned char[]>		m_BackBuffer;
-		std::unique_ptr<unsigned char[]>		m_BackLine;
+		unsigned char							*m_pbyBuffer;
+		std::unique_ptr<unsigned char[]>		m_Line;
+
 
 
 		static constexpr size_t						MaxComponents{ 4 };
@@ -21,13 +22,9 @@ namespace draw
 		virtual ~FrameBuffer();
 
 		bool	isOk() const override;
-
-		void fill(unsigned long ulRgba);
-
-		static unsigned long rgb(unsigned char r, unsigned char g, unsigned char b) 
-		{ 
-			return ((unsigned long)(((unsigned char)(r) | ((unsigned short)((unsigned char)(g)) << 8)) | (((unsigned long)(unsigned char)(b)) << 16))); 
-		}
+		
+		void	pixel(int x, int y, unsigned char r, unsigned char g, unsigned char b, unsigned char a = 0);
+		void	fill(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 0);
 
 		static void pattern(
 			unsigned char* pbBuff, size_t stBuffSize,

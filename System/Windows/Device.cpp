@@ -1,19 +1,28 @@
 //leandro_say
 
 #include <windows.h>
+
+#include <stdint.h>
 #include "../Device.h"
 
-#define WHANDLE		static_cast<HWND>(m_WndHandle)
-#define WDEVCON		static_cast<HDC>(m_DeviceContext) 
 
 namespace draw
 {
+
+	typedef struct MEMBMP
+	{
+		HBITMAP             hHandle;
+		BITMAPINFOHEADER	bmih;
+		BITMAPINFO			dbmi;
+		void* pBits;
+	}MEMBMP;
 
 	Device::Device(void* pWndHandle):
 		m_WndHandle{ pWndHandle },
 		m_DeviceContext{nullptr},
 		m_bFullScreen{false},
 		m_BackBufferHandle{nullptr},
+		m_BackBuffer{nullptr},
 		m_stWidth{ 0 },
 		m_stHeight{ 0 },
 		m_byBitPerPixel{ 0 }
@@ -27,22 +36,25 @@ namespace draw
 
 		if (m_BackBufferHandle)
 			DeleteObject(m_BackBufferHandle);
+
+		if (m_BackBuffer)
+			delete m_BackBuffer;
 	}
 
 	
 	void *Device::beginPain() 
 	{
 		if(m_WndHandle)
-			m_DeviceContext = GetDC(WHANDLE);
+			m_DeviceContext = GetDC(static_cast<HWND>(m_WndHandle));
 		return m_DeviceContext;
 	};
 
 	void Device::endPaint() 
 	{
 
-		if (m_WndHandle && WDEVCON)
+		if (m_WndHandle && m_DeviceContext)
 		{
-			ReleaseDC(WHANDLE, WDEVCON);
+			ReleaseDC(static_cast<HWND>(m_WndHandle), static_cast<HDC>(m_DeviceContext));
 			m_DeviceContext = nullptr;
 		}
 	}
@@ -102,44 +114,84 @@ namespace draw
 		return Device::getVideoMode(m_stWidth, m_stHeight, m_byBitPerPixel);
 	}
 	
-	bool Device::createBackbuffer(size_t stWidth, size_t stlHeight, unsigned short unPlanes, unsigned char byBitPerPixel, unsigned char* pbyBuff)
+	void *Device::createBackbuffer(size_t stWidth, size_t stlHeight, unsigned short unPlanes, unsigned char byBitPerPixel)
 	{
-		HBITMAP		hDev;
-
 
 		if (!m_BackBufferHandle)
 		{
+			HBITMAP		hDev;
+			
+			//create a context device to the window handle
 			m_BackBufferHandle = CreateCompatibleDC(GetDC(static_cast<HWND>(m_WndHandle)));
+			
+			/*
+			* I created this temp bitmap just to select the device context with this measures
+			*/
 			hDev = CreateBitmap(
 				stWidth,
 				stlHeight,
 				unPlanes,
 				static_cast<UINT>(byBitPerPixel),
-				pbyBuff);
+				nullptr);
 
 			if (m_BackBufferHandle)
 			{
+				//bind this temp bmp measures with the back context device handle
 				SelectObject(static_cast<HDC>(m_BackBufferHandle), hDev);
-				return true;
+
+				//this will be (on Windows) the back buffer
+				size_t stRGBSize = stWidth * stlHeight * (byBitPerPixel>>3);
+				unsigned char*  pbPixels = new unsigned char[stRGBSize];	
+				MEMBMP* pBitMap = new MEMBMP;
+
+				for (size_t i = 0; i < stRGBSize; i++)
+					pbPixels[i] = (i % 4 == 1) * 255;        // BGR
+
+				pBitMap->bmih.biSize = sizeof(BITMAPINFOHEADER);
+				pBitMap->bmih.biWidth = stWidth;
+				pBitMap->bmih.biHeight = (-1) * stlHeight;
+				pBitMap->bmih.biPlanes = 1;
+				pBitMap->bmih.biBitCount = byBitPerPixel;
+				pBitMap->bmih.biCompression = BI_RGB;
+				pBitMap->bmih.biSizeImage = 0;
+				pBitMap->bmih.biXPelsPerMeter = 10;
+				pBitMap->bmih.biYPelsPerMeter = 10;
+				pBitMap->bmih.biClrUsed = 0;
+				pBitMap->bmih.biClrImportant = 0;
+
+				ZeroMemory(&pBitMap->dbmi, sizeof(pBitMap->dbmi));
+				pBitMap->dbmi.bmiHeader = pBitMap->bmih;
+				pBitMap->dbmi.bmiColors->rgbBlue = 0;
+				pBitMap->dbmi.bmiColors->rgbGreen = 0;
+				pBitMap->dbmi.bmiColors->rgbRed = 0;
+				pBitMap->dbmi.bmiColors->rgbReserved = 0;
+				pBitMap->pBits = (void*)&(pbPixels[0]);
+					
+				pBitMap->hHandle = CreateDIBSection(static_cast<HDC>(m_BackBufferHandle), &pBitMap->dbmi, DIB_RGB_COLORS, &pBitMap->pBits, nullptr, 0);
+					
+				m_BackBuffer = pBitMap;
+
+				delete[] pbPixels;
+
+				return static_cast<MEMBMP*>(m_BackBuffer)->pBits;
 			}
 		}
 
-		return false;
+		return nullptr;
 
 	}
 
-	bool Device::create(size_t stWidth, size_t stHeight, unsigned char byBitPerPixel, unsigned char* pbyBuff)
+	void *Device::create(size_t stWidth, size_t stHeight, unsigned char byBitPerPixel)
 	{
-		if (createBackbuffer(stWidth, stHeight, 1, byBitPerPixel, pbyBuff))
+		void* pRet{ nullptr };
+		if (nullptr != (pRet = createBackbuffer(stWidth, stHeight, 1, byBitPerPixel)))
 		{
 			m_stWidth = stWidth;
 			m_stHeight = stHeight;
 			m_byBitPerPixel = byBitPerPixel;
-
-			return true;
 		}
 
-		return false;
+		return pRet;
 	}
 
 	void Device::setSystemText(int x, int y, const char* sz) const
@@ -149,33 +201,21 @@ namespace draw
 
 	void Device::flip()
 	{
-
-		HDC hdc;
-
-		if (WHANDLE && !IsIconic(WHANDLE))
+		if (m_WndHandle && !IsIconic(static_cast<HWND>(m_WndHandle)))
 		{
+			HDC hdc;
+			//copy the fake buffer (BMP) on back context device
+			HDC hMem = CreateCompatibleDC(0);
+			MEMBMP* pBitMap = static_cast<MEMBMP*>(m_BackBuffer);
+			SelectObject(hMem, pBitMap->hHandle);
+			BitBlt(static_cast<HDC>(m_BackBufferHandle), 0, 0, m_stWidth, m_stHeight, hMem, 0, 0, SRCCOPY);
+			DeleteDC(hMem);
+			
+			//copy the the back context device on primary context device windows
 			hdc = static_cast<HDC>(beginPain());
 			BitBlt(hdc, 0, 0, m_stWidth, m_stHeight, static_cast<HDC>(m_BackBufferHandle), 0, 0, SRCCOPY);
 			endPaint();
 		}
-
 	};
-
-
-	/*
-		https://msdn.microsoft.com/en-us/library/windows/desktop/ms683200(v=vs.85).aspx
-	*/
-
-	HMODULE Device::getCurrentModule()
-	{
-		HMODULE hModule = NULL;
-		GetModuleHandleEx(
-			GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS,
-			(LPCTSTR)getCurrentModule,
-			&hModule);
-
-		return hModule;
-	}
-
 
 }//draw

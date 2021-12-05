@@ -5,6 +5,7 @@
 #endif
 
 #include <memory>
+#include <stdint.h>
 
 #include "Device.h"
 #include "FrameBuffer.h"
@@ -17,11 +18,10 @@ namespace draw
 		m_stWidth{ w },
 		m_stHeight{ h },
         m_stComponents { static_cast<size_t>(Device::m_byBitPerPixel >> 3) },
-		m_BackBuffer{ std::make_unique<unsigned char[]>((m_stWidth * m_stComponents) * m_stHeight) },
-        m_BackLine{ std::make_unique<unsigned char[]> (m_stWidth * m_stComponents) }
+        m_pbyBuffer{nullptr},
+        m_Line{ std::make_unique<unsigned char[]> (m_stWidth * m_stComponents) }
 	{
-		if (!create(m_stWidth, m_stHeight, Device::m_byBitPerPixel, m_BackBuffer.get()))
-			m_BackBuffer = nullptr;
+        m_pbyBuffer = static_cast<unsigned char*>(create(m_stWidth, m_stHeight, Device::m_byBitPerPixel));
 	}
 
 	FrameBuffer::~FrameBuffer()
@@ -32,37 +32,40 @@ namespace draw
 
 	bool FrameBuffer::isOk() const 
 	{
-		return m_WndHandle && m_BackBuffer.get() ? true : false;
+		return m_WndHandle && m_pbyBuffer ? true : false;
 	}
 
-    
-    void FrameBuffer::fill(unsigned long ulRgba)
+    void FrameBuffer::pixel(int x, int y, unsigned char r, unsigned char g, unsigned char b, unsigned char a)
     {
+        unsigned char byPixel[FrameBuffer::MaxComponents] = { b, g, r };
 
-        unsigned char* pbyPix = m_BackBuffer.get();
-        unsigned char* pbyLine = m_BackLine.get();
-        /*
-        unsigned char byPttn[FrameBuffer::MaxComponents]  = {
-            (unsigned char)(ulRgba),
-            (unsigned char)((unsigned int)(ulRgba) >> 8),
-            (unsigned char)((unsigned int)(ulRgba) >> 16),
-            (unsigned char)(ulRgba >> 24),
-        };
-          */
+        if (FrameBuffer::MaxComponents > 3)
+            byPixel[3] = a;
 
-
-        unsigned char byPttn[FrameBuffer::MaxComponents] = { 255, 0, 0,0 };
-        pattern(pbyLine, m_stWidth, byPttn, 3);
-
+        std::memcpy(m_pbyBuffer + (y * m_stWidth * FrameBuffer::MaxComponents) + (x * FrameBuffer::MaxComponents), byPixel, FrameBuffer::MaxComponents);
+    }
+    
+    void FrameBuffer::fill(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
+    {
         size_t y = 0;
         size_t offset;
+
+        unsigned char* pbyPix = m_pbyBuffer;
+        unsigned char* pbyLine = m_Line.get();
+        
+        unsigned char byPttn[FrameBuffer::MaxComponents]  = {b, g, r};
+
+        if (FrameBuffer::MaxComponents > 3)
+            byPttn[3] = a;
+          
+        pattern(pbyLine, m_stWidth * FrameBuffer::MaxComponents, byPttn, FrameBuffer::MaxComponents);
+
         while (y < m_stHeight)
         {
-            offset = 3 * (y * m_stWidth);
-            memcpy(pbyPix + offset, pbyLine, m_stWidth);
+            offset = (y * m_stWidth * FrameBuffer::MaxComponents);
+            std::memcpy(pbyPix + offset, pbyLine, m_stWidth * FrameBuffer::MaxComponents);
             y++;
         }
-
 	}
 
     void FrameBuffer::pattern(
@@ -71,7 +74,7 @@ namespace draw
     )
     {
         for (uint32_t ud = 0; ud < stBuffSize; ud += stPatterSize)
-            memcpy(&pbBuff[ud], pbPattern, stPatterSize);
+            std::memcpy(&pbBuff[ud], pbPattern, stPatterSize);
     }
 
 

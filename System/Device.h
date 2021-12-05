@@ -6,21 +6,23 @@ namespace draw
 	class Device
 	{
 	protected:
-		void		*m_WndHandle;
-		void		 *m_DeviceContext;
-		bool		m_bFullScreen;
+		void				*m_WndHandle;
+		void				*m_DeviceContext;
+		bool				m_bFullScreen;
 
-		void		*m_BackBufferHandle;
+		void				*m_BackBufferHandle;
+		void				*m_BackBuffer;
 
 		size_t				m_stWidth;
 		size_t				m_stHeight;
 		unsigned char		m_byBitPerPixel;
 
+
 	protected:
 		
 		explicit Device(void* pWndHandle);
 		
-		bool createBackbuffer(size_t stWidth, size_t stlHeight, unsigned short unPlanes, unsigned char byBitPerPixel, unsigned char *pbyBuff);
+		void *createBackbuffer(size_t stWidth, size_t stlHeight, unsigned short unPlanes, unsigned char byBitPerPixel);
 
 
 		virtual bool	isOk() const = 0;
@@ -44,19 +46,14 @@ namespace draw
 		void	retoreVideo() const;
 
 		bool getVideoMode();
-		bool create(size_t stWidth, size_t stlHeight, unsigned char byBitPerPixel, unsigned char* pbyBuff);
+		void *create(size_t stWidth, size_t stlHeight, unsigned char byBitPerPixel);
 	
 	public:
 
 		void setSystemText(int x, int y, const char* sz) const;
 		void flip();
 
-#if defined(_WINDOWS)
-		static HMODULE	getCurrentModule();
-#endif
-
 		inline const void *getHandle() const { return m_WndHandle; };
-
 
 		static bool	getVideoMode(
 			size_t& lWidth,

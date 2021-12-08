@@ -194,11 +194,6 @@ namespace draw
 		return pRet;
 	}
 
-	void Device::setSystemText(int x, int y, const char* sz) const
-	{
-		TextOut(static_cast<HDC>(m_BackBufferHandle), x, y, sz, strlen(sz));
-	}
-
 	void Device::flip()
 	{
 		if (m_WndHandle && !IsIconic(static_cast<HWND>(m_WndHandle)))

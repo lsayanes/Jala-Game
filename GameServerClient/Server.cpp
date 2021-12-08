@@ -81,15 +81,20 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
             uint64_t ullFps = 0;
             char str[128] = "\x0";
-                
+
+            size_t x, y;
+           
+            srand(static_cast<unsigned int>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()));
+
+            for (y = 0; y < height; y++)
+            {
+                for (x = 0; x < width; x++)
+                    frameBuffer.pixel(x, y, 0, rand(), 0);
+            }
+
             while (bRun)
             {
-                frameBuffer.fill(255, 255, 255);
-
-                for(size_t x = 0; x < width; x+=10)
-                    frameBuffer.pixel(x, 100, 0, 0, 0);
-
-                frameBuffer.setSystemText(0, 20, str);
+                //frameBuffer.fill(255, 255, 255);
 
                 while (::PeekMessage(&msg, nullptr, 0, 0, PM_NOREMOVE))
                 {
@@ -115,7 +120,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
                 if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - lasttime).count() > 1000)
                 {
-                    sprintf(str, "fps: %llu", ullFps);
+                    sprintf(str, "fps: %llu\n", ullFps);
+                    OutputDebugString(str);
                     ullFps = 0;
                     lasttime = std::chrono::steady_clock::now();
                     

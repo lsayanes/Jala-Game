@@ -50,7 +50,6 @@ namespace draw
 	
 	public:
 
-		void setSystemText(int x, int y, const char* sz) const;
 		void flip();
 
 		inline const void *getHandle() const { return m_WndHandle; };

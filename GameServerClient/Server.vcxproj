@@ -153,6 +153,7 @@
     <ClInclude Include="..\Sock\Sock.h" />
     <ClInclude Include="..\Sock\Udp.h" />
     <ClInclude Include="..\System\Device.h" />
+    <ClInclude Include="..\System\Entity.h" />
     <ClInclude Include="..\System\FrameBuffer.h" />
     <ClInclude Include="..\Util\format.h" />
     <ClInclude Include="framework.h" />
@@ -165,6 +166,7 @@
     <ClCompile Include="..\Networking\Setting.cpp" />
     <ClCompile Include="..\Sock\Sock.cpp" />
     <ClCompile Include="..\Sock\Udp.cpp" />
+    <ClCompile Include="..\System\Entity.cpp" />
     <ClCompile Include="..\System\FrameBuffer.cpp" />
     <ClCompile Include="..\System\Windows\Device.cpp" />
     <ClCompile Include="..\Util\format.c" />

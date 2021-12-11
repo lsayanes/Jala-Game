@@ -6,6 +6,7 @@
 #include <memory>
 #include <thread>
 #include <string>
+#include <vector>
 
 #include <winsock2.h>
 
@@ -16,6 +17,7 @@
 #include "../Networking/ListenerMngr.h"
 
 #include "../System/Device.h"
+#include "../System/Entity.h"
 #include "../System/FrameBuffer.h"
 
 #include "Server.h"
@@ -63,7 +65,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     draw::Device::getVideoMode(width, height, bitpx);
 
-    draw::FrameBuffer frameBuffer{ width, height,  hWnd };
+    draw::FrameBuffer frameBuffer{ width , height,  hWnd };
+
+    draw::Entity entity{ 200, 100, 32 };
 
     if (frameBuffer.isOk())
     {
@@ -81,7 +85,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
             uint64_t ullFps = 0;
             char str[128] = "\x0";
-
+            /*
             size_t x, y;
            
             srand(static_cast<unsigned int>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()));
@@ -92,9 +96,23 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                     frameBuffer.pixel(x, y, 0, rand(), 0);
             }
 
+            entity.fill(255, 0, 0, 100);
+
+            entity.nX = 10;
+            entity.nY = 50;
+            */
+            entity.fill(255, 0, 0, 100);
+            
+            //frameBuffer.put(entity);
+
             while (bRun)
             {
-                //frameBuffer.fill(255, 255, 255);
+                frameBuffer.fill(0, 255, 255);
+
+                entity.nX++;
+                entity.nY++;
+
+                frameBuffer.put(entity);
 
                 while (::PeekMessage(&msg, nullptr, 0, 0, PM_NOREMOVE))
                 {

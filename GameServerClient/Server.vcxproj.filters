@@ -66,6 +66,9 @@
     <ClInclude Include="..\System\Device.h">
       <Filter>System</Filter>
     </ClInclude>
+    <ClInclude Include="..\System\Entity.h">
+      <Filter>System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Server.cpp">
@@ -90,6 +93,9 @@
       <Filter>System\Windows</Filter>
     </ClCompile>
     <ClCompile Include="..\System\FrameBuffer.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\System\Entity.cpp">
       <Filter>System</Filter>
     </ClCompile>
   </ItemGroup>

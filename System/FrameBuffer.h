@@ -11,6 +11,7 @@ namespace draw
 		const size_t							m_stComponents;
 		unsigned char							*m_pbyBuffer;
 		std::unique_ptr<unsigned char[]>		m_Line;
+		const size_t							m_stSizeLine;
 
 
 
@@ -23,8 +24,10 @@ namespace draw
 
 		bool	isOk() const override;
 		
-		void	pixel(int x, int y, unsigned char r, unsigned char g, unsigned char b, unsigned char a = 0);
+		void	pixel(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a = 0);
 		void	fill(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 0);
+
+		void put(const Entity& e);
 
 		static void pattern(
 			unsigned char* pbBuff, size_t stBuffSize,

@@ -17,6 +17,7 @@
 #include "../Networking/ListenerMngr.h"
 
 #include "../System/Device.h"
+#include "../System/Raster.h"
 #include "../System/Entity.h"
 #include "../System/FrameBuffer.h"
 
@@ -65,7 +66,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     draw::Device::getVideoMode(width, height, bitpx);
 
-    draw::FrameBuffer frameBuffer{ width , height,  hWnd };
+    draw::FrameBuffer frameBuffer{ width , height, bitpx, hWnd };
 
     draw::Entity entity{ 200, 100, 32 };
 
@@ -101,10 +102,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             entity.nX = 10;
             entity.nY = 50;
             */
-            entity.fill(255, 0, 0, 100);
-            
-            //frameBuffer.put(entity);
 
+            entity.fill(255, 0, 0, 100);
+            for (size_t i = 0; i < entity.stW; i++)
+            {
+                entity.pixel(i, 2, 0, 255, 0);
+                entity.pixel(i, 10, 255, 255, 255);
+                entity.pixel(i, 50, 0, 0, 255);
+            }
+            
             while (bRun)
             {
                 frameBuffer.fill(0, 255, 255);

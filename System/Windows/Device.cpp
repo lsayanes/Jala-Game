@@ -114,7 +114,7 @@ namespace draw
 		return Device::getVideoMode(m_stWidth, m_stHeight, m_byBitPerPixel);
 	}
 	
-	void *Device::createBackbuffer(size_t stWidth, size_t stlHeight, unsigned short unPlanes, unsigned char byBitPerPixel)
+	void *Device::createBackbuffer(size_t stWidth, size_t stHeight, unsigned short unPlanes, unsigned char byBitPerPixel)
 	{
 
 		if (!m_BackBufferHandle)
@@ -129,7 +129,7 @@ namespace draw
 			*/
 			hDev = CreateBitmap(
 				stWidth,
-				stlHeight,
+				stHeight,
 				unPlanes,
 				static_cast<UINT>(byBitPerPixel),
 				nullptr);
@@ -140,7 +140,7 @@ namespace draw
 				SelectObject(static_cast<HDC>(m_BackBufferHandle), hDev);
 
 				//this will be (on Windows) the back buffer
-				size_t stRGBSize = stWidth * stlHeight * (byBitPerPixel>>3);
+				size_t stRGBSize = stWidth * stHeight * (byBitPerPixel>>3);
 				unsigned char*  pbPixels = new unsigned char[stRGBSize];	
 				MEMBMP* pBitMap = new MEMBMP;
 
@@ -149,7 +149,7 @@ namespace draw
 
 				pBitMap->bmih.biSize = sizeof(BITMAPINFOHEADER);
 				pBitMap->bmih.biWidth = stWidth;
-				pBitMap->bmih.biHeight = (-1) * stlHeight;
+				pBitMap->bmih.biHeight = (-1) * stHeight;
 				pBitMap->bmih.biPlanes = 1;
 				pBitMap->bmih.biBitCount = byBitPerPixel;
 				pBitMap->bmih.biCompression = BI_RGB;
@@ -174,7 +174,8 @@ namespace draw
 				delete[] pbPixels;
 
 				return static_cast<MEMBMP*>(m_BackBuffer)->pBits;
-			}
+
+				}
 		}
 
 		return nullptr;
@@ -190,7 +191,7 @@ namespace draw
 			m_stHeight = stHeight;
 			m_byBitPerPixel = byBitPerPixel;
 		}
-
+		
 		return pRet;
 	}
 

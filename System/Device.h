@@ -22,7 +22,7 @@ namespace draw
 		
 		explicit Device(void* pWndHandle);
 		
-		void *createBackbuffer(size_t stWidth, size_t stlHeight, unsigned short unPlanes, unsigned char byBitPerPixel);
+		void *createBackbuffer(size_t stWidth, size_t stHeight, unsigned short unPlanes, unsigned char byBitPerPixel);
 
 
 		virtual bool	isOk() const = 0;

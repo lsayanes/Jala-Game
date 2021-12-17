@@ -155,6 +155,7 @@
     <ClInclude Include="..\System\Device.h" />
     <ClInclude Include="..\System\Entity.h" />
     <ClInclude Include="..\System\FrameBuffer.h" />
+    <ClInclude Include="..\System\Raster.h" />
     <ClInclude Include="..\Util\format.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />

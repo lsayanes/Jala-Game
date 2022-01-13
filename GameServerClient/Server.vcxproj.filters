@@ -28,6 +28,12 @@
     <Filter Include="System\Windows">
       <UniqueIdentifier>{52a130eb-6c68-4217-b82a-5841db46065d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Libs">
+      <UniqueIdentifier>{7484a074-0edd-415d-967a-943168f2caaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libs\png">
+      <UniqueIdentifier>{9643c829-1a49-4108-b8eb-165e2d360c2a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -72,6 +78,12 @@
     <ClInclude Include="..\System\Raster.h">
       <Filter>System</Filter>
     </ClInclude>
+    <ClInclude Include="..\Libs\picopng.hpp">
+      <Filter>Libs\png</Filter>
+    </ClInclude>
+    <ClInclude Include="..\System\Sprite.h">
+      <Filter>System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Server.cpp">
@@ -99,6 +111,12 @@
       <Filter>System</Filter>
     </ClCompile>
     <ClCompile Include="..\System\Entity.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Libs\picopng.cpp">
+      <Filter>Libs\png</Filter>
+    </ClCompile>
+    <ClCompile Include="..\System\Sprite.cpp">
       <Filter>System</Filter>
     </ClCompile>
   </ItemGroup>

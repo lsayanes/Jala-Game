@@ -3,6 +3,7 @@
 
 namespace draw
 {
+
     struct Raster 
     {
 
@@ -32,7 +33,6 @@ namespace draw
 
         }
 
-
         inline void fill(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255)
         {
             size_t y = 0;
@@ -59,7 +59,6 @@ namespace draw
             uint32_t pixel = Raster::buildPixel(r, g, b, a);
             std::memcpy(pbyBuffer + (std::abs(y) * stSizeLine) + (std::abs(x) * MaxComponents), &pixel, MaxComponents);
         }
-
 
         static uint32_t buildPixel(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
         {

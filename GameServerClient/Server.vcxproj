@@ -148,6 +148,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\format.h" />
+    <ClInclude Include="..\Libs\picopng.hpp" />
     <ClInclude Include="..\Networking\ListenerMngr.h" />
     <ClInclude Include="..\Networking\Setting.h" />
     <ClInclude Include="..\Sock\Sock.h" />
@@ -156,6 +157,7 @@
     <ClInclude Include="..\System\Entity.h" />
     <ClInclude Include="..\System\FrameBuffer.h" />
     <ClInclude Include="..\System\Raster.h" />
+    <ClInclude Include="..\System\Sprite.h" />
     <ClInclude Include="..\Util\format.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
@@ -163,12 +165,14 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Libs\picopng.cpp" />
     <ClCompile Include="..\Networking\ListenerMngr.cpp" />
     <ClCompile Include="..\Networking\Setting.cpp" />
     <ClCompile Include="..\Sock\Sock.cpp" />
     <ClCompile Include="..\Sock\Udp.cpp" />
     <ClCompile Include="..\System\Entity.cpp" />
     <ClCompile Include="..\System\FrameBuffer.cpp" />
+    <ClCompile Include="..\System\Sprite.cpp" />
     <ClCompile Include="..\System\Windows\Device.cpp" />
     <ClCompile Include="..\Util\format.c" />
     <ClCompile Include="Server.cpp" />

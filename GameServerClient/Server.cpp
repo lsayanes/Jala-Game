@@ -20,6 +20,7 @@
 #include "../System/Raster.h"
 #include "../System/Entity.h"
 #include "../System/FrameBuffer.h"
+#include "../System/Sprite.h"
 
 #include "Server.h"
 
@@ -44,6 +45,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_ LPWSTR    lpCmdLine,
                      _In_ int       nCmdShow)
 {
+
+
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
@@ -69,6 +72,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     draw::FrameBuffer frameBuffer{ width , height, bitpx, hWnd };
 
     draw::Entity entity{ 200, 100, 32 };
+
+    draw::Sprite sprite{ 1024, 600, 32, 10 };
+    sprite.load(0, "C:\\Maquinita\\Jala-Game\\Resources\\bgd_test.png");
 
     if (frameBuffer.isOk())
     {
@@ -110,6 +116,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                 entity.pixel(i, 10, 255, 255, 255);
                 entity.pixel(i, 50, 0, 0, 255);
             }
+
             
             while (bRun)
             {
@@ -119,6 +126,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                 entity.nY++;
 
                 frameBuffer.put(entity);
+                frameBuffer.put(sprite[0]);
 
                 while (::PeekMessage(&msg, nullptr, 0, 0, PM_NOREMOVE))
                 {

@@ -42,7 +42,7 @@ namespace draw
 			{
 				std::vector<unsigned char> img{};
 				std::streamsize size = file.tellg();
-				std::vector<char> buffer(size);
+				std::vector<char> buffer(static_cast<int>(size));
 				file.seekg(0, std::ios::beg);
 
 				if (file.read(buffer.data(), size))
@@ -50,10 +50,11 @@ namespace draw
 					Entity* pe{ m_Entities[stIndex] };
 					unsigned long w{ pe->stW }, h{ pe->stH };
 					char* p{ buffer.data() };
-					
+				
 					if (0 == decodePNG(img, w, h, (unsigned char*)(p), pe->stSize))
 					{
 						std::copy(begin(img), end(img), pe->pbyBuffer);
+						bgraToRgba(pe->pbyBuffer, pe->stSize);
 						return true;
 					}
 				}
@@ -62,6 +63,23 @@ namespace draw
 		}
 		
 		return false;
+	}
+
+	void Sprite::bgraToRgba(uint8_t* pbyBgra, size_t stSize)
+	{
+		uint32_t i = 0, e = 0;
+		uint8_t pixel[4];
+		
+		for (i = 0; i < stSize; i++)
+		{
+			if (i && 0 == i % 4)
+			{
+				pbyBgra[i - 4] = pixel[2];
+				pbyBgra[i - 2] = pixel[0];
+				e = 0;
+			}
+			pixel[e++] = pbyBgra[i];
+		}
 	}
 
 	void Sprite::pos(int x, int y)

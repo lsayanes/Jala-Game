@@ -11,7 +11,8 @@ namespace draw
 		virtual ~FrameBuffer();
 
 		bool	isOk() const override;
-		void	put(const Entity& e);
+		void	put(const Entity& e) const;
+		void	put(const std::vector<const Entity*> &v) const;
 	};
 
 

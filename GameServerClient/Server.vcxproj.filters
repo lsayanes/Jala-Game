@@ -84,6 +84,12 @@
     <ClInclude Include="..\System\Sprite.h">
       <Filter>System</Filter>
     </ClInclude>
+    <ClInclude Include="..\System\Font.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\System\CharSet.h">
+      <Filter>System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Server.cpp">
@@ -119,6 +125,12 @@
     <ClCompile Include="..\System\Sprite.cpp">
       <Filter>System</Filter>
     </ClCompile>
+    <ClCompile Include="..\System\Font.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\System\CharSet.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Server.rc">
@@ -132,5 +144,8 @@
     <Image Include="Server.ico">
       <Filter>resources</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\out\freetype.lib" />
   </ItemGroup>
 </Project>

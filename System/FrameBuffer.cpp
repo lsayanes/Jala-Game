@@ -7,6 +7,7 @@
 #include <memory>
 #include <vector>
 #include <stdint.h>
+#include <algorithm>
 
 #include "Device.h"
 #include "Raster.h"
@@ -34,7 +35,7 @@ namespace draw
 		return m_WndHandle && Raster::pbyBuffer ? true : false;
 	}
 
-    void FrameBuffer::put(const Entity& e)
+    void FrameBuffer::put(const Entity& e) const
     {
         
         size_t line = 0;
@@ -42,11 +43,10 @@ namespace draw
         
         unsigned char* pbyPix = Raster::pbyBuffer;
         const int x = (e.nX * FrameBuffer::MaxComponents);
-        const size_t stLimitH = (m_stHeight - e.stH) - 1;
 
-        size_t y = e.nY;
+        int y = e.nY;
 
-        while (line < e.stH && y < stLimitH)
+        while (line < e.stH && y < static_cast<int>(m_stHeight - 1) && y > 0)
         {
             y = (line + e.nY);
             offset = ((y) *  stSizeLine) + x;
@@ -54,6 +54,11 @@ namespace draw
             line++;
         }
 
+    }
+
+    void FrameBuffer::put(const std::vector<const Entity*> &v) const
+    {
+        std::for_each(v.begin(), v.end(), [&](const Entity* it) { put(*it); });
     }
 
 

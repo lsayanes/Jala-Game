@@ -7,6 +7,7 @@
 #include <thread>
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 #include <winsock2.h>
 
@@ -21,6 +22,9 @@
 #include "../System/Entity.h"
 #include "../System/FrameBuffer.h"
 #include "../System/Sprite.h"
+
+#include "../System/Font.h"
+#include "../System/CharSet.h"
 
 #include "Server.h"
 
@@ -71,10 +75,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     draw::FrameBuffer frameBuffer{ width , height, bitpx, hWnd };
 
-    draw::Entity entity{ 200, 100, 32 };
+    draw::Entity entity{ 200, 100, bitpx };
 
-    draw::Sprite sprite{ 1024, 600, 32, 10 };
-    sprite.load(0, "C:\\Maquinita\\Jala-Game\\Resources\\bgd_test.png");
+    draw::Sprite sprite{ 1024, 600, bitpx, 10 };
+    sprite.load(0, "..\\Resources\\bgd_test.png");
+
+ 
 
     if (frameBuffer.isOk())
     {
@@ -117,16 +123,20 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                 entity.pixel(i, 50, 0, 0, 255);
             }
 
-            
+            draw::CharSet ttfCharSet{};
+            ttfCharSet.create("..\\Resources\\verdana.ttf", 48, bitpx);
+            auto text = ttfCharSet.format("H");
+                        
             while (bRun)
             {
-                frameBuffer.fill(0, 255, 255);
+                frameBuffer.fill(255, 255, 255);
 
                 entity.nX++;
                 entity.nY++;
 
-                frameBuffer.put(entity);
-                frameBuffer.put(sprite[0]);
+                //frameBuffer.put(entity);
+                //frameBuffer.put(sprite[0]);
+                frameBuffer.put(text);
 
                 while (::PeekMessage(&msg, nullptr, 0, 0, PM_NOREMOVE))
                 {
@@ -162,6 +172,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
 
         delete pMngr;
+        draw::Font::instance()->free();
     }
 
     return (int) msg.wParam;

@@ -73,12 +73,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <SourcePath>C:\Maquinita\GitHub;$(SourcePath)</SourcePath>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <IncludePath>C:\Maquinita\Jala-Game\Libs\freetype-2.10.4\include;$(IncludePath)</IncludePath>
+    <OutDir>..\out\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <SourcePath>$(SourcePath)</SourcePath>
     <IncludePath>$(IncludePath)</IncludePath>
+    <OutDir>..\out</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -96,6 +98,7 @@
       <ConformanceMode>true</ConformanceMode>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
       <UseUnicodeForAssemblerListing>false</UseUnicodeForAssemblerListing>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -110,6 +113,7 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -153,8 +157,10 @@
     <ClInclude Include="..\Networking\Setting.h" />
     <ClInclude Include="..\Sock\Sock.h" />
     <ClInclude Include="..\Sock\Udp.h" />
+    <ClInclude Include="..\System\CharSet.h" />
     <ClInclude Include="..\System\Device.h" />
     <ClInclude Include="..\System\Entity.h" />
+    <ClInclude Include="..\System\Font.h" />
     <ClInclude Include="..\System\FrameBuffer.h" />
     <ClInclude Include="..\System\Raster.h" />
     <ClInclude Include="..\System\Sprite.h" />
@@ -170,7 +176,9 @@
     <ClCompile Include="..\Networking\Setting.cpp" />
     <ClCompile Include="..\Sock\Sock.cpp" />
     <ClCompile Include="..\Sock\Udp.cpp" />
+    <ClCompile Include="..\System\CharSet.cpp" />
     <ClCompile Include="..\System\Entity.cpp" />
+    <ClCompile Include="..\System\Font.cpp" />
     <ClCompile Include="..\System\FrameBuffer.cpp" />
     <ClCompile Include="..\System\Sprite.cpp" />
     <ClCompile Include="..\System\Windows\Device.cpp" />
@@ -183,6 +191,9 @@
   <ItemGroup>
     <Image Include="Server.ico" />
     <Image Include="small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\out\freetype.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

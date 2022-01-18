@@ -8,6 +8,7 @@ namespace draw
 	{
 	private:
 		std::vector<Entity*> m_Entities;
+
 	public:
 		explicit Sprite(size_t w, size_t h, uint8_t bits, size_t stTotal);
 		virtual ~Sprite();
@@ -16,6 +17,9 @@ namespace draw
 		void	pos(int x, int y);
 
 		const Entity& operator[](size_t i) const;
+
+
+		static void	bgraToRgba(uint8_t* pbyBgra, size_t stSize);
 	};
 
 }//draw

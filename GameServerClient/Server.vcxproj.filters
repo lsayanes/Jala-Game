@@ -84,10 +84,10 @@
     <ClInclude Include="..\System\Sprite.h">
       <Filter>System</Filter>
     </ClInclude>
-    <ClInclude Include="..\System\Font.h">
+    <ClInclude Include="..\System\CharSet.h">
       <Filter>System</Filter>
     </ClInclude>
-    <ClInclude Include="..\System\CharSet.h">
+    <ClInclude Include="..\System\FontLib.h">
       <Filter>System</Filter>
     </ClInclude>
   </ItemGroup>
@@ -125,10 +125,10 @@
     <ClCompile Include="..\System\Sprite.cpp">
       <Filter>System</Filter>
     </ClCompile>
-    <ClCompile Include="..\System\Font.cpp">
+    <ClCompile Include="..\System\CharSet.cpp">
       <Filter>System</Filter>
     </ClCompile>
-    <ClCompile Include="..\System\CharSet.cpp">
+    <ClCompile Include="..\System\FontLib.cpp">
       <Filter>System</Filter>
     </ClCompile>
   </ItemGroup>

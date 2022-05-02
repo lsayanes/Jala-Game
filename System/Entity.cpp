@@ -14,7 +14,7 @@ namespace draw
 		data{ std::make_unique<unsigned char[]>(stSize) }
 	{
 		pbyBuffer = data.get();
-		fill(255, 0, 255);
+		//fill(255, 0, 255);
 	}
 
 

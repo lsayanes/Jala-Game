@@ -160,7 +160,7 @@
     <ClInclude Include="..\System\CharSet.h" />
     <ClInclude Include="..\System\Device.h" />
     <ClInclude Include="..\System\Entity.h" />
-    <ClInclude Include="..\System\Font.h" />
+    <ClInclude Include="..\System\FontLib.h" />
     <ClInclude Include="..\System\FrameBuffer.h" />
     <ClInclude Include="..\System\Raster.h" />
     <ClInclude Include="..\System\Sprite.h" />
@@ -178,7 +178,7 @@
     <ClCompile Include="..\Sock\Udp.cpp" />
     <ClCompile Include="..\System\CharSet.cpp" />
     <ClCompile Include="..\System\Entity.cpp" />
-    <ClCompile Include="..\System\Font.cpp" />
+    <ClCompile Include="..\System\FontLib.cpp" />
     <ClCompile Include="..\System\FrameBuffer.cpp" />
     <ClCompile Include="..\System\Sprite.cpp" />
     <ClCompile Include="..\System\Windows\Device.cpp" />

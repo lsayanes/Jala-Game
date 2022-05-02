@@ -15,8 +15,8 @@ namespace draw
 
 		size_t				m_stWidth;
 		size_t				m_stHeight;
+	
 		unsigned char		m_byBitPerPixel;
-
 
 	protected:
 		

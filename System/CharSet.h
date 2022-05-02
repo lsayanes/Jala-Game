@@ -6,14 +6,14 @@ namespace draw
 	class CharSet 
 	{
 		std::vector<const Entity*> m_vctText{};
-		std::unordered_map<char, const Entity*> m_Chars{};
+		std::unordered_map<char, Entity*> m_Chars{};
+		uint8_t m_byBpp;
 	
 	public:
-		explicit CharSet();
+		explicit CharSet(uint8_t byBpp);
 		virtual ~CharSet();
 
-		bool create(const char * szFontPath, size_t stSize, uint8_t bpp);
-		
+		const std::vector<const Entity*>& flatText(void* pFont, const char* sText, int x, int y);
 		const std::vector<const Entity*> & format(const char *szTxt);
 
 	};

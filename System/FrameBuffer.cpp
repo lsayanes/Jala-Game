@@ -21,7 +21,6 @@ namespace draw
         Raster{ w, h, bits },
         Device{ pWndHandle }
     {
-
         Raster::pbyBuffer = static_cast<unsigned char*>(Device::create(m_stWidth, m_stHeight, bits));
     }
 
@@ -42,11 +41,11 @@ namespace draw
         size_t offset;
         
         unsigned char* pbyPix = Raster::pbyBuffer;
-        const int x = (e.nX * FrameBuffer::MaxComponents);
+        const int x = (e.nX * FrameBuffer::MaxComponents); 
 
         int y = e.nY;
 
-        while (line < e.stH && y < static_cast<int>(m_stHeight - 1) && y > 0)
+        while (line < e.stH && y < static_cast<int>(m_stHeight - 1) && y >= 0)
         {
             y = (line + e.nY);
             offset = ((y) *  stSizeLine) + x;

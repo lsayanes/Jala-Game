@@ -23,7 +23,7 @@
 #include "../System/FrameBuffer.h"
 #include "../System/Sprite.h"
 
-#include "../System/Font.h"
+#include "../System/FontLib.h"
 #include "../System/CharSet.h"
 
 #include "Server.h"
@@ -98,9 +98,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
             uint64_t ullFps = 0;
             char str[128] = "\x0";
+
             /*
             size_t x, y;
-           
             srand(static_cast<unsigned int>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()));
 
             for (y = 0; y < height; y++)
@@ -108,13 +108,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                 for (x = 0; x < width; x++)
                     frameBuffer.pixel(x, y, 0, rand(), 0);
             }
-
+            */
             entity.fill(255, 0, 0, 100);
 
-            entity.nX = 10;
-            entity.nY = 50;
-            */
-
+            //entity.nX = 10;
+            //entity.nY = 50;
+            
+            /*
             entity.fill(255, 0, 0, 100);
             for (size_t i = 0; i < entity.stW; i++)
             {
@@ -122,20 +122,21 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                 entity.pixel(i, 10, 255, 255, 255);
                 entity.pixel(i, 50, 0, 0, 255);
             }
+            */
 
-            draw::CharSet ttfCharSet{};
-            ttfCharSet.create("..\\Resources\\verdana.ttf", 48, bitpx);
-            auto text = ttfCharSet.format("H");
+            draw::CharSet ttfCharSet{ bitpx };
+            auto Font = draw::FontLib::instance()->newFont("..\\Resources\\verdana.ttf", 48);
+            auto text = ttfCharSet.flatText(Font, "Hola inmundo!", 100, 100);
                         
             while (bRun)
             {
                 frameBuffer.fill(255, 255, 255);
 
-                entity.nX++;
-                entity.nY++;
+                //entity.nX++;
+                //entity.nY++;
 
-                //frameBuffer.put(entity);
                 //frameBuffer.put(sprite[0]);
+                //frameBuffer.put(entity);
                 frameBuffer.put(text);
 
                 while (::PeekMessage(&msg, nullptr, 0, 0, PM_NOREMOVE))
@@ -172,7 +173,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
 
         delete pMngr;
-        draw::Font::instance()->free();
+        draw::FontLib::instance()->free();
     }
 
     return (int) msg.wParam;

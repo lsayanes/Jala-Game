@@ -1,6 +1,8 @@
 
 #pragma once
 
+#define MAX_
+
 namespace draw
 {
 
@@ -9,7 +11,7 @@ namespace draw
 
         size_t							        stW;
         size_t							        stH;
-        const   uint8_t                         MaxComponents;
+        const uint8_t                           MaxComponents;
         size_t							        stSize;
         size_t	                                stSizeLine;
         uint8_t                                 *pbyBuffer;
@@ -64,7 +66,7 @@ namespace draw
         {
             return  ((uint32_t)a << 24) | ((uint32_t)r << 16) | ((uint16_t)g << 8) | b;
         }
-
+        
     };
 
 }//draw

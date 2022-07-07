@@ -125,7 +125,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             */
 
             draw::CharSet ttfCharSet{ bitpx };
-            auto Font = draw::FontLib::instance()->newFont("..\\Resources\\verdana.ttf", 48);
+            auto Font = draw::FontLib::instance()->newFont("..\\Resources\\verdana.ttf", 100);
             auto text = ttfCharSet.flatText(Font, "Hola inmundo!", 100, 100);
                         
             while (bRun)

@@ -67,7 +67,7 @@ namespace draw
 			uint8_t* pbyData;
 			int nGlyphIndexCmp;
 			
-			unsigned char byCmp = (face->glyph->bitmap.pixel_mode == FT_PIXEL_MODE_BGRA ? 32 : 24) >> 3;
+			bool bRgb = !(face->glyph->bitmap.pixel_mode == FT_PIXEL_MODE_BGRA);
 			
 			m_vctText.resize(stLen);
 			for (size_t n = 0; n < stLen; n++)
@@ -86,7 +86,7 @@ namespace draw
 		 
 				if (pbyData)
 				{
-					if (byCmp < 4)
+					if (bRgb)
 					{
 						for (int i = 0; i < (int)face->glyph->bitmap.rows; i++)
 						{
@@ -102,19 +102,7 @@ namespace draw
 					}
 					else
 					{
-						for (int i = 0; i < (int)face->glyph->bitmap.rows; i++)
-						{
-							for (int j = 0; j < (int)face->glyph->bitmap.width; j++)
-							{
-								nGlyphIndexCmp = (i * face->glyph->bitmap.pitch + j);
-								*(pbyData++) = (uint8_t)(~face->glyph->bitmap.buffer[nGlyphIndexCmp]);
-								*(pbyData++) = (uint8_t)(~face->glyph->bitmap.buffer[nGlyphIndexCmp]);
-								*(pbyData++) = (uint8_t)(~face->glyph->bitmap.buffer[nGlyphIndexCmp]);
-								*(pbyData++) = (uint8_t)(~face->glyph->bitmap.buffer[nGlyphIndexCmp]);
-								pbyData++;
-							}
-						}
-
+						//TODO RGBA support
 					}
 
 

@@ -72,6 +72,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>C:\Maquinita\Jala-Game\Libs\freetype-2.10.4\include;$(IncludePath)</IncludePath>
+    <OutDir>..\out\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -139,6 +141,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Framebuffer\CharSet.h" />
+    <ClInclude Include="..\Framebuffer\Device.h" />
+    <ClInclude Include="..\Framebuffer\Entity.h" />
+    <ClInclude Include="..\Framebuffer\FontLib.h" />
+    <ClInclude Include="..\Framebuffer\FrameBuffer.h" />
+    <ClInclude Include="..\Framebuffer\Raster.h" />
+    <ClInclude Include="..\Framebuffer\Sprite.h" />
+    <ClInclude Include="..\Framebuffer\Types.h" />
+    <ClInclude Include="..\Libs\picopng.hpp" />
     <ClInclude Include="..\Networking\Sender.h" />
     <ClInclude Include="..\Networking\Setting.h" />
     <ClInclude Include="..\Sock\Sock.h" />
@@ -150,6 +161,13 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Framebuffer\CharSet.cpp" />
+    <ClCompile Include="..\Framebuffer\Entity.cpp" />
+    <ClCompile Include="..\Framebuffer\FontLib.cpp" />
+    <ClCompile Include="..\Framebuffer\FrameBuffer.cpp" />
+    <ClCompile Include="..\Framebuffer\Sprite.cpp" />
+    <ClCompile Include="..\Framebuffer\Windows\Device.cpp" />
+    <ClCompile Include="..\Libs\picopng.cpp" />
     <ClCompile Include="..\Networking\Sender.cpp" />
     <ClCompile Include="..\Networking\Setting.cpp" />
     <ClCompile Include="..\Sock\Sock.cpp" />
@@ -163,6 +181,9 @@
   <ItemGroup>
     <Image Include="Sender.ico" />
     <Image Include="small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\out\freetype.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

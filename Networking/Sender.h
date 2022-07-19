@@ -7,7 +7,8 @@ namespace net
 	private:
 
 		unsigned long m_ulPktSent{};  //packet sent
-		unsigned long m_ulPktSeq{};  //sequence of packet sent
+		unsigned long m_ulPktSeq{};   //sequence of packet sent
+		unsigned long long m_ullByteSet{};
 
 		static constexpr unsigned long m_pktSeqOffset{ 0 };
 		static constexpr unsigned long m_pktSentOffset{ sizeof(m_ulPktSeq) };
@@ -31,6 +32,10 @@ namespace net
 				m_ulPktSeq++;
 			}
 		}
+
+		const unsigned long pktSent() const { return m_ulPktSent; }
+		const unsigned long pktSeq() const { return m_ulPktSeq; }
+		const unsigned long long byteSent() const { return m_ullByteSet;  }
 	};
 
 }

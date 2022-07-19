@@ -5,11 +5,14 @@
 
 #include <memory>
 #include <thread>
+#include <mutex>
 #include <string>
 #include <vector>
 #include <unordered_map>
 
 #include <winsock2.h>
+
+#include "../Util/format.h"
 
 #include "../Sock/Sock.h"
 #include "../Sock/Udp.h"
@@ -17,14 +20,14 @@
 #include "../Networking/Setting.h"
 #include "../Networking/ListenerMngr.h"
 
-#include "../System/Device.h"
-#include "../System/Raster.h"
-#include "../System/Entity.h"
-#include "../System/FrameBuffer.h"
-#include "../System/Sprite.h"
-
-#include "../System/FontLib.h"
-#include "../System/CharSet.h"
+#include "../Framebuffer/Types.h"
+#include "../Framebuffer/Device.h"
+#include "../Framebuffer/Raster.h"
+#include "../Framebuffer/Entity.h"
+#include "../Framebuffer/FrameBuffer.h"
+#include "../Framebuffer/Sprite.h"
+#include "../Framebuffer/FontLib.h"
+#include "../Framebuffer/CharSet.h"
 
 #include "Server.h"
 
@@ -43,6 +46,9 @@ LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
 
+
+std::mutex                      g_rcvMutex{};
+std::vector<unsigned char>      g_rcvVct{};
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -72,15 +78,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
 
     draw::Device::getVideoMode(width, height, bitpx);
-
     draw::FrameBuffer frameBuffer{ width , height, bitpx, hWnd };
 
-    draw::Entity entity{ 200, 100, bitpx };
+    //draw::Entity entity{ 200, 100, frameBuffer.bpp() };
 
-    draw::Sprite sprite{ 1024, 600, bitpx, 10 };
-    sprite.load(0, "..\\Resources\\bgd_test.png");
-
- 
+//    draw::Sprite sprite{ 1024, 600, frameBuffer.bpp(), 10 };
+//    sprite.load(0, "..\\Resources\\bgd_test.png");
 
     if (frameBuffer.isOk())
     {
@@ -89,7 +92,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
         if (pMngr->create())
         {
-            std::thread t(&net::ListenerMngr::start, pMngr);
+
+            g_rcvVct.reserve(1024 * 1024);
+
+            std::thread t(&net::ListenerMngr::start, pMngr, &g_rcvMutex, &g_rcvVct);
             t.detach();
 
             bool bRun = true;
@@ -99,46 +105,19 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             uint64_t ullFps = 0;
             char str[128] = "\x0";
 
-            /*
-            size_t x, y;
-            srand(static_cast<unsigned int>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()));
+            draw::DBGW dbgGeneral{ 0, static_cast<short>(frameBuffer.stH - 100) };
+            draw::DBGW dbgData{ 0, static_cast<short>(frameBuffer.stH - 115) };
 
-            for (y = 0; y < height; y++)
-            {
-                for (x = 0; x < width; x++)
-                    frameBuffer.pixel(x, y, 0, rand(), 0);
-            }
-            */
-            entity.fill(255, 0, 0, 100);
+            draw::CharSet ttfCharSet{ frameBuffer.bpp() };
+            dbgGeneral.pFont = draw::FontLib::instance()->newFont("..\\Resources\\verdana.ttf", 10);
 
-            //entity.nX = 10;
-            //entity.nY = 50;
+            dbgData.pFont = dbgGeneral.pFont;
             
-            /*
-            entity.fill(255, 0, 0, 100);
-            for (size_t i = 0; i < entity.stW; i++)
-            {
-                entity.pixel(i, 2, 0, 255, 0);
-                entity.pixel(i, 10, 255, 255, 255);
-                entity.pixel(i, 50, 0, 0, 255);
-            }
-            */
-
-            draw::CharSet ttfCharSet{ bitpx };
-            auto Font = draw::FontLib::instance()->newFont("..\\Resources\\verdana.ttf", 100);
-            auto text = ttfCharSet.flatText(Font, "Hola inmundo!", 100, 100);
+            std::vector<const draw::Entity*> txtGeneral = ttfCharSet.flatText(dbgGeneral.pFont, "dbg: ", dbgGeneral.x, dbgGeneral.y);
+            std::vector<const draw::Entity*> txtData = ttfCharSet.flatText(dbgData.pFont, "Data: ", dbgData.x, dbgData.y);
                         
             while (bRun)
             {
-                frameBuffer.fill(255, 255, 255);
-
-                //entity.nX++;
-                //entity.nY++;
-
-                //frameBuffer.put(sprite[0]);
-                //frameBuffer.put(entity);
-                frameBuffer.put(text);
-
                 while (::PeekMessage(&msg, nullptr, 0, 0, PM_NOREMOVE))
                 {
                     result = ::GetMessage(&msg, nullptr, 0, 0);
@@ -158,17 +137,51 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                     }
                 }
 
-                frameBuffer.flip();
+                if (g_rcvVct.size())
+                {
+                    g_rcvMutex.lock();
+
+                    size_t stLen = g_rcvVct.size() > 100 ? 100 : g_rcvVct.size();
+                    
+                    unsigned char* bytes = new unsigned char[stLen];
+                    char* psz = new char[(stLen * 4) + 1];
+
+                    sprintf(psz, "Data (rcv:%lu): ", g_rcvVct.size());
+                    size_t stDataLen = strlen(psz);
+                    
+                    std::copy(std::begin(g_rcvVct), std::begin(g_rcvVct) + stLen, bytes);
+                    hexToAscii(bytes, stLen, &psz[stDataLen]);
+
+                    g_rcvVct.clear();
+
+
+                    txtData = ttfCharSet.flatText(dbgData.pFont, psz, dbgData.x, dbgData.y);
+
+                    g_rcvMutex.unlock();
+
+                    delete[] bytes;
+                    delete[] psz;
+                }
+
+                
                 ullFps++;
 
                 if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - lasttime).count() > 1000)
                 {
-                    sprintf(str, "fps: %llu\n", ullFps);
-                    OutputDebugString(str);
-                    ullFps = 0;
                     lasttime = std::chrono::steady_clock::now();
                     
+                    sprintf(str, "dbg: fps=%llu", ullFps);
+                    txtGeneral = ttfCharSet.flatText(dbgGeneral.pFont, str, dbgGeneral.x, dbgGeneral.y);
+                   
+                    ullFps = 0;
+                   
                 }
+
+                frameBuffer.fill(255, 255, 255);
+                frameBuffer.put(txtData);
+                frameBuffer.put(txtGeneral);
+
+                frameBuffer.flip();
             }
         }
 

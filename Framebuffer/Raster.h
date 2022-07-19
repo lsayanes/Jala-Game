@@ -1,8 +1,6 @@
 
 #pragma once
 
-#define MAX_
-
 namespace draw
 {
 

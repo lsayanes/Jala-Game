@@ -53,6 +53,7 @@ namespace draw
 		void flip();
 
 		inline const void *getHandle() const { return m_WndHandle; };
+		inline const unsigned char bpp() const { return m_byBitPerPixel; }
 
 		static bool	getVideoMode(
 			size_t& lWidth,

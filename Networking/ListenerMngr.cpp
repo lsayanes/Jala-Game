@@ -7,7 +7,9 @@
 #endif
 #include <string>
 #include <chrono>
+#include <vector>
 #include <thread>
+#include <mutex>
 
 #include <winsock2.h>
 
@@ -54,9 +56,9 @@ namespace net
         return bRet;
     }
 
-    void ListenerMngr::start() 
+    void ListenerMngr::start(std::mutex *pmSc, std::vector<unsigned char> *pvOut)
     {
-        int nRcv = -1;
+        int nRcv = -1, i;
         unsigned char* pby = m_byRcvBuff.get();
 
         m_bListening = true ;
@@ -65,16 +67,27 @@ namespace net
         {
             if ((nRcv = m_pTcp->rcv(pby, Setting::max_buff)) > 0)
             {
+                pmSc->lock();
+                
                 if (check(pby))
                 {
                     //TODO create a new thread 
+                    /*
                     char* s{ new char[nRcv * 3] };
                     nRcv = hexToAscii(pby, nRcv, s);
                     s[nRcv] = 0;
                     OutputDebugString(s);
                     OutputDebugString("\n");
                     delete[] s;
+                    */
+
+
+                    for (i = 0; i < nRcv; i++)
+                        pvOut->push_back(pby[i]);
+
                 }
+                
+                pmSc->unlock();
             }
             else
             {
@@ -82,7 +95,7 @@ namespace net
             }
         }
     };
-
+       
   
     bool ListenerMngr::check(const unsigned char* pRcv) const
     {

@@ -12,6 +12,8 @@
 #include "Device.h"
 #include "Raster.h"
 #include "Entity.h"
+#include "CharSet.h"
+
 #include "FrameBuffer.h"
 
 namespace draw
@@ -60,5 +62,10 @@ namespace draw
         std::for_each(v.begin(), v.end(), [&](const Entity* it) { put(*it); });
     }
 
+    void FrameBuffer::put(CharSet& c) const
+    {
+        const std::vector<const Entity*>* v = c.get();
+        std::for_each(v->begin(), v->end(), [&](const Entity* it) { put(*it); });
+    }
 
 }//draw

@@ -58,40 +58,31 @@ namespace net
 
     void ListenerMngr::start(std::mutex *pmSc, std::vector<unsigned char> *pvOut)
     {
-        int nRcv = -1, i;
-        unsigned char* pby = m_byRcvBuff.get();
-
-        m_bListening = true ;
-        
-        while (m_bListening)
+        if (pmSc && pvOut)
         {
-            if ((nRcv = m_pTcp->rcv(pby, Setting::max_buff)) > 0)
+            int nRcv = -1, i;
+            unsigned char* pby = m_byRcvBuff.get();
+
+            m_bListening = true;
+
+            while (m_bListening)
             {
-                pmSc->lock();
-                
-                if (check(pby))
+                if ((nRcv = m_pTcp->rcv(pby, Setting::max_buff)) > 0)
                 {
-                    //TODO create a new thread 
-                    /*
-                    char* s{ new char[nRcv * 3] };
-                    nRcv = hexToAscii(pby, nRcv, s);
-                    s[nRcv] = 0;
-                    OutputDebugString(s);
-                    OutputDebugString("\n");
-                    delete[] s;
-                    */
+                    pmSc->lock();
 
+                    if (check(pby))
+                    {
+                        for (i = 0; i < nRcv; i++)
+                            pvOut->push_back(pby[i]);
+                    }
 
-                    for (i = 0; i < nRcv; i++)
-                        pvOut->push_back(pby[i]);
-
+                    pmSc->unlock();
                 }
-                
-                pmSc->unlock();
-            }
-            else
-            {
-             //   std::this_thread::sleep_for(std::chrono::milliseconds(1));
+                else
+                {
+                    //   std::this_thread::sleep_for(std::chrono::milliseconds(1));
+                }
             }
         }
     };

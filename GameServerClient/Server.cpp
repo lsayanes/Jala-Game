@@ -3,12 +3,16 @@
 
 #include "framework.h"
 
+
 #include <memory>
 #include <thread>
 #include <mutex>
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <stdint.h>
+#include <algorithm>
+
 
 #include <winsock2.h>
 
@@ -24,10 +28,11 @@
 #include "../Framebuffer/Device.h"
 #include "../Framebuffer/Raster.h"
 #include "../Framebuffer/Entity.h"
-#include "../Framebuffer/FrameBuffer.h"
 #include "../Framebuffer/Sprite.h"
 #include "../Framebuffer/FontLib.h"
 #include "../Framebuffer/CharSet.h"
+
+#include "../Framebuffer/FrameBuffer.h"
 
 #include "Server.h"
 
@@ -47,8 +52,96 @@ INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
 
 
+constexpr size_t MAX_BYTE_DISPLAYED = 100;
+
+std::mutex                      g_DrawMutex{};
 std::mutex                      g_rcvMutex{};
 std::vector<unsigned char>      g_rcvVct{};
+
+
+HANDLE      g_hFlipEvent;
+
+bool bRun = false;
+
+
+void  rcv()
+{
+    /*
+    while (bRun)
+    {
+        if (g_rcvVct.size())
+        {
+            g_rcvMutex.lock();
+
+            size_t stLen = g_rcvVct.size() > MAX_BYTE_DISPLAYED ? MAX_BYTE_DISPLAYED : g_rcvVct.size();
+
+            sprintf(pszRcv, "Data (rcv:%lu): ", g_rcvVct.size());
+            size_t stDataLen = strlen(pszRcv);
+
+            std::copy(std::begin(g_rcvVct), std::begin(g_rcvVct) + stLen, pbyRcv);
+            hexToAscii(pbyRcv, stLen, &pszRcv[stDataLen]);
+
+            g_rcvVct.clear();
+
+
+            ttfData.flatText(pszRcv, dbgData.x, dbgData.y);
+
+            g_rcvMutex.unlock();
+        }
+    }
+    */
+}
+
+void render(draw::FrameBuffer *pfbuffer)
+{
+
+    uint64_t ullFps = 0;
+    char str[1024] = "\x0";
+
+    draw::DBGW dbg
+    { 
+        0,
+        static_cast<short>(pfbuffer->stH - 100),
+        draw::FontLib::instance()->newFont("..\\Resources\\verdana.ttf", 10)
+    };
+
+    draw::CharSet ttfGeneral{ dbg.pFont, pfbuffer->bpp() };
+
+    auto lasttime = std::chrono::steady_clock::now();
+    
+    while (bRun)
+    {
+        g_DrawMutex.lock();
+        
+        pfbuffer->fill(255, 255, 255);
+        pfbuffer->put(ttfGeneral);
+        
+        ullFps++;
+        if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - lasttime).count() > 1000)
+        {
+
+            sprintf(str, "dbg: fps=%llu (dolar 338! hay que tramitar el pasaporte yaaaaaaaaaaaaa!!  dolar 318! hay que tramitar el pasaporte yaaaaaaaaaaaaa!! dolar 338! hay que tramitar el pasaporte yaaaaaaaaaaaaa!!)", ullFps);
+            ttfGeneral.flatText(str, dbg.x, dbg.y);
+            
+            lasttime = std::chrono::steady_clock::now();
+            ullFps = 0;
+        }
+
+        g_DrawMutex.unlock();
+    }
+}
+
+void flip(draw::FrameBuffer* pfbuffer)
+{
+    while (bRun)
+    {
+        WaitForSingleObject(g_hFlipEvent, 12); //80 fpp
+        g_DrawMutex.lock();
+        pfbuffer->flip();
+        g_DrawMutex.unlock();
+    }
+
+}
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -63,6 +156,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MSG msg;
     BOOL result;
 
+
     size_t width, height;
     unsigned char bitpx;
 
@@ -76,6 +170,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     {
         return FALSE;
     }
+
+
+    bRun = true;
 
     draw::Device::getVideoMode(width, height, bitpx);
     draw::FrameBuffer frameBuffer{ width , height, bitpx, hWnd };
@@ -92,96 +189,33 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
         if (pMngr->create())
         {
-
+            //rcv thread
             g_rcvVct.reserve(1024 * 1024);
+            std::thread tNet(&net::ListenerMngr::start, pMngr, &g_rcvMutex, &g_rcvVct);
+            tNet.detach();
 
-            std::thread t(&net::ListenerMngr::start, pMngr, &g_rcvMutex, &g_rcvVct);
-            t.detach();
+            //render thread
+            std::thread tRender(&render, &frameBuffer);
+            tRender.detach();
 
-            bool bRun = true;
-            
-            auto lasttime = std::chrono::steady_clock::now();
+            //flip buffer thread
+            g_hFlipEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+            std::thread tFlip(&flip, &frameBuffer);
+            tFlip.detach();
 
-            uint64_t ullFps = 0;
-            char str[128] = "\x0";
 
-            draw::DBGW dbgGeneral{ 0, static_cast<short>(frameBuffer.stH - 100) };
-            draw::DBGW dbgData{ 0, static_cast<short>(frameBuffer.stH - 115) };
-
-            draw::CharSet ttfCharSet{ frameBuffer.bpp() };
-            dbgGeneral.pFont = draw::FontLib::instance()->newFont("..\\Resources\\verdana.ttf", 10);
-
-            dbgData.pFont = dbgGeneral.pFont;
-            
-            std::vector<const draw::Entity*> txtGeneral = ttfCharSet.flatText(dbgGeneral.pFont, "dbg: ", dbgGeneral.x, dbgGeneral.y);
-            std::vector<const draw::Entity*> txtData = ttfCharSet.flatText(dbgData.pFont, "Data: ", dbgData.x, dbgData.y);
-                        
-            while (bRun)
+           // Bucle principal de mensajes:
+            while ((result = GetMessage(&msg, NULL, 0, 0)) != 0)
             {
-                while (::PeekMessage(&msg, nullptr, 0, 0, PM_NOREMOVE))
+                if (result == -1)
                 {
-                    result = ::GetMessage(&msg, nullptr, 0, 0);
-                    if (result == 0)
-                    {
-                        ::PostQuitMessage(msg.wParam);
-                        bRun = false;
-                        break;
-                    }
-                    else if (result == -1)
-                    {
-                    }
-                    else
-                    {
-                        ::TranslateMessage(&msg);
-                        ::DispatchMessage(&msg);
-                    }
+                    // handle the error and possibly exit
                 }
-
-                if (g_rcvVct.size())
+                else
                 {
-                    g_rcvMutex.lock();
-
-                    size_t stLen = g_rcvVct.size() > 100 ? 100 : g_rcvVct.size();
-                    
-                    unsigned char* bytes = new unsigned char[stLen];
-                    char* psz = new char[(stLen * 4) + 1];
-
-                    sprintf(psz, "Data (rcv:%lu): ", g_rcvVct.size());
-                    size_t stDataLen = strlen(psz);
-                    
-                    std::copy(std::begin(g_rcvVct), std::begin(g_rcvVct) + stLen, bytes);
-                    hexToAscii(bytes, stLen, &psz[stDataLen]);
-
-                    g_rcvVct.clear();
-
-
-                    txtData = ttfCharSet.flatText(dbgData.pFont, psz, dbgData.x, dbgData.y);
-
-                    g_rcvMutex.unlock();
-
-                    delete[] bytes;
-                    delete[] psz;
+                    TranslateMessage(&msg);
+                    DispatchMessage(&msg);
                 }
-
-                
-                ullFps++;
-
-                if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - lasttime).count() > 1000)
-                {
-                    lasttime = std::chrono::steady_clock::now();
-                    
-                    sprintf(str, "dbg: fps=%llu", ullFps);
-                    txtGeneral = ttfCharSet.flatText(dbgGeneral.pFont, str, dbgGeneral.x, dbgGeneral.y);
-                   
-                    ullFps = 0;
-                   
-                }
-
-                frameBuffer.fill(255, 255, 255);
-                frameBuffer.put(txtData);
-                frameBuffer.put(txtGeneral);
-
-                frameBuffer.flip();
             }
         }
 
@@ -280,6 +314,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         }
         break;
     case WM_DESTROY:
+        g_DrawMutex.lock();
+        bRun = false;
+        SetEvent(g_hFlipEvent);
+        g_DrawMutex.unlock();
         PostQuitMessage(0);
         break;
     default:

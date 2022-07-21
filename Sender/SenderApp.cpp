@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <algorithm>
 
 
 #include "../Sock/Sock.h"
@@ -24,10 +25,11 @@
 #include "../Framebuffer/Device.h"
 #include "../Framebuffer/Raster.h"
 #include "../Framebuffer/Entity.h"
-#include "../Framebuffer/FrameBuffer.h"
 #include "../Framebuffer/Sprite.h"
 #include "../Framebuffer/FontLib.h"
 #include "../Framebuffer/CharSet.h"
+
+#include "../Framebuffer/FrameBuffer.h"
 
 
 
@@ -49,9 +51,9 @@ LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
-                     _In_opt_ HINSTANCE hPrevInstance,
-                     _In_ LPWSTR    lpCmdLine,
-                     _In_ int       nCmdShow)
+    _In_opt_ HINSTANCE hPrevInstance,
+    _In_ LPWSTR    lpCmdLine,
+    _In_ int       nCmdShow)
 {
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
@@ -64,13 +66,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MyRegisterClass(hInstance);
 
     // Realizar la inicialización de la aplicación:
-    if (!InitInstance (hInstance, nCmdShow))
+    if (!InitInstance(hInstance, nCmdShow))
     {
         return FALSE;
     }
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SENDER));
-
 
     MSG msg;
     BOOL result;
@@ -82,7 +83,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     {
         size_t width, height;
         unsigned char bitpx;
-        char str[2048];
+        char str[2048] = "\x0";
 
         std::thread t(&net::Sender::start, pSndr);
         t.detach();
@@ -94,14 +95,16 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
         draw::DBGW dbgw{ 0, static_cast<short>(frameBuffer.stH - (frameBuffer.stH / 2)) };
 
-        draw::CharSet ttfCharSet{ frameBuffer.bpp() };
         dbgw.pFont = draw::FontLib::instance()->newFont("..\\Resources\\verdana.ttf", 10);
-        std::vector<const draw::Entity*> text = ttfCharSet.flatText(dbgw.pFont, str, dbgw.x, dbgw.y);
+
+        draw::CharSet ttfCharSet{ dbgw.pFont, frameBuffer.bpp() };
+        
+        ttfCharSet.flatText(str, dbgw.x, dbgw.y);
 
         while (bRun)
         {
             sprintf(str, "Sent Seq :%lu Pkt :%lu byte :%llu", pSndr->pktSeq(), pSndr->pktSent(), pSndr->byteSent());
-            text = ttfCharSet.flatText(dbgw.pFont, str, dbgw.x, dbgw.y);
+            ttfCharSet.flatText(str, dbgw.x, dbgw.y);
 
             while (::PeekMessage(&msg, nullptr, 0, 0, PM_NOREMOVE))
             {
@@ -123,10 +126,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             }
 
             frameBuffer.fill(255, 255, 255);
-            frameBuffer.put(text);
+            frameBuffer.put(ttfCharSet);
 
             frameBuffer.flip();
-
         }
 
         delete pSndr;
@@ -220,14 +222,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             default:
                 return DefWindowProc(hWnd, message, wParam, lParam);
             }
-        }
-        break;
-    case WM_PAINT:
-        {
-            PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hWnd, &ps);
-            // TODO: Agregar cualquier código de dibujo que use hDC aquí...
-            EndPaint(hWnd, &ps);
         }
         break;
     case WM_DESTROY:

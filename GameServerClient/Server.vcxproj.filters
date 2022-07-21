@@ -78,9 +78,6 @@
     <ClInclude Include="..\Components\Utilities.h">
       <Filter>Component</Filter>
     </ClInclude>
-    <ClInclude Include="..\Framebuffer\CharSet.h">
-      <Filter>Framebuffer</Filter>
-    </ClInclude>
     <ClInclude Include="..\Framebuffer\Device.h">
       <Filter>Framebuffer</Filter>
     </ClInclude>
@@ -100,6 +97,9 @@
       <Filter>Framebuffer</Filter>
     </ClInclude>
     <ClInclude Include="..\Framebuffer\Types.h">
+      <Filter>Framebuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Framebuffer\CharSet.h">
       <Filter>Framebuffer</Filter>
     </ClInclude>
   </ItemGroup>
@@ -125,9 +125,6 @@
     <ClCompile Include="..\Libs\picopng.cpp">
       <Filter>Libs\png</Filter>
     </ClCompile>
-    <ClCompile Include="..\Framebuffer\CharSet.cpp">
-      <Filter>Framebuffer</Filter>
-    </ClCompile>
     <ClCompile Include="..\Framebuffer\Entity.cpp">
       <Filter>Framebuffer</Filter>
     </ClCompile>
@@ -142,6 +139,9 @@
     </ClCompile>
     <ClCompile Include="..\Framebuffer\Windows\Device.cpp">
       <Filter>Framebuffer\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Framebuffer\CharSet.cpp">
+      <Filter>Framebuffer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

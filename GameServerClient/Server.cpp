@@ -56,7 +56,6 @@ constexpr size_t MAX_BYTE_DISPLAYED = 100;
 
 std::mutex                      g_DrawMutex{};
 std::mutex                      g_rcvMutex{};
-std::vector<unsigned char>      g_rcvVct{};
 
 
 HANDLE      g_hFlipEvent;
@@ -64,33 +63,20 @@ HANDLE      g_hFlipEvent;
 bool bRun = false;
 
 
-void  rcv()
+void  rcv(net::ListenerMngr* pMngr, draw::FrameBuffer* pfbuffer)
 {
-    /*
+
+    pMngr->start();
+
     while (bRun)
     {
-        if (g_rcvVct.size())
+        auto vc =  pMngr->getPackets();
+        if (bRun && vc.size())
         {
-            g_rcvMutex.lock();
-
-            size_t stLen = g_rcvVct.size() > MAX_BYTE_DISPLAYED ? MAX_BYTE_DISPLAYED : g_rcvVct.size();
-
-            sprintf(pszRcv, "Data (rcv:%lu): ", g_rcvVct.size());
-            size_t stDataLen = strlen(pszRcv);
-
-            std::copy(std::begin(g_rcvVct), std::begin(g_rcvVct) + stLen, pbyRcv);
-            hexToAscii(pbyRcv, stLen, &pszRcv[stDataLen]);
-
-            g_rcvVct.clear();
-
-
-            ttfData.flatText(pszRcv, dbgData.x, dbgData.y);
-
-            g_rcvMutex.unlock();
+            vc.clear();
         }
     }
-    */
-}
+ }
 
 void render(draw::FrameBuffer *pfbuffer)
 {
@@ -119,8 +105,7 @@ void render(draw::FrameBuffer *pfbuffer)
         ullFps++;
         if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - lasttime).count() > 1000)
         {
-
-            sprintf(str, "dbg: fps=%llu (dolar 338! hay que tramitar el pasaporte yaaaaaaaaaaaaa!!  dolar 318! hay que tramitar el pasaporte yaaaaaaaaaaaaa!! dolar 338! hay que tramitar el pasaporte yaaaaaaaaaaaaa!!)", ullFps);
+            sprintf(str, "dbg: fps=%llu", ullFps);
             ttfGeneral.flatText(str, dbg.x, dbg.y);
             
             lasttime = std::chrono::steady_clock::now();
@@ -190,8 +175,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         if (pMngr->create())
         {
             //rcv thread
-            g_rcvVct.reserve(1024 * 1024);
-            std::thread tNet(&net::ListenerMngr::start, pMngr, &g_rcvMutex, &g_rcvVct);
+//            g_rcvVct.reserve(1024 * 1024);
+            std::thread tNet(rcv, pMngr, &frameBuffer);
             tNet.detach();
 
             //render thread

@@ -12,14 +12,24 @@ namespace net
 		std::unique_ptr<Udp>				m_pTcp{};
 		std::unique_ptr<unsigned char[]>	m_byRcvBuff{};
 
+		std::vector<unsigned char>	m_Packets;
+		std::mutex					m_mxPacks;
+		std::condition_variable		m_cvPackets;
+
 		const  Setting&	m_Settings;
+	private:
+		void listen();
 	public:
 
 		explicit ListenerMngr(Setting &settings);
 		~ListenerMngr();
 
 		bool create() const;
-		void start(std::mutex *pmSc, std::vector<unsigned char> *pvOut);
+		//void start(std::mutex *pmSc, std::vector<unsigned char> *pvOut);
+		//void listen();
+		void start();
+
+		std::vector<unsigned char> getPackets();
 
 		bool check(const unsigned char *pRcv) const;
 	

@@ -4,6 +4,8 @@
 
 #include <memory>
 #include <stdexcept>
+#include <chrono>
+#include <thread>
 
 #include <winsock2.h>
 
@@ -61,6 +63,8 @@ namespace net {
                 m_ullByteSet += (m_dataOffset + 3);
                 //sprintf(str, "Sent { Seq :%lu Pkt :%lu }\n ", m_ulPktSeq, m_ulPktSent);
                 //OutputDebugString(str);
+
+                //std::this_thread::sleep_for(std::chrono::milliseconds(50000));
             }
         }
     };

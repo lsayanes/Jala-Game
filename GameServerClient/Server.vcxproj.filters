@@ -37,6 +37,9 @@
     <Filter Include="Framebuffer\Windows">
       <UniqueIdentifier>{52a130eb-6c68-4217-b82a-5841db46065d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Managers">
+      <UniqueIdentifier>{74f1c7e0-e79b-4b83-98ec-b85705629695}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -101,6 +104,9 @@
     </ClInclude>
     <ClInclude Include="..\Framebuffer\CharSet.h">
       <Filter>Framebuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Managers\EntityManager.h">
+      <Filter>Managers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

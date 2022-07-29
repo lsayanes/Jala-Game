@@ -66,14 +66,17 @@ bool bRun = false;
 void  rcv(net::ListenerMngr* pMngr, draw::FrameBuffer* pfbuffer)
 {
 
-    pMngr->start();
+    pMngr->start(); //turn on the listener thread 
 
     while (bRun)
     {
-        auto vc =  pMngr->getPackets();
-        if (bRun && vc.size())
+        if (pMngr->waitPacketsNotify()) //waiting for.. 
         {
-            vc.clear();
+            auto vc = pMngr->cpyPackets();
+            if (bRun && vc.size())
+            {
+                vc.clear();
+            }
         }
     }
  }

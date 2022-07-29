@@ -163,6 +163,7 @@
     <ClInclude Include="..\Framebuffer\Sprite.h" />
     <ClInclude Include="..\Framebuffer\Types.h" />
     <ClInclude Include="..\Libs\picopng.hpp" />
+    <ClInclude Include="..\Managers\EntityManager.h" />
     <ClInclude Include="..\Networking\ListenerMngr.h" />
     <ClInclude Include="..\Networking\Setting.h" />
     <ClInclude Include="..\Sock\Sock.h" />

@@ -100,11 +100,15 @@ namespace net
         t.detach();
     };
 
-    std::vector<unsigned char> ListenerMngr::getPackets()
+    const bool ListenerMngr::waitPacketsNotify() 
     {
         std::unique_lock lk(m_mxPacks);
         m_cvPackets.wait(lk);
-        
+        return m_bListening;
+    };
+
+    std::vector<unsigned char> ListenerMngr::cpyPackets()
+    {
         if (m_bListening)
         {
             m_mxPacks.lock();
@@ -117,7 +121,6 @@ namespace net
             m_mxPacks.unlock();
             return ret;
         }
-
 
         return {};
     }

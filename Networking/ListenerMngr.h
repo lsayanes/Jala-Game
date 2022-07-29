@@ -29,7 +29,8 @@ namespace net
 		//void listen();
 		void start();
 
-		std::vector<unsigned char> getPackets();
+		const bool waitPacketsNotify();
+		std::vector<unsigned char> cpyPackets();
 
 		bool check(const unsigned char *pRcv) const;
 	

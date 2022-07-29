@@ -9,8 +9,10 @@
 #include <stdint.h>
 #include <algorithm>
 
+#include <Properties.h>
+#include <Physics.h>
+
 #include "Device.h"
-#include "Raster.h"
 #include "Entity.h"
 #include "CharSet.h"
 
@@ -19,11 +21,16 @@
 namespace draw
 {
 
-	FrameBuffer::FrameBuffer(size_t w, size_t h, uint8_t bits, void* pWndHandle) :
-        Raster{ w, h, bits },
-        Device{ pWndHandle }
+	FrameBuffer::FrameBuffer(size_t w, size_t h, uint8_t bits, void* pDevHandle) :
+        Device{ pDevHandle },
+        m_Properties{ components::Properties<size_t> {w, h, bits} }
     {
-        Raster::pbyBuffer = static_cast<unsigned char*>(Device::create(m_stWidth, m_stHeight, bits));
+
+        unsigned char comp = m_Properties.components();
+
+        m_Line = std::make_unique<unsigned char[]>(m_Properties.lineSize);
+        m_pbyBuffer = static_cast<unsigned char*>(Device::create(w, h, bits));
+
     }
 
 	FrameBuffer::~FrameBuffer()
@@ -33,25 +40,25 @@ namespace draw
 
 	bool FrameBuffer::isOk() const 
 	{
-		return m_WndHandle && Raster::pbyBuffer ? true : false;
+		return getHandle() && m_pbyBuffer ? true : false;
 	}
 
     void FrameBuffer::put(const Entity& e) const
     {
         
         size_t line = 0;
+        size_t linSizeEnt = e.properties.lineSize;
         size_t offset;
         
-        unsigned char* pbyPix = Raster::pbyBuffer;
-        const int x = (e.nX * FrameBuffer::MaxComponents); 
+        unsigned char* pbyPix = m_pbyBuffer;
+        const int x = (e.physics.x * m_Properties.components()); 
+        int y = e.physics.y;
 
-        int y = e.nY;
-
-        while (line < e.stH && y < static_cast<int>(m_stHeight - 1) && y >= 0)
+        while (line < e.properties.h && y < static_cast<int>(m_Properties.h - 1) && y >= 0)
         {
-            y = (line + e.nY);
-            offset = ((y) *  stSizeLine) + x;
-            std::memcpy(pbyPix + offset, e.data.get() + (line * e.stSizeLine), e.stSizeLine);
+            y = (line + e.physics.y);
+            offset = ((y) *  m_Properties.lineSize) + x;
+            std::memcpy(pbyPix + offset, e.data.get() + (line * linSizeEnt), linSizeEnt);
             line++;
         }
 
@@ -66,6 +73,29 @@ namespace draw
     {
         const std::vector<const Entity*>* v = c.get();
         std::for_each(v->begin(), v->end(), [&](const Entity* it) { put(*it); });
+    }
+
+    void FrameBuffer::fill(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
+    {
+        size_t y = 0;
+        size_t offset;
+        size_t lineSize = m_Properties.lineSize;
+        unsigned char comp = m_Properties.components();
+
+        unsigned char* pbyPix = m_pbyBuffer;
+        unsigned char* pbyLine = m_Line.get();
+
+        uint32_t pixel = buildPixel(r, g, b, a);
+
+        for (uint32_t ud = 0; ud < lineSize; ud += comp)
+            std::memcpy(&pbyLine[ud], &pixel, comp);
+
+        while (y < m_Properties.h)
+        {
+            offset = (y * lineSize);
+            std::memcpy(pbyPix + offset, pbyLine, lineSize);
+            y++;
+        }
     }
 
 }//draw

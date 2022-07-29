@@ -24,15 +24,17 @@
 #include "../Networking/Setting.h"
 #include "../Networking/ListenerMngr.h"
 
-#include "../Framebuffer/Types.h"
-#include "../Framebuffer/Device.h"
-#include "../Framebuffer/Raster.h"
-#include "../Framebuffer/Entity.h"
-#include "../Framebuffer/Sprite.h"
-#include "../Framebuffer/FontLib.h"
-#include "../Framebuffer/CharSet.h"
+#include <Types.h>
+#include <Properties.h>
+#include <Physics.h>
 
-#include "../Framebuffer/FrameBuffer.h"
+#include <Device.h>
+#include <Entity.h>
+#include <Sprite.h>
+#include <FontLib.h>
+#include <CharSet.h>
+         
+#include <FrameBuffer.h>
 
 #include "Server.h"
 
@@ -90,11 +92,11 @@ void render(draw::FrameBuffer *pfbuffer)
     draw::DBGW dbg
     { 
         0,
-        static_cast<short>(pfbuffer->stH - 100),
+        static_cast<short>(pfbuffer->properties().h - 100),
         draw::FontLib::instance()->newFont("..\\Resources\\verdana.ttf", 10)
     };
 
-    draw::CharSet ttfGeneral{ dbg.pFont, pfbuffer->bpp() };
+    draw::CharSet ttfGeneral{ dbg.pFont, pfbuffer->properties().bpp() };
 
     auto lasttime = std::chrono::steady_clock::now();
     

@@ -31,6 +31,9 @@
     <Filter Include="Libs">
       <UniqueIdentifier>{67100eb8-c6f9-457f-9cd3-3f55e31bd666}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Components">
+      <UniqueIdentifier>{c31700cc-455c-41b9-812c-abd0470c0776}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -75,9 +78,6 @@
     <ClInclude Include="..\Framebuffer\FrameBuffer.h">
       <Filter>Framebuffer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Framebuffer\Raster.h">
-      <Filter>Framebuffer</Filter>
-    </ClInclude>
     <ClInclude Include="..\Framebuffer\Sprite.h">
       <Filter>Framebuffer</Filter>
     </ClInclude>
@@ -86,6 +86,15 @@
     </ClInclude>
     <ClInclude Include="..\Libs\picopng.hpp">
       <Filter>Libs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Components\Physics.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Components\Properties.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Components\Utilities.h">
+      <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

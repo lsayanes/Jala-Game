@@ -108,6 +108,9 @@
     <ClInclude Include="..\Managers\EntityManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
+    <ClInclude Include="..\Components\Properties.h">
+      <Filter>Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Server.cpp">

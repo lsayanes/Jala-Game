@@ -6,21 +6,18 @@ namespace draw
 	class Device
 	{
 	protected:
-		void				*m_WndHandle;
+		void				*m_DevHandle;
 		void				*m_DeviceContext;
 		bool				m_bFullScreen;
 
 		void				*m_BackBufferHandle;
 		void				*m_BackBuffer;
 
-		size_t				m_stWidth;
-		size_t				m_stHeight;
-	
-		unsigned char		m_byBitPerPixel;
+		components::Properties<size_t> m_Properties;
 
 	protected:
 		
-		explicit Device(void* pWndHandle);
+		explicit Device(void* pDevHandle);
 		
 		void *createBackbuffer(size_t stWidth, size_t stHeight, unsigned short unPlanes, unsigned char byBitPerPixel);
 
@@ -46,14 +43,16 @@ namespace draw
 		void	retoreVideo() const;
 
 		bool getVideoMode();
+		
 		void *create(size_t stWidth, size_t stlHeight, unsigned char byBitPerPixel);
+		void* create();
 	
 	public:
 
 		void flip();
 
-		inline const void *getHandle() const { return m_WndHandle; };
-		inline const unsigned char bpp() const { return m_byBitPerPixel; }
+		inline const void *getHandle() const { return m_DevHandle; };
+		inline const components::Properties<size_t> &properties() const { return m_Properties; }
 
 		static bool	getVideoMode(
 			size_t& lWidth,

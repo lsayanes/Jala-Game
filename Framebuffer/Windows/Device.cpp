@@ -3,7 +3,8 @@
 #include <windows.h>
 
 #include <stdint.h>
-#include "../Device.h"
+#include <Properties.h>
+#include <Device.h>
 
 
 namespace draw
@@ -17,15 +18,13 @@ namespace draw
 		void* pBits;
 	}MEMBMP;
 
-	Device::Device(void* pWndHandle):
-		m_WndHandle{ pWndHandle },
+	Device::Device(void* pDevHandle):
+		m_DevHandle{ pDevHandle },
 		m_DeviceContext{nullptr},
 		m_bFullScreen{false},
 		m_BackBufferHandle{nullptr},
 		m_BackBuffer{nullptr},
-		m_stWidth{ 0 },
-		m_stHeight{ 0 },
-		m_byBitPerPixel{ 0 }
+		m_Properties{ components::Properties<size_t> {0, 0, 0} }
 	{
 		getVideoMode();
 	}
@@ -44,17 +43,17 @@ namespace draw
 	
 	void *Device::beginPain() 
 	{
-		if(m_WndHandle)
-			m_DeviceContext = GetDC(static_cast<HWND>(m_WndHandle));
+		if(m_DevHandle)
+			m_DeviceContext = GetDC(static_cast<HWND>(m_DevHandle));
 		return m_DeviceContext;
 	};
 
 	void Device::endPaint() 
 	{
 
-		if (m_WndHandle && m_DeviceContext)
+		if (m_DevHandle && m_DeviceContext)
 		{
-			ReleaseDC(static_cast<HWND>(m_WndHandle), static_cast<HDC>(m_DeviceContext));
+			ReleaseDC(static_cast<HWND>(m_DevHandle), static_cast<HDC>(m_DeviceContext));
 			m_DeviceContext = nullptr;
 		}
 	}
@@ -111,7 +110,13 @@ namespace draw
 
 	bool Device::getVideoMode()
 	{
-		return Device::getVideoMode(m_stWidth, m_stHeight, m_byBitPerPixel);
+		unsigned char b{0};
+
+		bool bRet = Device::getVideoMode(m_Properties.w, m_Properties.h, b);
+		m_Properties.bpp(b);
+
+		return bRet;
+
 	}
 	
 	void *Device::createBackbuffer(size_t stWidth, size_t stHeight, unsigned short unPlanes, unsigned char byBitPerPixel)
@@ -122,7 +127,7 @@ namespace draw
 			HBITMAP		hDev;
 			
 			//create a context device to the window handle
-			m_BackBufferHandle = CreateCompatibleDC(GetDC(static_cast<HWND>(m_WndHandle)));
+			m_BackBufferHandle = CreateCompatibleDC(GetDC(static_cast<HWND>(m_DevHandle)));
 			
 			/*
 			* I created this temp bitmap just to select the device context with this measures
@@ -187,29 +192,42 @@ namespace draw
 		void* pRet{ nullptr };
 		if (nullptr != (pRet = createBackbuffer(stWidth, stHeight, 1, byBitPerPixel)))
 		{
-			m_stWidth = stWidth;
-			m_stHeight = stHeight;
-			m_byBitPerPixel = byBitPerPixel;
+			m_Properties.w = stWidth;
+			m_Properties.h = stHeight;
+			m_Properties.bpp(byBitPerPixel);
 		}
 		
 		return pRet;
 	}
 
+	void *Device::create()
+	{
+		size_t w{0}, h{0};
+		unsigned char b{0};
+		
+		void* pRet{ nullptr };
+
+		if (Device::getVideoMode(w, h, b))
+			pRet = create(w, h, b);
+
+		return pRet;
+	}
+
 	void Device::flip()
 	{
-		if (m_WndHandle && !IsIconic(static_cast<HWND>(m_WndHandle)))
+		if (m_DevHandle && !IsIconic(static_cast<HWND>(m_DevHandle)))
 		{
 			HDC hdc;
 			//copy the fake buffer (BMP) on back context device
 			HDC hMem = CreateCompatibleDC(0);
 			MEMBMP* pBitMap = static_cast<MEMBMP*>(m_BackBuffer);
 			SelectObject(hMem, pBitMap->hHandle);
-			BitBlt(static_cast<HDC>(m_BackBufferHandle), 0, 0, m_stWidth, m_stHeight, hMem, 0, 0, SRCCOPY);
+			BitBlt(static_cast<HDC>(m_BackBufferHandle), 0, 0, m_Properties.w, m_Properties.h, hMem, 0, 0, SRCCOPY);
 			DeleteDC(hMem);
 			
 			//copy the the back context device on primary context device windows
 			hdc = static_cast<HDC>(beginPain());
-			BitBlt(hdc, 0, 0, m_stWidth, m_stHeight, static_cast<HDC>(m_BackBufferHandle), 0, 0, SRCCOPY);
+			BitBlt(hdc, 0, 0, m_Properties.w, m_Properties.h, static_cast<HDC>(m_BackBufferHandle), 0, 0, SRCCOPY);
 			endPaint();
 		}
 	};

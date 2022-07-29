@@ -21,15 +21,17 @@
 #include "../Networking/Setting.h"
 #include "../Networking/Sender.h"
 
-#include "../Framebuffer/Types.h"
-#include "../Framebuffer/Device.h"
-#include "../Framebuffer/Raster.h"
-#include "../Framebuffer/Entity.h"
-#include "../Framebuffer/Sprite.h"
-#include "../Framebuffer/FontLib.h"
-#include "../Framebuffer/CharSet.h"
+#include <Types.h>
+#include <Physics.h>
+#include <Properties.h>
 
-#include "../Framebuffer/FrameBuffer.h"
+#include <Device.h>
+#include <Entity.h>
+#include <Sprite.h>
+#include <FontLib.h>
+#include <CharSet.h>
+
+#include <FrameBuffer.h>
 
 
 
@@ -93,11 +95,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         draw::Device::getVideoMode(width, height, bitpx);
         draw::FrameBuffer frameBuffer{ width , height, bitpx, hWnd };
 
-        draw::DBGW dbgw{ 0, static_cast<short>(frameBuffer.stH - (frameBuffer.stH / 2)) };
+        draw::DBGW dbgw{ 0, static_cast<short>(frameBuffer.properties().h - (frameBuffer.properties().h / 2)) };
 
         dbgw.pFont = draw::FontLib::instance()->newFont("..\\Resources\\verdana.ttf", 10);
 
-        draw::CharSet ttfCharSet{ dbgw.pFont, frameBuffer.bpp() };
+        draw::CharSet ttfCharSet{ dbgw.pFont, frameBuffer.properties().bpp() };
         
         ttfCharSet.flatText(str, dbgw.x, dbgw.y);
 

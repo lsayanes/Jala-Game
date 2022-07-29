@@ -73,7 +73,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <SourcePath>C:\Maquinita\GitHub;$(SourcePath)</SourcePath>
-    <IncludePath>C:\Maquinita\Jala-Game\Framebuffer;C:\Maquinita\Jala-Game\Framebuffer\Windows;C:\Maquinita\Jala-Game\Libs\freetype-2.10.4\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Maquinita\Jala-Game\Util;C:\Maquinita\Jala-Game\Components;C:\Maquinita\Jala-Game\Framebuffer;C:\Maquinita\Jala-Game\Framebuffer\Windows;C:\Maquinita\Jala-Game\Libs\freetype-2.10.4\include;$(IncludePath)</IncludePath>
     <OutDir>..\out\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Components\Physics.h" />
+    <ClInclude Include="..\Components\Properties.h" />
     <ClInclude Include="..\Components\Utilities.h" />
     <ClInclude Include="..\format.h" />
     <ClInclude Include="..\Framebuffer\CharSet.h" />

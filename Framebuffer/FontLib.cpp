@@ -8,8 +8,9 @@
 #include FT_FREETYPE_H
 #include FT_STROKER_H
 
+#include <Physics.h>
+#include <Properties.h>
 
-#include "Raster.h"
 #include "Entity.h"
 
 #include "FontLib.h"

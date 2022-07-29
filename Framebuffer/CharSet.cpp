@@ -19,7 +19,11 @@
 #include FT_STROKER_H
 
 
-#include "Raster.h"
+//#include "Raster.h"
+
+#include <Properties.h>
+#include <Physics.h>
+
 #include "Entity.h"
 
 #include "Sprite.h"
@@ -77,7 +81,7 @@ namespace draw
 
 			pEntity = new Entity{ face->glyph->bitmap.width, face->glyph->bitmap.rows,  m_byBpp };
 			dAdvance = face->glyph->metrics.horiAdvance >> 6;
-			pbyData = pEntity->pbyBuffer;
+			pbyData = pEntity->data.get();
 		 
 			for (int i = 0; i < (int)face->glyph->bitmap.rows; i++)
 			{
@@ -91,8 +95,8 @@ namespace draw
 				}
 			}
 
-			pEntity->nX = nWidth;
-			pEntity->nY = nY - Slot->bitmap_top;
+			pEntity->physics.x = nWidth;
+			pEntity->physics.y = nY - Slot->bitmap_top;
 
 			m_vctText[n] = pEntity;
 

@@ -8,6 +8,7 @@
 #include FT_FREETYPE_H
 #include FT_STROKER_H
 
+#include <Component.h>
 #include <Physics.h>
 #include <Properties.h>
 

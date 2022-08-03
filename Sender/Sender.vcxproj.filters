@@ -96,6 +96,9 @@
     <ClInclude Include="..\Components\Utilities.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="..\Components\Component.h">
+      <Filter>Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SenderApp.cpp">

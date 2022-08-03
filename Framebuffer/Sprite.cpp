@@ -11,22 +11,25 @@
 
 #include "../Libs/picopng.hpp"
 
-
+#include <Component.h>
 #include <Properties.h>
 #include <Physics.h>
 #include "Device.h"
 #include "Entity.h"
 
 #include "Sprite.h"
-
+//#include "FrameBuffer.h"
 
 namespace draw
 {
 	Sprite::Sprite(size_t w, size_t h, uint8_t bits, size_t stTotal):
 		m_Entities {stTotal}
 	{
+		if(stTotal <= 0)
+			throw std::invalid_argument("Total entities==0");
+
 		for (size_t i = 0; i < stTotal; i++)
-			m_Entities[i] = new Entity{ w, h, bits };
+			m_Entities[i] = new Entity{ w, h, bits, 0 };
 	}
 
 	Sprite::~Sprite()
@@ -57,7 +60,7 @@ namespace draw
 					if (0 == decodePNG(img, w, h, (unsigned char*)(p), pe->properties.size))
 					{
 						std::copy(begin(img), end(img), pEntData);
-						bgraToRgba(pEntData, pe->properties.size);
+						//FrameBuffer::bgraToRgba(pEntData, pe->properties.size);
 						return true;
 					}
 				}
@@ -68,26 +71,14 @@ namespace draw
 		return false;
 	}
 
-	void Sprite::bgraToRgba(uint8_t* pbyBgra, size_t stSize)
-	{
-		uint32_t i = 0, e = 0;
-		uint8_t pixel[4];
-		
-		for (i = 0; i < stSize; i++)
-		{
-			if (i && 0 == i % 4)
-			{
-				pbyBgra[i - 4] = pixel[2];
-				pbyBgra[i - 2] = pixel[0];
-				e = 0;
-			}
-			pixel[e++] = pbyBgra[i];
-		}
-	}
-
 	void Sprite::pos(int x, int y)
 	{
 
+		std::for_each(m_Entities.begin(), m_Entities.end(), [&](Entity* it)
+			{
+				it->physics.x = x; 
+				it->physics.y = y;
+			});
 	}
 
 	const Entity& Sprite::operator[](size_t i) const

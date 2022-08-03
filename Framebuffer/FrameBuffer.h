@@ -30,7 +30,6 @@ namespace draw
 
         void fill(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255);
 
-
 		inline const components::Properties<size_t>& properties() const { return m_Properties; };
 
         inline void pixel(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255)
@@ -44,6 +43,8 @@ namespace draw
         {
             return  ((uint32_t)a << 24) | ((uint32_t)r << 16) | ((uint16_t)g << 8) | b;
         }
+
+		static void bgraToRgba(uint8_t* pbyBgra, size_t stSize);
 
 	};
 

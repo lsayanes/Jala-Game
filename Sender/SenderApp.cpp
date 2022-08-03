@@ -21,6 +21,7 @@
 #include "../Networking/Setting.h"
 #include "../Networking/Sender.h"
 
+#include <Component.h>
 #include <Types.h>
 #include <Physics.h>
 #include <Properties.h>

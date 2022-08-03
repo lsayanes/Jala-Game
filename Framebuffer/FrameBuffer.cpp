@@ -9,6 +9,7 @@
 #include <stdint.h>
 #include <algorithm>
 
+#include <Component.h>
 #include <Properties.h>
 #include <Physics.h>
 
@@ -23,7 +24,7 @@ namespace draw
 
 	FrameBuffer::FrameBuffer(size_t w, size_t h, uint8_t bits, void* pDevHandle) :
         Device{ pDevHandle },
-        m_Properties{ components::Properties<size_t> {w, h, bits} }
+        m_Properties{ components::Properties<size_t> {w, h, bits, 0} }
     {
 
         unsigned char comp = m_Properties.components();
@@ -95,6 +96,23 @@ namespace draw
             offset = (y * lineSize);
             std::memcpy(pbyPix + offset, pbyLine, lineSize);
             y++;
+        }
+    }
+
+    void FrameBuffer::bgraToRgba(uint8_t* pbyBgra, size_t stSize)
+    {
+        uint32_t i = 0, e = 0;
+        uint8_t pixel[4];
+
+        for (i = 0; i < stSize; i++)
+        {
+            if (i && 0 == i % 4)
+            {
+                pbyBgra[i - 4] = pixel[2];
+                pbyBgra[i - 2] = pixel[0];
+                e = 0;
+            }
+            pixel[e++] = pbyBgra[i];
         }
     }
 

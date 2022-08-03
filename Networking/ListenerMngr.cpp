@@ -115,7 +115,15 @@ namespace net
 
             std::vector<unsigned char> ret{};
             ret.reserve(m_Packets.size());
-            std::copy(std::begin(m_Packets), std::end(m_Packets), std::begin(ret));
+            //std::copy(std::begin(m_Packets), std::end(m_Packets), std::begin(ret));
+            std::vector<unsigned char>::iterator it = m_Packets.begin();
+            
+            while (it != m_Packets.end())
+            {
+                ret.push_back(*it);
+                it++;
+            }
+            
             m_Packets.clear();
 
             m_mxPacks.unlock();

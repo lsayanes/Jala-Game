@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Components\Component.h" />
     <ClInclude Include="..\Components\Physics.h" />
     <ClInclude Include="..\Components\Properties.h" />
     <ClInclude Include="..\Components\Utilities.h" />
@@ -158,13 +159,13 @@
     <ClInclude Include="..\Framebuffer\CharSet.h" />
     <ClInclude Include="..\Framebuffer\Device.h" />
     <ClInclude Include="..\Framebuffer\Entity.h" />
+    <ClInclude Include="..\Framebuffer\EntityMngr.h" />
     <ClInclude Include="..\Framebuffer\FontLib.h" />
     <ClInclude Include="..\Framebuffer\FrameBuffer.h" />
     <ClInclude Include="..\Framebuffer\Raster.h" />
     <ClInclude Include="..\Framebuffer\Sprite.h" />
     <ClInclude Include="..\Framebuffer\Types.h" />
     <ClInclude Include="..\Libs\picopng.hpp" />
-    <ClInclude Include="..\Managers\EntityManager.h" />
     <ClInclude Include="..\Networking\ListenerMngr.h" />
     <ClInclude Include="..\Networking\Setting.h" />
     <ClInclude Include="..\Sock\Sock.h" />
@@ -178,6 +179,7 @@
   <ItemGroup>
     <ClCompile Include="..\Framebuffer\CharSet.cpp" />
     <ClCompile Include="..\Framebuffer\Entity.cpp" />
+    <ClCompile Include="..\Framebuffer\EntityMngr.cpp" />
     <ClCompile Include="..\Framebuffer\FontLib.cpp" />
     <ClCompile Include="..\Framebuffer\FrameBuffer.cpp" />
     <ClCompile Include="..\Framebuffer\Sprite.cpp" />

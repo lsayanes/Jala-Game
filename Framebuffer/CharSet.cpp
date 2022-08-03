@@ -21,6 +21,7 @@
 
 //#include "Raster.h"
 
+#include <Component.h>
 #include <Properties.h>
 #include <Physics.h>
 
@@ -79,7 +80,7 @@ namespace draw
 
 			Slot = face->glyph;
 
-			pEntity = new Entity{ face->glyph->bitmap.width, face->glyph->bitmap.rows,  m_byBpp };
+			pEntity = new Entity{ face->glyph->bitmap.width, face->glyph->bitmap.rows,  m_byBpp, 0 };
 			dAdvance = face->glyph->metrics.horiAdvance >> 6;
 			pbyData = pEntity->data.get();
 		 

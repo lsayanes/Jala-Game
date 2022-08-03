@@ -37,9 +37,6 @@
     <Filter Include="Framebuffer\Windows">
       <UniqueIdentifier>{52a130eb-6c68-4217-b82a-5841db46065d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Managers">
-      <UniqueIdentifier>{74f1c7e0-e79b-4b83-98ec-b85705629695}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -105,11 +102,14 @@
     <ClInclude Include="..\Framebuffer\CharSet.h">
       <Filter>Framebuffer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Managers\EntityManager.h">
-      <Filter>Managers</Filter>
-    </ClInclude>
     <ClInclude Include="..\Components\Properties.h">
       <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Components\Component.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Framebuffer\EntityMngr.h">
+      <Filter>Framebuffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -150,6 +150,9 @@
       <Filter>Framebuffer\Windows</Filter>
     </ClCompile>
     <ClCompile Include="..\Framebuffer\CharSet.cpp">
+      <Filter>Framebuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Framebuffer\EntityMngr.cpp">
       <Filter>Framebuffer</Filter>
     </ClCompile>
   </ItemGroup>

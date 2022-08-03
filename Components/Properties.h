@@ -6,14 +6,15 @@ namespace draw
 	{
 		//using prop_selected_t = unsigned short int;
 		template <typename TYPE>
-		struct Properties
+		struct Properties : Component
 		{
 			TYPE w{ 0 };
 			TYPE h{ 0 };
 			TYPE size{ 0 };
 			TYPE lineSize{ 0 };
 
-			explicit Properties(TYPE w_t, TYPE h_t, unsigned char b_t) :
+			explicit Properties(TYPE w_t, TYPE h_t, unsigned char b_t, size_t eID) :
+				Component{eID},
 				w{w_t},
 				h{h_t}
 			{

@@ -25,6 +25,7 @@
 #include "../Networking/ListenerMngr.h"
 
 #include <Types.h>
+#include <Component.h>
 #include <Properties.h>
 #include <Physics.h>
 
@@ -33,8 +34,9 @@
 #include <Sprite.h>
 #include <FontLib.h>
 #include <CharSet.h>
-         
 #include <FrameBuffer.h>
+
+#include <EntityMngr.h>
 
 #include "Server.h"
 
@@ -61,12 +63,23 @@ std::mutex                      g_rcvMutex{};
 
 
 HANDLE      g_hFlipEvent;
+void        *g_hDbgFont{nullptr};
 
 bool bRun = false;
 
 
-void  rcv(net::ListenerMngr* pMngr, draw::FrameBuffer* pfbuffer)
+void  rcv(net::ListenerMngr* pMngr, draw::EntityMngr* pEntityMan)
 {
+
+    draw::DBGW rcvDlg
+    {
+        0,
+        static_cast<short>(pEntityMan->frameBuffer().properties().h - 150),
+        g_hDbgFont
+    };
+
+    draw::CharSet ttfRcv{ rcvDlg.pFont, pEntityMan->frameBuffer().properties().bpp() };
+    char str[248] = "\x0";
 
     pMngr->start(); //turn on the listener thread 
 
@@ -77,42 +90,55 @@ void  rcv(net::ListenerMngr* pMngr, draw::FrameBuffer* pfbuffer)
             auto vc = pMngr->cpyPackets();
             if (bRun && vc.size())
             {
+                g_DrawMutex.lock();
+                
+                sprintf(str, "rcv: size=%lu", vc.size());
+                ttfRcv.flatText(str, rcvDlg.x, rcvDlg.y);
+                pEntityMan->add("rcv", ttfRcv.get());
                 vc.clear();
+                
+                g_DrawMutex.unlock();
             }
         }
     }
  }
 
-void render(draw::FrameBuffer *pfbuffer)
+void render(draw::EntityMngr *pEntityMan)
 {
 
-    uint64_t ullFps = 0;
+    uint64_t ullFps = 0, i = 0;
     char str[1024] = "\x0";
 
     draw::DBGW dbg
     { 
         0,
-        static_cast<short>(pfbuffer->properties().h - 100),
-        draw::FontLib::instance()->newFont("..\\Resources\\verdana.ttf", 10)
+        static_cast<short>(pEntityMan->frameBuffer().properties().h - 100),
+        g_hDbgFont
     };
 
-    draw::CharSet ttfGeneral{ dbg.pFont, pfbuffer->properties().bpp() };
+    draw::CharSet ttfGeneral{ dbg.pFont, pEntityMan->frameBuffer().properties().bpp() };
+
+    draw::Sprite sprite{ 1024, 600, pEntityMan->frameBuffer().properties().bpp(), 1 };
+    sprite.load(0, "..\\Resources\\bgd_test.png");
+
 
     auto lasttime = std::chrono::steady_clock::now();
+
+    pEntityMan->add("Sprinte1-0", sprite.at(0));
     
     while (bRun)
     {
         g_DrawMutex.lock();
-        
-        pfbuffer->fill(255, 255, 255);
-        pfbuffer->put(ttfGeneral);
+       
+        pEntityMan->renderAll();
         
         ullFps++;
         if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - lasttime).count() > 1000)
         {
             sprintf(str, "dbg: fps=%llu", ullFps);
             ttfGeneral.flatText(str, dbg.x, dbg.y);
-            
+            pEntityMan->add("debug", ttfGeneral.get());
+           
             lasttime = std::chrono::steady_clock::now();
             ullFps = 0;
         }
@@ -166,11 +192,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     draw::Device::getVideoMode(width, height, bitpx);
     draw::FrameBuffer frameBuffer{ width , height, bitpx, hWnd };
+    draw::EntityMngr entityMan{ frameBuffer };
 
-    //draw::Entity entity{ 200, 100, frameBuffer.bpp() };
-
-//    draw::Sprite sprite{ 1024, 600, frameBuffer.bpp(), 10 };
-//    sprite.load(0, "..\\Resources\\bgd_test.png");
+    g_hDbgFont = draw::FontLib::instance()->newFont("..\\Resources\\verdana.ttf", 10);
 
     if (frameBuffer.isOk())
     {
@@ -180,12 +204,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         if (pMngr->create())
         {
             //rcv thread
-//            g_rcvVct.reserve(1024 * 1024);
-            std::thread tNet(rcv, pMngr, &frameBuffer);
+            std::thread tNet(rcv, pMngr, &entityMan);
             tNet.detach();
 
             //render thread
-            std::thread tRender(&render, &frameBuffer);
+            std::thread tRender(&render, &entityMan);
             tRender.detach();
 
             //flip buffer thread

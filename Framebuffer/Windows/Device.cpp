@@ -3,6 +3,9 @@
 #include <windows.h>
 
 #include <stdint.h>
+
+#include <Component.h>
+#include <Physics.h>
 #include <Properties.h>
 #include <Device.h>
 
@@ -24,7 +27,7 @@ namespace draw
 		m_bFullScreen{false},
 		m_BackBufferHandle{nullptr},
 		m_BackBuffer{nullptr},
-		m_Properties{ components::Properties<size_t> {0, 0, 0} }
+		m_Properties{ components::Properties<size_t> {0, 0, 0, 0} }
 	{
 		getVideoMode();
 	}

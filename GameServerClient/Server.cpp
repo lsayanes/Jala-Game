@@ -94,7 +94,7 @@ void  rcv(net::ListenerMngr* pMngr, draw::EntityMngr* pEntityMan)
                 
                 sprintf(str, "rcv: size=%lu", vc.size());
                 ttfRcv.flatText(str, rcvDlg.x, rcvDlg.y);
-                pEntityMan->add("rcv", ttfRcv.get());
+                pEntityMan->addText("rcv", ttfRcv.get());
                 vc.clear();
                 
                 g_DrawMutex.unlock();
@@ -124,7 +124,7 @@ void render(draw::EntityMngr *pEntityMan)
 
     auto lasttime = std::chrono::steady_clock::now();
 
-    pEntityMan->add("Sprinte1-0", sprite.at(0));
+    pEntityMan->add("Sprite1-0", sprite.at(0));
     
     while (bRun)
     {
@@ -137,7 +137,7 @@ void render(draw::EntityMngr *pEntityMan)
         {
             sprintf(str, "dbg: fps=%llu", ullFps);
             ttfGeneral.flatText(str, dbg.x, dbg.y);
-            pEntityMan->add("debug", ttfGeneral.get());
+            pEntityMan->addText("debug", ttfGeneral.get());
            
             lasttime = std::chrono::steady_clock::now();
             ullFps = 0;

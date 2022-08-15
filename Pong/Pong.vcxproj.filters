@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Framebuffer">
+      <UniqueIdentifier>{344b35b2-07fb-4fd1-a849-f342ae691800}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component">
+      <UniqueIdentifier>{e8e4e4a2-9db8-4abd-985a-15f3e5e1056a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{17d1dd88-46db-4a34-8bd9-12ad9795580a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libs">
+      <UniqueIdentifier>{3fc62e17-0f5d-47b0-b6ff-619d110c8005}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Sources">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="framework.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Pong.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Framebuffer\CharSet.h">
+      <Filter>Framebuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Framebuffer\Device.h">
+      <Filter>Framebuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Framebuffer\Entity.h">
+      <Filter>Framebuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Framebuffer\EntityMngr.h">
+      <Filter>Framebuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Framebuffer\FontLib.h">
+      <Filter>Framebuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Framebuffer\FrameBuffer.h">
+      <Filter>Framebuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Framebuffer\Sprite.h">
+      <Filter>Framebuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Framebuffer\Types.h">
+      <Filter>Framebuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Components\Component.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Components\Physics.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Components\Properties.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Components\Utilities.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Util\format.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Libs\picopng.hpp">
+      <Filter>Libs</Filter>
+    </ClInclude>
+    <ClInclude Include="PongGame.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Util\Tools.h">
+      <Filter>Framebuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Framebuffer\Config.h">
+      <Filter>Framebuffer</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Pong.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Framebuffer\CharSet.cpp">
+      <Filter>Framebuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Framebuffer\Entity.cpp">
+      <Filter>Framebuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Framebuffer\EntityMngr.cpp">
+      <Filter>Framebuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Framebuffer\FontLib.cpp">
+      <Filter>Framebuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Framebuffer\FrameBuffer.cpp">
+      <Filter>Framebuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Framebuffer\Sprite.cpp">
+      <Filter>Framebuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Framebuffer\Windows\Device.cpp">
+      <Filter>Framebuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Util\format.c">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Libs\picopng.cpp">
+      <Filter>Libs</Filter>
+    </ClCompile>
+    <ClCompile Include="PongGame.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Pong.rc">
+      <Filter>Resources</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="small.ico">
+      <Filter>Resources</Filter>
+    </Image>
+    <Image Include="Pong.ico">
+      <Filter>Resources</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\out\freetype.lib" />
+  </ItemGroup>
+</Project>

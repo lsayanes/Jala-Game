@@ -18,6 +18,8 @@ namespace draw
 
 		const Entity& operator[](size_t i) const;
 		inline const Entity* at(size_t i) const { return m_Entities[i]; }
+		
+		Entity* operator&(size_t i) const { return m_Entities.at(i); }
 	};
 
 }//draw

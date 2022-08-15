@@ -9,6 +9,8 @@
 #include <stdint.h>
 #include <algorithm>
 
+#include <Config.h>
+
 #include <Component.h>
 #include <Properties.h>
 #include <Physics.h>
@@ -22,9 +24,9 @@
 namespace draw
 {
 
-	FrameBuffer::FrameBuffer(size_t w, size_t h, uint8_t bits, void* pDevHandle) :
+	FrameBuffer::FrameBuffer(prop_type w, prop_type h, uint8_t bits, void* pDevHandle) :
         Device{ pDevHandle },
-        m_Properties{ components::Properties<size_t> {w, h, bits, 0} }
+        m_Properties{ components::Properties<prop_type> {w, h, bits, 0} }
     {
 
         unsigned char comp = m_Properties.components();
@@ -44,37 +46,66 @@ namespace draw
 		return getHandle() && m_pbyBuffer ? true : false;
 	}
 
-    void FrameBuffer::put(const Entity& e) const
+    void FrameBuffer::put(Entity& e) const
     {
-        
+        auto &physicsRef = e.physics();
+        auto &propRef = e.properties();
+        auto data = e.data().get();
+
         size_t line = 0;
-        size_t linSizeEnt = e.properties.lineSize;
+        size_t linSizeEnt = propRef.lineSize;
         size_t offset;
         
         unsigned char* pbyPix = m_pbyBuffer;
-        const int x = (e.physics.x * m_Properties.components()); 
-        int y = e.physics.y;
+        const int x = (physicsRef.x * m_Properties.components());
+        int y = physicsRef.y;
 
-        while (line < e.properties.h && y < static_cast<int>(m_Properties.h - 1) && y >= 0)
+        while (line < propRef.h && y < static_cast<int>(m_Properties.h - 1) && y >= 0)
         {
-            y = (line + e.physics.y);
+            y = (line + physicsRef.y);
             offset = ((y) *  m_Properties.lineSize) + x;
-            std::memcpy(pbyPix + offset, e.data.get() + (line * linSizeEnt), linSizeEnt);
+            std::memcpy(pbyPix + offset, data + (line * linSizeEnt), linSizeEnt);
             line++;
         }
-
     }
-
-    void FrameBuffer::put(const std::vector<const Entity*> &v) const
+        
+    void FrameBuffer::put(std::vector<Entity*> &v) const
     {
-        std::for_each(v.begin(), v.end(), [&](const Entity* it) { put(*it); });
+        std::for_each(v.begin(), v.end(), [&](Entity* it) { put(*it); });
     }
 
     void FrameBuffer::put(CharSet& c) const
     {
-        const std::vector<const Entity*>* v = c.get();
-        std::for_each(v->begin(), v->end(), [&](const Entity* it) { put(*it); });
+        std::vector<Entity*>* v = c.get();
+        std::for_each(v->begin(), v->end(), [&](Entity* it) { put(*it); });
     }
+
+    void FrameBuffer::fill(Entity& e, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
+    {
+        size_t y = 0;
+        size_t offset;
+        size_t lineSize = e.properties().lineSize;
+        unsigned char comp = e.properties().components();
+
+        unsigned char* pbyPix = e.data().get();
+
+        std::unique_ptr<unsigned char[]> line = std::make_unique<unsigned char[]>(e.properties().lineSize);
+        unsigned char* pbyLine = line.get();
+
+        uint32_t pixel = buildPixel(r, g, b, a);
+
+        for (uint32_t ud = 0; ud < lineSize; ud += comp)
+            std::memcpy(&pbyLine[ud], &pixel, comp);
+
+        while (y < e.properties().h)
+        {
+            offset = (y * lineSize);
+            std::memcpy(pbyPix + offset, pbyLine, lineSize);
+            y++;
+        }
+
+    }
+
 
     void FrameBuffer::fill(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
     {
@@ -98,22 +129,4 @@ namespace draw
             y++;
         }
     }
-
-    void FrameBuffer::bgraToRgba(uint8_t* pbyBgra, size_t stSize)
-    {
-        uint32_t i = 0, e = 0;
-        uint8_t pixel[4];
-
-        for (i = 0; i < stSize; i++)
-        {
-            if (i && 0 == i % 4)
-            {
-                pbyBgra[i - 4] = pixel[2];
-                pbyBgra[i - 2] = pixel[0];
-                e = 0;
-            }
-            pixel[e++] = pbyBgra[i];
-        }
-    }
-
 }//draw

@@ -19,11 +19,13 @@
 #include FT_STROKER_H
 
 
-//#include "Raster.h"
+#include <Config.h>
 
 #include <Component.h>
 #include <Properties.h>
 #include <Physics.h>
+
+#include <Tools.h>
 
 #include "Entity.h"
 
@@ -48,14 +50,14 @@ namespace draw
 
 	CharSet::~CharSet()
 	{
-		deleteVct();
+		tools::deletePtrVct<std::vector<Entity*>>(m_vctText);
 	}
 	
-	const std::vector<const Entity*>* CharSet::flatText(const char* sText, int x, int y)
+	std::vector<Entity*>* CharSet::flatText(const char* sText, int x, int y)
 	{
 		FT_Face face = static_cast<FT_Face>(m_pFont);
 
-		deleteVct();
+		tools::deletePtrVct<std::vector<Entity*>>(m_vctText);
 		
 		size_t	stLen = strlen(sText);
 
@@ -69,6 +71,7 @@ namespace draw
 		int nGlyphIndexCmp;
 			
 		//bool bRgb = !(face->glyph->bitmap.pixel_mode == FT_PIXEL_MODE_BGRA);
+
 			
 		m_vctText.resize(stLen);
 		for (size_t n = 0; n < stLen; n++)
@@ -82,7 +85,8 @@ namespace draw
 
 			pEntity = new Entity{ face->glyph->bitmap.width, face->glyph->bitmap.rows,  m_byBpp, 0 };
 			dAdvance = face->glyph->metrics.horiAdvance >> 6;
-			pbyData = pEntity->data.get();
+			pbyData = pEntity->data().get();
+			auto& phyRef = pEntity->physics();
 		 
 			for (int i = 0; i < (int)face->glyph->bitmap.rows; i++)
 			{
@@ -96,8 +100,8 @@ namespace draw
 				}
 			}
 
-			pEntity->physics.x = nWidth;
-			pEntity->physics.y = nY - Slot->bitmap_top;
+			phyRef.x = nWidth;
+			phyRef.y = nY - Slot->bitmap_top;
 
 			m_vctText[n] = pEntity;
 

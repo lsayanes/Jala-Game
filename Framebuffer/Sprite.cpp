@@ -11,9 +11,12 @@
 
 #include "../Libs/picopng.hpp"
 
+#include <Config.h>
+
 #include <Component.h>
 #include <Properties.h>
 #include <Physics.h>
+#include <Tools.h>
 #include "Device.h"
 #include "Entity.h"
 
@@ -53,14 +56,14 @@ namespace draw
 				if (file.read(buffer.data(), size))
 				{
 					Entity* pe{ m_Entities[stIndex] };
-					unsigned long w{ pe->properties.w }, h{ pe->properties.h };
+					unsigned long w{ pe->properties().w }, h{ pe->properties().h };
 					char* p{ buffer.data() };
-					unsigned char* pEntData = pe->data.get();
+					unsigned char* pEntData = pe->data().get();
 				
-					if (0 == decodePNG(img, w, h, (unsigned char*)(p), pe->properties.size))
+					if (0 == decodePNG(img, w, h, (unsigned char*)(p), pe->properties().size))
 					{
 						std::copy(begin(img), end(img), pEntData);
-						//FrameBuffer::bgraToRgba(pEntData, pe->properties.size);
+						draw::tools::bgraToRgba(pEntData, pe->properties().size);
 						return true;
 					}
 				}
@@ -76,8 +79,8 @@ namespace draw
 
 		std::for_each(m_Entities.begin(), m_Entities.end(), [&](Entity* it)
 			{
-				it->physics.x = x; 
-				it->physics.y = y;
+				it->physics().x = x; 
+				it->physics().y = y;
 			});
 	}
 

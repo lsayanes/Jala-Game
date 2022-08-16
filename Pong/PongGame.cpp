@@ -32,6 +32,7 @@ PongGame::PongGame(void* pDevHandle, draw::FrameBuffer& fbuffer):
 	m_EnMan{fbuffer},
 	m_bRun{false},
 	m_mtxRender{},
+	m_mtxDbg{},
 	m_nBallDeltaY{-1},
 	m_nBallDeltaX{1}
 {
@@ -79,15 +80,26 @@ bool PongGame::create()
 	return bRet;
 }
 
-void PongGame::dbg(std::string sz)
+void PongGame::updateDbg(std::string sz)
 {
+	m_mtxDbg.lock();
+	
 	std::string str = PongGame::TXT_ID_DBG + ": " + sz;
 	auto vc = m_pDbgFont->flatText(str.c_str(), DGB_X, DGB_Y);
 	m_EnMan.addText(PongGame::TXT_ID_DBG, vc);
+	
+	m_mtxDbg.unlock();
 }
 
 void PongGame::render()
 {
+
+	int i = 0;
+	char str[1024];
+
+	auto lasttime = std::chrono::steady_clock::now();
+
+
 	while (m_bRun)
 	{
 		m_mtxRender.lock();
@@ -95,8 +107,20 @@ void PongGame::render()
 		m_EnMan.fill(255, 255, 255);
 
 		locateBall();
-		
+
+		if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - lasttime).count() > 1000)
+		{
+			sprintf(str, "fps :%d", i);
+			updateDbg(str);
+			i = 0;
+
+			lasttime = std::chrono::steady_clock::now();
+		}
+		else
+			i++;
+
 		m_EnMan.renderAll();
+		
 		
 		m_EnMan.flip();
 		
@@ -105,39 +129,9 @@ void PongGame::render()
 	}
 }
 
-void PongGame::run()
-{
-	m_bRun = true;
-
-	int i = 0;
-	char str[1024];
-
-	auto lasttime = std::chrono::steady_clock::now();
-
-	while (m_bRun)
-	{
-		m_mtxRender.lock();
-
-
-		if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - lasttime).count() > 1000)
-		{
-			sprintf(str, "fps :%d", i);
-			dbg(str);
-			i = 0;
-
-			lasttime = std::chrono::steady_clock::now();
-		}
-		else
-			i++;
-		
-		m_mtxRender.unlock();
-	}
-}
-
 void PongGame::start()
 {
-	std::thread tRun(&PongGame::run, this);
-	tRun.detach();
+	m_bRun = true;
 
 	std::thread tRender(&PongGame::render, this);
 	tRender.detach();
@@ -157,26 +151,25 @@ void PongGame::locateBall()
 	ballphy.x += 1 * m_nBallDeltaX;
 	ballphy.y += 1 * m_nBallDeltaY;
 
-
-	if (ballphy.x < m_pGameArea->l)
+	if (ballphy.x < m_pGameArea->left)
 	{
-		ballphy.x = m_pGameArea->l;
+		ballphy.x = m_pGameArea->left;
 		m_nBallDeltaX = 1;
 	}
-	else if (ballphy.x + ballprp.w > m_pGameArea->r)
+	else if (ballphy.x + ballprp.w > m_pGameArea->right)
 	{
-		ballphy.x = static_cast<draw::phy_type>(m_pGameArea->r - ballprp.w);
+		ballphy.x = static_cast<draw::phy_type>(m_pGameArea->right - ballprp.w);
 		m_nBallDeltaX = -1;
 	}
 
-	if (ballphy.y < m_pGameArea->t)
+	if (ballphy.y < m_pGameArea->top)
 	{
-		ballphy.y = m_pGameArea->t;
+		ballphy.y = m_pGameArea->top;
 		m_nBallDeltaY = 1;
 	}
-	else if (ballphy.y + ballprp.h > m_pGameArea->b)
+	else if (ballphy.y + ballprp.h > m_pGameArea->bottom)
 	{
-		ballphy.y = static_cast<draw::phy_type>(m_pGameArea->b - ballprp.h);
+		ballphy.y = static_cast<draw::phy_type>(m_pGameArea->bottom - ballprp.h);
 		m_nBallDeltaY = -1;
 	}
 }

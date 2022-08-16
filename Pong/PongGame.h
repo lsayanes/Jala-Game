@@ -10,6 +10,7 @@ private:
 
 	bool					m_bRun;
 	std::mutex				m_mtxRender;
+	std::mutex				m_mtxDbg;
 
 	int m_nBallDeltaX;
 	int m_nBallDeltaY;
@@ -38,9 +39,6 @@ private:
 
 private:
 	void render();
-	void run();
-
-
 	void locateBall();
 
 public:
@@ -59,7 +57,7 @@ public:
 	void stop();
 
 
-	void dbg(std::string sz);
+	void updateDbg(std::string sz);
 
 };
 

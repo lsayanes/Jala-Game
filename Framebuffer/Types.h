@@ -13,18 +13,17 @@ namespace draw
 
     struct RECT
     {
-        phy_type l{ 0 };    //left
-        phy_type t{ 0 };    //top
-        prop_type r{ 0 };   //rigth
-        prop_type b{ 0 };   //bottom
-
+        phy_type left{ 0 };   
+        phy_type top{ 0 };    
+        prop_type right{ 0 }; 
+        prop_type bottom{ 0 };
 
         explicit RECT(phy_type x, phy_type y, prop_type w, prop_type h)
         {
-            l = x;
-            t = y;
-            r = l + w;
-            b = t + h;
+            left = x;
+            top = y;
+            right = left + w;
+            bottom = top + h;
         }
     };
 }

@@ -11,6 +11,10 @@ private:
 	bool					m_bRun;
 	std::mutex				m_mtxRender;
 
+	int m_nBallDeltaX;
+	int m_nBallDeltaY;
+
+	draw::RECT				*m_pGameArea{nullptr};
 
 	const std::string TXT_ID_DBG{ "dbg" };
 	const std::string DBGFONTPATH{ "..\\Pong\\Resources\\verdana.ttf" };
@@ -26,8 +30,6 @@ private:
 	const std::string BCKGRNDTPATH{ "..\\Pong\\Resources\\bck.png" };
 	
 
-
-
 	/*
 			Error msg
 	*/
@@ -37,6 +39,9 @@ private:
 private:
 	void render();
 	void run();
+
+
+	void locateBall();
 
 public:
 	static constexpr size_t SCREEN_W{ 1024 };

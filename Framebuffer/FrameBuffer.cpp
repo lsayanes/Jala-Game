@@ -59,13 +59,40 @@ namespace draw
         unsigned char* pbyPix = m_pbyBuffer;
         const int x = (physicsRef.x * m_Properties.components());
         int y = physicsRef.y;
-
-        while (line < propRef.h && y < static_cast<int>(m_Properties.h - 1) && y >= 0)
+        
+        if (propRef.alpha)
         {
-            y = (line + physicsRef.y);
-            offset = ((y) *  m_Properties.lineSize) + x;
-            std::memcpy(pbyPix + offset, data + (line * linSizeEnt), linSizeEnt);
-            line++;
+            size_t i;
+            unsigned char* psrc, *pdest;
+            while (line < propRef.h && y < static_cast<int>(m_Properties.h - 1) && y >= 0)
+            {
+                y = (line + physicsRef.y);
+                pdest = m_pbyBuffer + ((y * m_Properties.lineSize) + x);
+                psrc = data + (line * linSizeEnt);
+               
+                for (i = 0; i < linSizeEnt; i+=4)
+                {
+                    if (0 != *(psrc + i + 3))
+                    {
+                        *(pdest + i + 0) = *(psrc + i + 0);
+                        *(pdest + i + 1) = *(psrc + i + 1);
+                        *(pdest + i + 2) = *(psrc + i + 2);
+                    }
+                }
+                
+                line++;
+            }
+
+        }
+        else
+        {
+            while (line < propRef.h && y < static_cast<int>(m_Properties.h - 1) && y >= 0)
+            {
+                y = (line + physicsRef.y);
+                offset = (y * m_Properties.lineSize) + x;
+                std::memcpy(pbyPix + offset, data + (line * linSizeEnt), linSizeEnt);
+                line++;
+            }
         }
     }
         
@@ -80,8 +107,33 @@ namespace draw
         std::for_each(v->begin(), v->end(), [&](Entity* it) { put(*it); });
     }
 
+    void FrameBuffer::fill(components::Properties<prop_type> &Prop, unsigned char* pbySurface, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
+    {
+        size_t y = 0;
+        size_t offset;
+        size_t lineSize = Prop.lineSize;
+        unsigned char comp = Prop.components();
+
+        std::unique_ptr<unsigned char[]> line = std::make_unique<unsigned char[]>(lineSize);
+        unsigned char* pbyLine = line.get();
+
+        uint32_t pixel = FrameBuffer::buildPixel(r, g, b, a);
+//        std::fill(pbyLine, pbyLine + lineSize, pixel);
+
+        for (uint32_t ud = 0; ud < lineSize; ud += comp)
+            std::memcpy(&pbyLine[ud], &pixel, comp);
+
+        while (y < Prop.h)
+        {
+            offset = (y * lineSize);
+            std::memcpy(pbySurface + offset, pbyLine, lineSize);
+            y++;
+        }
+    }
+
     void FrameBuffer::fill(Entity& e, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
     {
+        
         size_t y = 0;
         size_t offset;
         size_t lineSize = e.properties().lineSize;
@@ -103,12 +155,14 @@ namespace draw
             std::memcpy(pbyPix + offset, pbyLine, lineSize);
             y++;
         }
-
+        
+        //fill(e.properties(), e.data().get(), r, g, b, a);
     }
 
 
     void FrameBuffer::fill(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
     {
+    
         size_t y = 0;
         size_t offset;
         size_t lineSize = m_Properties.lineSize;
@@ -128,5 +182,8 @@ namespace draw
             std::memcpy(pbyPix + offset, pbyLine, lineSize);
             y++;
         }
+    
+
+        //fill(m_Properties, m_pbyBuffer, r, g, b, a);
     }
 }//draw

@@ -4,7 +4,6 @@ namespace draw
 {
 	namespace components
 	{
-		//using prop_selected_t = unsigned short int;
 		template <typename TYPE>
 		struct Properties : Component
 		{
@@ -12,6 +11,7 @@ namespace draw
 			TYPE h{ 0 };
 			TYPE size{ 0 };
 			TYPE lineSize{ 0 };
+			unsigned char alpha{ 0 }; //if it have alpha channel
 
 			explicit Properties(TYPE w_t, TYPE h_t, unsigned char b_t, size_t eID) :
 				Component{eID},

@@ -20,9 +20,17 @@ private:
 	const std::string TXT_ID_DBG{ "dbg" };
 	const std::string DBGFONTPATH{ "..\\Pong\\Resources\\verdana.ttf" };
 	
-	const std::string BALL{"ball"};
 	static constexpr size_t BALL_W{ 10 };
 	static constexpr size_t BALL_H{ 10 };
+	const std::string BALL{ "ball" };
+	const std::string BALLPATH{ "..\\Pong\\Resources\\ball.png" };
+
+
+	const std::string PLAYER_L{ "PlayerL" };
+	const std::string PLAYER_R{ "PlayerR" };
+	static constexpr size_t PLAYER_W{ 10 };
+	static constexpr size_t PLAYER_H{ 40 };
+
 
 	
 	static constexpr size_t BCKGRND_W{ 640 };

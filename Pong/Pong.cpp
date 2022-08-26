@@ -42,7 +42,7 @@ WCHAR           szWindowClass[MAX_LOADSTRING];            // nombre de clase de 
 
 // Declaraciones de funciones adelantadas incluidas en este módulo de código:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
-BOOL                InitInstance(HINSTANCE, int);
+BOOL                InitInstance(HINSTANCE, int, int, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
@@ -61,23 +61,29 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     LoadStringW(hInstance, IDC_PONG, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance);
 
-    // Realizar la inicialización de la aplicación:
-    if (!InitInstance (hInstance, nCmdShow))
+    size_t width, height;
+    unsigned char bitpx;
+    int x, y;
+    draw::Device::getVideoMode(width, height, bitpx);
+
+    x = (width / 2) - (PongGame::SCREEN_W / 2);
+    y = (height / 2) - (PongGame::SCREEN_H / 2);
+
+    if (!InitInstance (hInstance, x, y, nCmdShow))
     {
         return FALSE;
     }
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_PONG));
     MSG msg;
-    size_t width, height;
-    unsigned char bitpx;
 
-    draw::Device::getVideoMode(width, height, bitpx);
     draw::FrameBuffer frameBuffer{ PongGame::SCREEN_W , PongGame::SCREEN_H, bitpx, hWnd };
 
     PongGame game{ hWnd, frameBuffer };
-    if(game.create())
+    if (game.create())
         game.start();
+    else
+        OutputDebugString("PongGame::create FAIL!\n");
 
 
     // Bucle principal de mensajes:
@@ -134,12 +140,12 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 //        En esta función, se guarda el identificador de instancia en una variable común y
 //        se crea y muestra la ventana principal del programa.
 //
-BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
+BOOL InitInstance(HINSTANCE hInstance, int x, int y, int nCmdShow)
 {
    hInst = hInstance; // Almacenar identificador de instancia en una variable global
 
   hWnd = CreateWindowW(szWindowClass, szTitle, WS_POPUPWINDOW| WS_CAPTION,
-      CW_USEDEFAULT, 0, PongGame::SCREEN_W, PongGame::SCREEN_H, nullptr, nullptr, hInstance, nullptr);
+      x, y, PongGame::SCREEN_W, PongGame::SCREEN_H, nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
    {

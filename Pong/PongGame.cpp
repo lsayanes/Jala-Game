@@ -26,7 +26,7 @@
 
 #include "PongGame.h"
 
-
+#include <iostream>
 PongGame::PongGame(void* pDevHandle, draw::FrameBuffer& fbuffer):
 	m_phDevHandle{pDevHandle},
 	m_EnMan{fbuffer},
@@ -36,6 +36,11 @@ PongGame::PongGame(void* pDevHandle, draw::FrameBuffer& fbuffer):
 	m_nBallDeltaY{-1},
 	m_nBallDeltaX{1}
 {
+
+	auto x = 61;
+	auto y = 43;
+	auto a = x + y;
+	std::cout << ++y + x + x;
 
 }
 
@@ -55,8 +60,10 @@ bool PongGame::create()
 
 	if (nullptr != (m_pDbgFont = new draw::CharSet{ draw::FontLib::instance()->newFont(DBGFONTPATH.c_str(), 16), m_EnMan.bpp() }))
 	{
+
+		//size_t t = m_EnMan.create(BALL, BALL_W, BALL_H, BALLPATH);
 		size_t t = m_EnMan.create(BACKGROUND, BCKGRND_W, BCKGRND_H, BCKGRNDTPATH);
-		t > 0 && (t = m_EnMan.create(BALL, BALL_W, BALL_H));
+		t > 0 && (t = m_EnMan.create(BALL, BALL_W, BALL_H, BALLPATH));
 		if (bRet = t > 0)
 		{
 			//initial positions
@@ -66,12 +73,15 @@ bool PongGame::create()
 
 			auto& bckprp = m_EnMan(BACKGROUND).properties();
 			m_pGameArea = new draw::RECT{ bckphy.x, bckphy.y, bckprp.w, bckprp.h };
-
+	
 			auto& ballphy = m_EnMan(BALL).physics();
 			auto& ballprp = m_EnMan(BALL).properties();
 			ballphy.x = bckphy.x;
 			ballphy.y = static_cast<draw::phy_type>( bckphy.y + (BCKGRND_H - ballprp.h) );
-			m_EnMan.frameBuffer().fill(m_EnMan(BALL), 0, 255, 0);
+
+			ballprp.alpha = 1;
+		
+			//m_EnMan.frameBuffer().fill(m_EnMan(BALL), 0, 255, 0);
 		}
 	}
 	else
@@ -99,6 +109,7 @@ void PongGame::render()
 
 	auto lasttime = std::chrono::steady_clock::now();
 
+	int min = 10000, max = 0, seconds = 0;
 
 	while (m_bRun)
 	{
@@ -108,10 +119,29 @@ void PongGame::render()
 
 		locateBall();
 
+		m_EnMan.renderAll();
+
+		m_EnMan.flip();
+
 		if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - lasttime).count() > 1000)
 		{
-			sprintf(str, "fps :%d", i);
+			sprintf(str, "fps :%d (min :%d max :%d) seconds :%d ", i, min, max, seconds++);
 			updateDbg(str);
+
+			if (seconds > 4)
+			{
+				if (min > i)
+				{
+					min = i;
+				}
+
+				if (max < i)
+				{
+					max = i;
+				}
+			}
+
+
 			i = 0;
 
 			lasttime = std::chrono::steady_clock::now();
@@ -119,10 +149,6 @@ void PongGame::render()
 		else
 			i++;
 
-		m_EnMan.renderAll();
-		
-		
-		m_EnMan.flip();
 		
 		m_mtxRender.unlock();
 

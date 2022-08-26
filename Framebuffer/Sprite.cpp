@@ -9,7 +9,6 @@
 #include <fstream>
 #include <algorithm>
 
-#include "../Libs/picopng.hpp"
 
 #include <Config.h>
 
@@ -43,6 +42,7 @@ namespace draw
 
 	bool Sprite::load(size_t stIndex, const char* szPath)
 	{
+		/*
 		if (stIndex < m_Entities.size())
 		{
 			std::ifstream file(szPath, std::ios::binary | std::ios::ate);
@@ -70,7 +70,7 @@ namespace draw
 			}
 
 		}
-		
+		*/
 		return false;
 	}
 

@@ -14,7 +14,8 @@
 
 #include <Tools.h>
 
-#include "../Libs/picopng.hpp"
+//#include "../Libs/picopng.hpp"
+#include "../Libs/png.h"
 
 #include "Entity.h"
 
@@ -35,30 +36,18 @@ namespace draw
 
 	bool Entity::loadPng(const char* szPath)
 	{
-		std::ifstream file(szPath, std::ios::binary | std::ios::ate);
-		if (file.is_open())
+		bool bRet = false;
+		Png png{};
+		
+		if (png.load(szPath, m_Properties.bpp()))
 		{
-			std::vector<unsigned char> img{};
-			std::streamsize size = file.tellg();
-			std::vector<char> buffer(static_cast<int>(size));
-			file.seekg(0, std::ios::beg);
-
-			if (file.read(buffer.data(), size))
-			{
-				unsigned long w{ m_Properties.w }, h{ m_Properties.h };
-				char* p{ buffer.data() };
-				unsigned char* pEntData = m_Data.get();
-
-				if (0 == decodePNG(img, w, h, (unsigned char*)(p), m_Properties.size))
-				{
-					std::copy(begin(img), end(img), pEntData);
-					tools::bgraToRgba(pEntData, m_Properties.size);
-					return true;
-				}
-			}
+			unsigned char* pData = m_Data.get();
+			std::memcpy(pData, png.pRawData, m_Properties.size);
+			tools::bgraToRgba(pData, m_Properties.size);
+			bRet = true;
 		}
 
-		return false;
+		return bRet;
 	}
 
 } //draw

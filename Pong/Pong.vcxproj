@@ -155,7 +155,7 @@
     <ClInclude Include="..\Framebuffer\FrameBuffer.h" />
     <ClInclude Include="..\Framebuffer\Sprite.h" />
     <ClInclude Include="..\Framebuffer\Types.h" />
-    <ClInclude Include="..\Libs\picopng.hpp" />
+    <ClInclude Include="..\Libs\png.h" />
     <ClInclude Include="..\Util\format.h" />
     <ClInclude Include="..\Util\Tools.h" />
     <ClInclude Include="framework.h" />
@@ -172,7 +172,7 @@
     <ClCompile Include="..\Framebuffer\FrameBuffer.cpp" />
     <ClCompile Include="..\Framebuffer\Sprite.cpp" />
     <ClCompile Include="..\Framebuffer\Windows\Device.cpp" />
-    <ClCompile Include="..\Libs\picopng.cpp" />
+    <ClCompile Include="..\Libs\png.cpp" />
     <ClCompile Include="..\Util\format.c" />
     <ClCompile Include="Pong.cpp" />
     <ClCompile Include="PongGame.cpp" />

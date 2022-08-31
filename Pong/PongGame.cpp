@@ -37,11 +37,6 @@ PongGame::PongGame(void* pDevHandle, draw::FrameBuffer& fbuffer):
 	m_nBallDeltaX{1}
 {
 
-	auto x = 61;
-	auto y = 43;
-	auto a = x + y;
-	std::cout << ++y + x + x;
-
 }
 
 PongGame::~PongGame()
@@ -77,23 +72,30 @@ bool PongGame::create()
 	
 			auto &ball = m_EnMan[BALL];
 			auto& ballphy = ball.physics();
-			auto& ballprp = ball.properties();
-			ballphy.x = bckphy.x;
-			ballphy.y = static_cast<draw::phy_type>( bckphy.y + (BCKGRND_H - ballprp.h) );
-
 			ball.renderWithAlpha();
 
-			auto init_player = [&](std::string szName) 
+			auto init_player = [&](std::string szPlayer) 
 			{
-				m_EnMan[szName].physics().centery(m_EnMan[szName].properties().h, bckphy.y, bckprp.h + bckphy.y);
-				m_EnMan.frameBuffer().fill(m_EnMan[szName], 0, 255, 0);
+				auto &phy = m_EnMan[szPlayer].physics();
+				phy.centery(PLAYERS_H, bckphy.y, bckprp.h + bckphy.y);
+				m_EnMan.frameBuffer().fill(m_EnMan[szPlayer], 0, 255, 0);
+
+				//velocity
+				phy.vy = 10;
+				phy.vx = 0;
 			};
 
 			init_player(PLAYER_L_SIDE);
 			init_player(PLAYER_R_SIDE);
 
-			m_EnMan[PLAYER_L_SIDE].physics().x = bckphy.x;
-			m_EnMan[PLAYER_R_SIDE].physics().x = static_cast<draw::phy_type>( (bckphy.x + bckprp.w) - m_EnMan[PLAYER_R_SIDE].properties().w);
+			auto &plyLPhy = m_EnMan[PLAYER_L_SIDE].physics();
+			auto& plyRPhy = m_EnMan[PLAYER_R_SIDE].physics();
+
+			plyLPhy.x = static_cast<draw::phy_type>(bckphy.x + BALL_W);
+			plyRPhy.x = static_cast<draw::phy_type>(((bckphy.x + bckprp.w) - PLAYERS_W) - BALL_W);
+			
+			//ballphy.x = plyLPhy.x + PLAYERS_W;
+			//ballphy.centery(BALL_H, plyLPhy.y, plyLPhy.y + PLAYERS_H);
 		}
 	}
 	else
@@ -128,9 +130,23 @@ void PongGame::render()
 		m_mtxRender.lock();
 
 		m_EnMan.fill(255, 255, 255);
-
-		//locateBall();
-
+		
+		switch (m_nStatus)
+		{
+		case PLAY_STATUS::PLAYER_L_HOLD:
+		case PLAY_STATUS::PLAYER_R_HOLD:
+			holdBall();
+			break;
+		case PLAY_STATUS::PLAYING:
+			if (i && 0 == i % 3)
+				locateBall();
+			break;
+		case PLAY_STATUS::PAUSE:
+			break;
+		default:
+			break;
+		}
+		
 		m_EnMan.renderAll();
 
 		m_EnMan.flip();
@@ -180,33 +196,91 @@ void PongGame::stop()
 }
 
 
+void PongGame::moveUp(std::string szPlayer)
+{
+	auto& plphy = m_EnMan[szPlayer].physics();
+	if (plphy.y > m_pGameArea->top)
+		plphy.y-=plphy.vy;
+	
+}
+
+void PongGame::moveDown(std::string szPlayer)
+{
+	auto& plphy = m_EnMan[szPlayer].physics();
+	if ((plphy.y + PLAYERS_H) < m_pGameArea->bottom)
+		plphy.y+=plphy.vy;
+}
+
+void PongGame::shot()
+{
+	if (
+		PLAY_STATUS::PLAYER_L_HOLD == m_nStatus || 
+		PLAY_STATUS::PLAYER_R_HOLD == m_nStatus
+		)
+	{
+		m_nStatus = PLAY_STATUS::PLAYING;
+	}
+}
+
+void PongGame::holdBall()
+{
+	auto& ballphy = m_EnMan[BALL].physics();
+	if (PLAY_STATUS::PLAYER_L_HOLD == m_nStatus)
+	{
+		auto& ply = m_EnMan[PLAYER_L_SIDE].physics();
+		ballphy.x = ply.x + PLAYERS_W;
+		ballphy.centery(BALL_H, ply.y, ply.y + PLAYERS_H);
+
+	}
+	else if (PLAY_STATUS::PLAYER_R_HOLD == m_nStatus)
+	{
+		auto& ply = m_EnMan[PLAYER_R_SIDE].physics();
+		ballphy.x = ply.x - PLAYERS_W;
+		ballphy.centery(BALL_H, ply.y, ply.y + PLAYERS_H);
+	}
+
+}
+
 void PongGame::locateBall()
 {
 	auto& ballphy = m_EnMan[BALL].physics();
-	auto& ballprp = m_EnMan[BALL].properties();
+	auto& plylphy = m_EnMan[PLAYER_L_SIDE].physics();
+	auto& plyrphy = m_EnMan[PLAYER_R_SIDE].physics();
 
 	ballphy.x += 1 * m_nBallDeltaX;
 	ballphy.y += 1 * m_nBallDeltaY;
 
-	if (ballphy.x < m_pGameArea->left)
+	if (
+		static_cast<draw::phy_type>(ballphy.x + BALL_W) <= static_cast<draw::phy_type>(plylphy.x + PLAYERS_W) &&
+		ballphy.y >= plylphy.y && ballphy.y <= static_cast<draw::phy_type>(plylphy.y + PLAYERS_H)
+		)
 	{
-		ballphy.x = m_pGameArea->left;
+		ballphy.x = static_cast<draw::phy_type>(plylphy.x + PLAYERS_W);
 		m_nBallDeltaX = 1;
 	}
-	else if (ballphy.x + ballprp.w > m_pGameArea->right)
+	else if (static_cast<draw::phy_type>(ballphy.x + BALL_W) > plyrphy.x &&
+		ballphy.y >= plyrphy.y && ballphy.y <= static_cast<draw::phy_type>(plyrphy.y + PLAYERS_H)
+		)
 	{
-		ballphy.x = static_cast<draw::phy_type>(m_pGameArea->right - ballprp.w);
+		ballphy.x = static_cast<draw::phy_type>(plyrphy.x - BALL_W);
 		m_nBallDeltaX = -1;
 	}
-
-	if (ballphy.y < m_pGameArea->top)
+	else if (ballphy.x < m_pGameArea->left)
+	{
+		holdPlayerBall(PLAYER_L_SIDE);
+	}
+	else if (ballphy.x + BALL_W > m_pGameArea->right)
+	{
+		holdPlayerBall(PLAYER_R_SIDE);
+	}
+	else if (ballphy.y < m_pGameArea->top)
 	{
 		ballphy.y = m_pGameArea->top;
 		m_nBallDeltaY = 1;
 	}
-	else if (ballphy.y + ballprp.h > m_pGameArea->bottom)
+	else if (ballphy.y + BALL_H > m_pGameArea->bottom)
 	{
-		ballphy.y = static_cast<draw::phy_type>(m_pGameArea->bottom - ballprp.h);
+		ballphy.y = static_cast<draw::phy_type>(m_pGameArea->bottom - BALL_H);
 		m_nBallDeltaY = -1;
 	}
 }

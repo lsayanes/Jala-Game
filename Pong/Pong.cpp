@@ -40,6 +40,8 @@ HINSTANCE       hInst;                                // instancia actual
 WCHAR           szTitle[MAX_LOADSTRING];                  // Texto de la barra de título
 WCHAR           szWindowClass[MAX_LOADSTRING];            // nombre de clase de la ventana principal
 
+PongGame* pPong{nullptr};
+
 // Declaraciones de funciones adelantadas incluidas en este módulo de código:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int, int, int);
@@ -79,9 +81,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     draw::FrameBuffer frameBuffer{ PongGame::SCREEN_W , PongGame::SCREEN_H, bitpx, hWnd };
 
-    PongGame game{ hWnd, frameBuffer };
-    if (game.create())
-        game.start();
+    pPong = new PongGame(hWnd, frameBuffer);
+
+    if (pPong->create())
+        pPong->start();
     else
         OutputDebugString("PongGame::create FAIL!\n");
 
@@ -96,9 +99,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
     }
 
-    game.stop();
+    pPong->stop();
     draw::tools::sleep(500);
 
+    delete pPong;
     return (int) msg.wParam;
 }
 
@@ -189,13 +193,36 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             }
         }
         break;
-    case WM_PAINT:
+    case WM_KEYDOWN:
+        switch (wParam)
         {
-            PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hWnd, &ps);
-            // TODO: Agregar cualquier código de dibujo que use hDC aquí...
-            EndPaint(hWnd, &ps);
+        case 'Q':
+        case 'q':
+            pPong->moveUp(pPong->PLAYER_L_SIDE);
+            break;
+
+        case 'A':
+        case 'a':
+            pPong->moveDown(pPong->PLAYER_L_SIDE);
+            break;
+
+        case 'O':
+        case 'o':
+            pPong->moveUp(pPong->PLAYER_R_SIDE);
+            break;
+
+        case 'L':
+        case 'l':
+            pPong->moveDown(pPong->PLAYER_R_SIDE);
+            break;
+        case VK_SPACE:
+            pPong->shot();
+            break;
+        case VK_ESCAPE:
+            DestroyWindow(hWnd);
+            break;
         }
+        
         break;
     case WM_DESTROY:
         PostQuitMessage(0);

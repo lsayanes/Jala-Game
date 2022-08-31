@@ -10,6 +10,8 @@ namespace draw
 		{
 			TYPE x{ 0 };
 			TYPE y{ 0 };
+			TYPE vx{ 1 };
+			TYPE vy{ 1 };
 
 			explicit Physics(TYPE x_t, TYPE y_t, size_t eID):
 				Component{eID},

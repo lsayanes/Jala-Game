@@ -26,12 +26,11 @@ private:
 	const std::string BALLPATH{ "..\\Pong\\Resources\\ball.png" };
 
 
-	const std::string PLAYER_L{ "PlayerL" };
-	const std::string PLAYER_R{ "PlayerR" };
-	static constexpr size_t PLAYER_W{ 10 };
-	static constexpr size_t PLAYER_H{ 40 };
-
-
+	const std::string PLAYER_R_SIDE{ "PlayerR" };
+	const std::string PLAYER_L_SIDE{ "PlayerL" };
+	
+	static constexpr size_t PLAYERS_W{ 10 };
+	static constexpr size_t PLAYERS_H{ 80 };
 	
 	static constexpr size_t BCKGRND_W{ 640 };
 	static constexpr size_t BCKGRND_H{ 480 };

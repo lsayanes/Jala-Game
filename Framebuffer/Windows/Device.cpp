@@ -4,6 +4,7 @@
 
 #include <stdint.h>
 
+#include <Config.h>
 #include <Component.h>
 #include <Physics.h>
 #include <Properties.h>

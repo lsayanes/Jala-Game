@@ -83,7 +83,7 @@ namespace draw
 		return 0;
 	}
 
-	Entity& EntityMngr::operator()(std::string szName) const
+	Entity& EntityMngr::operator[](std::string szName) const
 	{
 		auto it = m_Entities.find(szName);
 		if (it != m_Entities.end())

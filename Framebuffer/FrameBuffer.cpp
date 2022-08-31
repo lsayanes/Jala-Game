@@ -82,7 +82,6 @@ namespace draw
                 
                 line++;
             }
-
         }
         else
         {

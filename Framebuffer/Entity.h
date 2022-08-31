@@ -27,6 +27,8 @@ namespace draw
 		inline components::Physics<phy_type>&		physics()		{ return m_Physics; };
 		inline components::Properties<prop_type>&	properties()	{ return m_Properties; };
 		inline std::unique_ptr<unsigned char[]>&	data()			{ return m_Data; };
+		
+		inline void renderWithAlpha() { m_Properties.alpha = 1; };
 
 	//private:
 	//	size_t		m_typID{0};

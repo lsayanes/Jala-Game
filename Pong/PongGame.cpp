@@ -61,27 +61,39 @@ bool PongGame::create()
 	if (nullptr != (m_pDbgFont = new draw::CharSet{ draw::FontLib::instance()->newFont(DBGFONTPATH.c_str(), 16), m_EnMan.bpp() }))
 	{
 
-		//size_t t = m_EnMan.create(BALL, BALL_W, BALL_H, BALLPATH);
 		size_t t = m_EnMan.create(BACKGROUND, BCKGRND_W, BCKGRND_H, BCKGRNDTPATH);
 		t > 0 && (t = m_EnMan.create(BALL, BALL_W, BALL_H, BALLPATH));
+		t > 0 && (t = m_EnMan.create(PLAYER_L_SIDE, PLAYERS_W, PLAYERS_H));
+		t > 0 && (t = m_EnMan.create(PLAYER_R_SIDE, PLAYERS_W, PLAYERS_H));
 		if (bRet = t > 0)
 		{
 			//initial positions
-			auto& bckphy = m_EnMan(BACKGROUND).physics();
+			auto& bckphy = m_EnMan[BACKGROUND].physics();
 			bckphy.x = static_cast<draw::phy_type>((SCREEN_W / 2) - (BCKGRND_W / 2));
 			bckphy.y = 80;
 
-			auto& bckprp = m_EnMan(BACKGROUND).properties();
+			auto& bckprp = m_EnMan[BACKGROUND].properties();
 			m_pGameArea = new draw::RECT{ bckphy.x, bckphy.y, bckprp.w, bckprp.h };
 	
-			auto& ballphy = m_EnMan(BALL).physics();
-			auto& ballprp = m_EnMan(BALL).properties();
+			auto &ball = m_EnMan[BALL];
+			auto& ballphy = ball.physics();
+			auto& ballprp = ball.properties();
 			ballphy.x = bckphy.x;
 			ballphy.y = static_cast<draw::phy_type>( bckphy.y + (BCKGRND_H - ballprp.h) );
 
-			ballprp.alpha = 1;
-		
-			//m_EnMan.frameBuffer().fill(m_EnMan(BALL), 0, 255, 0);
+			ball.renderWithAlpha();
+
+			auto init_player = [&](std::string szName) 
+			{
+				m_EnMan[szName].physics().centery(m_EnMan[szName].properties().h, bckphy.y, bckprp.h + bckphy.y);
+				m_EnMan.frameBuffer().fill(m_EnMan[szName], 0, 255, 0);
+			};
+
+			init_player(PLAYER_L_SIDE);
+			init_player(PLAYER_R_SIDE);
+
+			m_EnMan[PLAYER_L_SIDE].physics().x = bckphy.x;
+			m_EnMan[PLAYER_R_SIDE].physics().x = static_cast<draw::phy_type>( (bckphy.x + bckprp.w) - m_EnMan[PLAYER_R_SIDE].properties().w);
 		}
 	}
 	else
@@ -117,7 +129,7 @@ void PongGame::render()
 
 		m_EnMan.fill(255, 255, 255);
 
-		locateBall();
+		//locateBall();
 
 		m_EnMan.renderAll();
 
@@ -134,8 +146,7 @@ void PongGame::render()
 				{
 					min = i;
 				}
-
-				if (max < i)
+				else if (max < i)
 				{
 					max = i;
 				}
@@ -171,8 +182,8 @@ void PongGame::stop()
 
 void PongGame::locateBall()
 {
-	auto& ballphy = m_EnMan(BALL).physics();
-	auto& ballprp = m_EnMan(BALL).properties();
+	auto& ballphy = m_EnMan[BALL].physics();
+	auto& ballprp = m_EnMan[BALL].properties();
 
 	ballphy.x += 1 * m_nBallDeltaX;
 	ballphy.y += 1 * m_nBallDeltaY;

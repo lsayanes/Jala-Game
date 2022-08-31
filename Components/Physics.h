@@ -26,6 +26,29 @@ namespace draw
 			virtual ~Physics()
 			{
 			}
+
+			/*
+				horizontal example: 
+						entity.x = TYPE &point
+						prop_type point_reach = entity.w
+						
+						TYPE from = screenImg.x, 
+						prop_type to = screenImg.x + screenImg.w
+			*/
+			inline void center(TYPE &point, prop_type point_reach,  TYPE from, prop_type to)
+			{
+				point = static_cast<TYPE>((from + ((to - from) / 2)) - (point_reach / 2));
+			}
+
+			inline void centerx(prop_type w, TYPE from, prop_type to)
+			{
+				center(x, w, from, to);
+			}
+
+			inline void centery(prop_type h, TYPE from, prop_type to)
+			{
+				center(y, h, from, to);
+			}
 		};
 	}//components
 } //draw

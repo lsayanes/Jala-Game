@@ -37,8 +37,6 @@
 // Variables globales:
 HWND            hWnd;
 HINSTANCE       hInst;                                // instancia actual
-WCHAR           szTitle[MAX_LOADSTRING];                  // Texto de la barra de título
-WCHAR           szWindowClass[MAX_LOADSTRING];            // nombre de clase de la ventana principal
 
 PongGame* pPong{nullptr};
 
@@ -59,8 +57,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     // TODO: Colocar código aquí.
 
     // Inicializar cadenas globales
-    LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDC_PONG, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance);
 
     size_t width, height;
@@ -115,23 +111,23 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 //
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
-    WNDCLASSEXW wcex;
+    WNDCLASSEX wce;
 
-    wcex.cbSize = sizeof(WNDCLASSEX);
+    wce.cbSize = sizeof(WNDCLASSEX);
 
-    wcex.style          = CS_HREDRAW | CS_VREDRAW;
-    wcex.lpfnWndProc    = WndProc;
-    wcex.cbClsExtra     = 0;
-    wcex.cbWndExtra     = 0;
-    wcex.hInstance      = hInstance;
-    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_PONG));
-    wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
-    wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
-    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_PONG);
-    wcex.lpszClassName  = szWindowClass;
-    wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
+    wce.style          = CS_HREDRAW | CS_VREDRAW;
+    wce.lpfnWndProc    = WndProc;
+    wce.cbClsExtra     = 0;
+    wce.cbWndExtra     = 0;
+    wce.hInstance      = hInstance;
+    wce.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_PONG));
+    wce.hCursor        = LoadCursor(nullptr, IDC_ARROW);
+    wce.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
+    wce.lpszMenuName   = MAKEINTRESOURCE(IDC_PONG);
+    wce.lpszClassName = TEXT("PongCLass");
+    wce.hIconSm        = LoadIcon(wce.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
-    return RegisterClassExW(&wcex);
+    return RegisterClassEx(&wce);
 }
 
 //
@@ -148,7 +144,7 @@ BOOL InitInstance(HINSTANCE hInstance, int x, int y, int nCmdShow)
 {
    hInst = hInstance; // Almacenar identificador de instancia en una variable global
 
-  hWnd = CreateWindowW(szWindowClass, szTitle, WS_POPUPWINDOW| WS_CAPTION,
+  hWnd = CreateWindow("PongClass", "Pong!", WS_POPUPWINDOW | WS_CAPTION,
       x, y, PongGame::SCREEN_W, PongGame::SCREEN_H, nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)

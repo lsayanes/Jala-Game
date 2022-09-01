@@ -8,7 +8,9 @@ public:
 private:
 	void					*m_phDevHandle{nullptr};
 	draw::CharSet			*m_pDbgFont{nullptr};
-	
+	draw::CharSet			*m_pScoreRPlayer{nullptr};
+	draw::CharSet			*m_pScoreLPlayer{nullptr};
+
 	draw::EntityMngr		m_EnMan;
 
 	bool					m_bRun;
@@ -22,8 +24,13 @@ private:
 
 	int	m_nStatus{ PLAY_STATUS::PLAYER_R_HOLD };
 
+	short unsigned			m_nScoreLPlayer{0};
+	short unsigned			m_nScoreRPlayer{0};
+
 	const std::string TXT_ID_DBG{ "dbg" };
-	const std::string DBGFONTPATH{ "..\\Pong\\Resources\\verdana.ttf" };
+	const std::string DBGFONTPATH  { "..\\Pong\\Resources\\verdana.ttf" };
+	const std::string SCOREFONTPATH{ "..\\Pong\\Resources\\Minecraft.ttf" };
+	static constexpr size_t SCOREFONTSIZE{32};
 	
 	static constexpr size_t BALL_W{ 10 };
 	static constexpr size_t BALL_H{ 10 };
@@ -53,6 +60,8 @@ private:
 
 	void locateBall();
 	void holdBall();
+
+	void updateScores();
 
 	inline void holdPlayerBall(std::string szPlayer)
 	{

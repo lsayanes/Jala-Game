@@ -25,5 +25,16 @@ namespace draw
             right = left + w;
             bottom = top + h;
         }
+
+        inline void pos(phy_type x, phy_type y)
+        {
+            prop_type w = right - left;
+            prop_type h = bottom - top;
+          
+            left = x;
+            top = y;
+            right = left + w;
+            bottom = top + h;
+        }
     };
 }

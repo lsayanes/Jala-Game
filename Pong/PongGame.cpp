@@ -144,11 +144,12 @@ void PongGame::render()
 {
 
 	int i = 0;
-	char str[1024];
+	//char str[1024];
+	updateScores();
 
 	auto lasttime = std::chrono::steady_clock::now();
 
-	int min = 10000, max = 0, seconds = 0;
+	//int min = 10000, max = 0, seconds = 0;
 
 	while (m_bRun)
 	{
@@ -160,7 +161,6 @@ void PongGame::render()
 		{
 		case PLAY_STATUS::PLAYER_L_HOLD:
 		case PLAY_STATUS::PLAYER_R_HOLD:
-			updateScores();
 			holdBall();
 			break;
 		case PLAY_STATUS::PLAYING:
@@ -294,11 +294,13 @@ void PongGame::locateBall()
 	else if (ballphy.x < m_pGameArea->left)
 	{
 		m_nScoreRPlayer++;
+		updateScores();
 		holdPlayerBall(PLAYER_L_SIDE);
 	}
 	else if (ballphy.x + BALL_W > m_pGameArea->right)
 	{
 		m_nScoreLPlayer++;
+		updateScores();
 		holdPlayerBall(PLAYER_R_SIDE);
 	}
 	else if (ballphy.y < m_pGameArea->top)

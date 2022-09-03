@@ -5,6 +5,7 @@
 #include <stdint.h>
 
 #include <Config.h>
+#include <Types.h>
 #include <Component.h>
 #include <Physics.h>
 #include <Properties.h>
@@ -28,7 +29,8 @@ namespace draw
 		m_bFullScreen{false},
 		m_BackBufferHandle{nullptr},
 		m_BackBuffer{nullptr},
-		m_Properties{ components::Properties<size_t> {0, 0, 0, 0} }
+		m_Properties{ components::Properties {0, 0, 0, 0} },
+		m_stWidth{ 0 }, m_stHeight{0}
 	{
 		getVideoMode();
 	}
@@ -116,7 +118,7 @@ namespace draw
 	{
 		unsigned char b{0};
 
-		bool bRet = Device::getVideoMode(m_Properties.w, m_Properties.h, b);
+		bool bRet = Device::getVideoMode(m_stWidth, m_stHeight, b);
 		m_Properties.bpp(b);
 
 		return bRet;
@@ -196,8 +198,8 @@ namespace draw
 		void* pRet{ nullptr };
 		if (nullptr != (pRet = createBackbuffer(stWidth, stHeight, 1, byBitPerPixel)))
 		{
-			m_Properties.w = stWidth;
-			m_Properties.h = stHeight;
+			m_stWidth = stWidth;
+			m_stHeight = stHeight;
 			m_Properties.bpp(byBitPerPixel);
 		}
 		
@@ -226,12 +228,12 @@ namespace draw
 			HDC hMem = CreateCompatibleDC(0);
 			MEMBMP* pBitMap = static_cast<MEMBMP*>(m_BackBuffer);
 			SelectObject(hMem, pBitMap->hHandle);
-			BitBlt(static_cast<HDC>(m_BackBufferHandle), 0, 0, m_Properties.w, m_Properties.h, hMem, 0, 0, SRCCOPY);
+			BitBlt(static_cast<HDC>(m_BackBufferHandle), 0, 0, m_stWidth, m_stHeight, hMem, 0, 0, SRCCOPY);
 			DeleteDC(hMem);
 			
 			//copy the the back context device on primary context device windows
 			hdc = static_cast<HDC>(beginPain());
-			BitBlt(hdc, 0, 0, m_Properties.w, m_Properties.h, static_cast<HDC>(m_BackBufferHandle), 0, 0, SRCCOPY);
+			BitBlt(hdc, 0, 0, m_stWidth, m_stHeight, static_cast<HDC>(m_BackBufferHandle), 0, 0, SRCCOPY);
 			endPaint();
 		}
 	};

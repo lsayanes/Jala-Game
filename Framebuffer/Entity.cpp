@@ -7,6 +7,7 @@
 #include <algorithm>
 
 #include <Config.h>
+#include <Types.h>
 
 #include <Component.h>
 #include <Properties.h>
@@ -21,9 +22,9 @@
 
 namespace draw
 {
-	Entity::Entity(prop_type w, prop_type h, unsigned char byBitPixels, size_t typeID):
-		m_Physics{ components::Physics<phy_type> {0, 0, typeID} },
-		m_Properties{ components::Properties<prop_type> {w, h, byBitPixels, typeID} },
+	Entity::Entity(draw_t w, draw_t h, unsigned char byBitPixels, size_t typeID):
+		m_Physics{ components::Physics{w, h, typeID} },
+		m_Properties{ components::Properties{w, h, byBitPixels, typeID} },
 		m_Data{ std::make_unique<unsigned char[]>(m_Properties.size) } /*,
 		m_typID{ typeID }*/
 	{

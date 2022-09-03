@@ -4,19 +4,13 @@ namespace draw
 {
 	namespace components
 	{
-		template <typename TYPE>
 		struct Properties : Component
 		{
-			TYPE w{ 0 };
-			TYPE h{ 0 };
-			TYPE size{ 0 };
-			TYPE lineSize{ 0 };
+			size_t size{ 0 };
+			size_t lineSize{ 0 };
 			unsigned char alpha{ 0 }; //if it have alpha channel
 
-			explicit Properties(TYPE w_t, TYPE h_t, unsigned char b_t, size_t eID) :
-				Component{eID},
-				w{w_t},
-				h{h_t}
+			explicit Properties(draw_t w, draw_t h, unsigned char b_t, size_t eID) : Component{eID}
 			{
 				bpp(b_t);
 				size = (w * (m_components)) * h;

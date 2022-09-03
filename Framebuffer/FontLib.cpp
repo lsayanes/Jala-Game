@@ -9,6 +9,7 @@
 #include FT_STROKER_H
 
 #include <Config.h>
+#include <Types.h>
 
 #include <Component.h>
 #include <Physics.h>

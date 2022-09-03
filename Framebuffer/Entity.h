@@ -9,12 +9,12 @@ namespace draw
 		//components::Physics<unsigned short>		*physics {nullptr};
 
 	protected:
-		components::Physics<phy_type>				m_Physics;
-		components::Properties<prop_type>			m_Properties;
-		std::unique_ptr<unsigned char[]>			m_Data{};
+		components::Physics					m_Physics;
+		components::Properties				m_Properties;
+		std::unique_ptr<unsigned char[]>	m_Data{};
 
 	public:
-		explicit Entity(prop_type w, prop_type h, unsigned char byBitPixels, size_t typeID);
+		explicit Entity(draw_t w, draw_t h, unsigned char byBitPixels, size_t typeID);
 		virtual ~Entity();
 
 		Entity(const Entity&) = delete;
@@ -24,8 +24,8 @@ namespace draw
 
 		bool loadPng(const char* szPath);
 
-		inline components::Physics<phy_type>&		physics()		{ return m_Physics; };
-		inline components::Properties<prop_type>&	properties()	{ return m_Properties; };
+		inline components::Physics&					physics()		{ return m_Physics; };
+		inline components::Properties&				properties()	{ return m_Properties; };
 		inline std::unique_ptr<unsigned char[]>&	data()			{ return m_Data; };
 		
 		inline void renderWithAlpha() { m_Properties.alpha = 1; };

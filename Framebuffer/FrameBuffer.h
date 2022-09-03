@@ -6,16 +6,18 @@ namespace draw
 	class FrameBuffer : public Device
 	{
 	private:
-		components::Properties<prop_type>		m_Properties;
+		components::Properties					m_Properties;
+		draw_t									m_Width;
+		draw_t									m_Height;
 		uint8_t									*m_pbyBuffer;
 
 		std::unique_ptr<unsigned char[]>		m_Line;
 	private:
-		void fill(components::Properties<prop_type>& Prop, unsigned char* pbySurface, uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255);
+		void fill(components::Properties& Prop, draw_t w, draw_t h, unsigned char* pbySurface, uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255);
 	
 	public:
 		
-		explicit FrameBuffer(prop_type w, prop_type h, uint8_t bits, void *pDevHandle);
+		explicit FrameBuffer(draw_t w, draw_t h, uint8_t bits, void *pDevHandle);
 	
 		virtual ~FrameBuffer();
 
@@ -33,7 +35,7 @@ namespace draw
 		void	fill(Entity &e, uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255);
         void	fill(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255);
 
-		inline const components::Properties<prop_type>& properties() const { return m_Properties; };
+		inline const components::Properties& properties() const { return m_Properties; };
 
         inline void pixel(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255)
         {

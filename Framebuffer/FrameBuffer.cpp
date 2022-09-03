@@ -1,15 +1,12 @@
 
 
-#if defined(_WINDOWS)
-#include <Windows.h>
-#endif
-
 #include <memory>
 #include <vector>
 #include <stdint.h>
 #include <algorithm>
 
 #include <Config.h>
+#include <Types.h>
 
 #include <Component.h>
 #include <Properties.h>
@@ -24,9 +21,11 @@
 namespace draw
 {
 
-	FrameBuffer::FrameBuffer(prop_type w, prop_type h, uint8_t bits, void* pDevHandle) :
+	FrameBuffer::FrameBuffer(draw_t w, draw_t h, uint8_t bits, void* pDevHandle) :
         Device{ pDevHandle },
-        m_Properties{ components::Properties<prop_type> {w, h, bits, 0} }
+        m_Properties{ components::Properties{w, h, bits, 0} },
+        m_Width{w},
+        m_Height{h}
     {
 
         unsigned char comp = m_Properties.components();
@@ -57,16 +56,16 @@ namespace draw
         size_t offset;
         
         unsigned char* pbyPix = m_pbyBuffer;
-        const int x = (physicsRef.x * m_Properties.components());
-        int y = physicsRef.y;
+        const int x = (physicsRef.rc.left * m_Properties.components());
+        int y = physicsRef.rc.top;
         
         if (propRef.alpha)
         {
             size_t i;
             unsigned char* psrc, *pdest;
-            while (line < propRef.h && y < static_cast<int>(m_Properties.h - 1) && y >= 0)
+            while (line < static_cast<size_t>(physicsRef.rc.height) && y < m_Height - 1 && y >= 0)
             {
-                y = (line + physicsRef.y);
+                y = (line + physicsRef.rc.top);
                 pdest = m_pbyBuffer + ((y * m_Properties.lineSize) + x);
                 psrc = data + (line * linSizeEnt);
                
@@ -85,9 +84,9 @@ namespace draw
         }
         else
         {
-            while (line < propRef.h && y < static_cast<int>(m_Properties.h - 1) && y >= 0)
+            while (line < static_cast<size_t>(physicsRef.rc.height) && y < (m_Height - 1) && y >= 0)
             {
-                y = (line + physicsRef.y);
+                y = (line + physicsRef.rc.top);
                 offset = (y * m_Properties.lineSize) + x;
                 std::memcpy(pbyPix + offset, data + (line * linSizeEnt), linSizeEnt);
                 line++;
@@ -106,7 +105,7 @@ namespace draw
         std::for_each(v->begin(), v->end(), [&](Entity* it) { put(*it); });
     }
 
-    void FrameBuffer::fill(components::Properties<prop_type> &Prop, unsigned char* pbySurface, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
+    void FrameBuffer::fill(components::Properties& Prop, draw_t w, draw_t h, unsigned char* pbySurface, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
     {
         size_t y = 0;
         size_t offset;
@@ -122,7 +121,7 @@ namespace draw
         for (uint32_t ud = 0; ud < lineSize; ud += comp)
             std::memcpy(&pbyLine[ud], &pixel, comp);
 
-        while (y < Prop.h)
+        while (y < static_cast<size_t>(h))
         {
             offset = (y * lineSize);
             std::memcpy(pbySurface + offset, pbyLine, lineSize);
@@ -135,12 +134,14 @@ namespace draw
         
         size_t y = 0;
         size_t offset;
-        size_t lineSize = e.properties().lineSize;
-        unsigned char comp = e.properties().components();
-
+        components::Properties& prop = e.properties();
+        components::Physics& phy = e.physics();
+        size_t lineSize = prop.lineSize;
+        unsigned char comp = prop.components();
         unsigned char* pbyPix = e.data().get();
 
-        std::unique_ptr<unsigned char[]> line = std::make_unique<unsigned char[]>(e.properties().lineSize);
+
+        std::unique_ptr<unsigned char[]> line = std::make_unique<unsigned char[]>(prop.lineSize);
         unsigned char* pbyLine = line.get();
 
         uint32_t pixel = buildPixel(r, g, b, a);
@@ -148,7 +149,7 @@ namespace draw
         for (uint32_t ud = 0; ud < lineSize; ud += comp)
             std::memcpy(&pbyLine[ud], &pixel, comp);
 
-        while (y < e.properties().h)
+        while (y < static_cast<size_t>(phy.rc.height))
         {
             offset = (y * lineSize);
             std::memcpy(pbyPix + offset, pbyLine, lineSize);
@@ -175,7 +176,7 @@ namespace draw
         for (uint32_t ud = 0; ud < lineSize; ud += comp)
             std::memcpy(&pbyLine[ud], &pixel, comp);
 
-        while (y < m_Properties.h)
+        while (y < static_cast<size_t>(m_Height))
         {
             offset = (y * lineSize);
             std::memcpy(pbyPix + offset, pbyLine, lineSize);

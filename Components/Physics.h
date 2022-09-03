@@ -4,19 +4,16 @@ namespace draw
 {
 	namespace components
 	{
-		//using phy_selected_t = short;
-		template <typename TYPE>
 		struct Physics : public Component
 		{
-			TYPE x{ 0 };
-			TYPE y{ 0 };
-			TYPE vx{ 1 };
-			TYPE vy{ 1 };
+			Rect	rc;
+			draw_t	vx;
+			draw_t	vy;
 
-			explicit Physics(TYPE x_t, TYPE y_t, size_t eID):
+			explicit Physics(draw_t w, draw_t h, size_t eID):
 				Component{eID},
-				x{x_t},
-				y{y_t}
+				rc{0, 0, w, h},
+				vx{ 0 }, vy{ 0 }
 			{
 			}
 
@@ -31,25 +28,29 @@ namespace draw
 
 			/*
 				horizontal example: 
-						entity.x = TYPE &point
+						entity.x = draw_t &point
 						prop_type point_reach = entity.w
 						
-						TYPE from = screenImg.x, 
-						prop_type to = screenImg.x + screenImg.w
+						draw_t from = screenImg.x, 
+						draw_t to = screenImg.x + screenImg.w
 			*/
-			inline void center(TYPE &point, prop_type point_reach,  TYPE from, prop_type to)
+			inline void center(draw_t &point, draw_t point_reach, draw_t from, draw_t to)
 			{
-				point = static_cast<TYPE>((from + ((to - from) / 2)) - (point_reach / 2));
+				point = (from + ((to - from) / 2)) - (point_reach / 2);
 			}
 
-			inline void centerx(prop_type w, TYPE from, prop_type to)
+			inline void centerx(draw_t w, draw_t from, draw_t to)
 			{
+				draw_t x = rc.left;
 				center(x, w, from, to);
+				rc.posx(x);
 			}
 
-			inline void centery(prop_type h, TYPE from, prop_type to)
+			inline void centery(draw_t h, draw_t from, draw_t to)
 			{
+				draw_t y = rc.top;
 				center(y, h, from, to);
+				rc.posy(y);
 			}
 		};
 	}//components

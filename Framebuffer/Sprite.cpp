@@ -1,7 +1,4 @@
 
-#if defined(_WINDOWS)
-#include <Windows.h>
-#endif
 
 #include <memory>
 #include <vector>
@@ -11,6 +8,7 @@
 
 
 #include <Config.h>
+#include <Types.h>
 
 #include <Component.h>
 #include <Properties.h>
@@ -24,7 +22,7 @@
 
 namespace draw
 {
-	Sprite::Sprite(size_t w, size_t h, uint8_t bits, size_t stTotal):
+	Sprite::Sprite(draw_t w, draw_t h, uint8_t bits, size_t stTotal):
 		m_Entities {stTotal}
 	{
 		if(stTotal <= 0)
@@ -79,8 +77,7 @@ namespace draw
 
 		std::for_each(m_Entities.begin(), m_Entities.end(), [&](Entity* it)
 			{
-				it->physics().x = x; 
-				it->physics().y = y;
+				it->physics().rc.pos(x, y);
 			});
 	}
 

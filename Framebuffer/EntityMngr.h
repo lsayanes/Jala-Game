@@ -20,8 +20,8 @@ namespace draw
 			m_Text[szName] = pVct;
 		}
 
-		const prop_type create(std::string szName, prop_type w, prop_type h) noexcept;
-		const prop_type create(std::string szName, prop_type w, prop_type h, std::string szPath) noexcept;
+		const size_t create(std::string szName, draw_t w, draw_t h) noexcept;
+		const size_t create(std::string szName, draw_t w, draw_t h, std::string szPath) noexcept;
 		
 		Entity& operator[](std::string szName) const;
 

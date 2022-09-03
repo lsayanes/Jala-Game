@@ -10,7 +10,7 @@ namespace draw
 		std::vector<Entity*> m_Entities;
 
 	public:
-		explicit Sprite(size_t w, size_t h, uint8_t bits, size_t stTotal = 1);
+		explicit Sprite(draw_t w, draw_t h, uint8_t bits, size_t stTotal = 1);
 		virtual ~Sprite();
 
 		bool	load(size_t stIndex, const char* szPath);

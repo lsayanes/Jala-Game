@@ -13,7 +13,10 @@ namespace draw
 		void				*m_BackBufferHandle;
 		void				*m_BackBuffer;
 
-		components::Properties<size_t> m_Properties;
+		components::Properties m_Properties;
+
+		size_t				m_stWidth; 
+		size_t				m_stHeight;
 
 	protected:
 		
@@ -52,7 +55,7 @@ namespace draw
 		void flip();
 
 		inline const void *getHandle() const { return m_DevHandle; };
-		inline const components::Properties<size_t> &properties() const { return m_Properties; }
+		inline const components::Properties &properties() const { return m_Properties; }
 
 		static bool	getVideoMode(
 			size_t& lWidth,

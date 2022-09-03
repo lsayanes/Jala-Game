@@ -20,7 +20,7 @@ private:
 	int m_nBallDeltaX;
 	int m_nBallDeltaY;
 
-	draw::RECT				*m_pGameArea{nullptr};
+	draw::Rect				*m_pGameArea{nullptr};
 
 	int	m_nStatus{ PLAY_STATUS::PLAYER_R_HOLD };
 

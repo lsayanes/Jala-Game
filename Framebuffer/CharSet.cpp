@@ -20,6 +20,7 @@
 
 
 #include <Config.h>
+#include <Types.h>
 
 #include <Component.h>
 #include <Properties.h>
@@ -83,7 +84,7 @@ namespace draw
 
 			Slot = face->glyph;
 
-			pEntity = new Entity{ face->glyph->bitmap.width, face->glyph->bitmap.rows,  m_byBpp, 0 };
+			pEntity = new Entity{ static_cast<draw_t>(face->glyph->bitmap.width), static_cast<draw_t>(face->glyph->bitmap.rows),  m_byBpp, 0 };
 			dAdvance = face->glyph->metrics.horiAdvance >> 6;
 			pbyData = pEntity->data().get();
 			auto& phyRef = pEntity->physics();
@@ -100,8 +101,10 @@ namespace draw
 				}
 			}
 
-			phyRef.x = nWidth;
-			phyRef.y = nY - Slot->bitmap_top;
+			//phyRef.x = nWidth;
+			//phyRef.y = nY - Slot->bitmap_top;
+
+			phyRef.rc.pos(nWidth, nY - Slot->bitmap_top);
 
 			m_vctText[n] = pEntity;
 

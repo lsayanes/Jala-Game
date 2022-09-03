@@ -5,20 +5,25 @@ namespace draw
 {
     struct DBGW
     {
-        phy_type x{ 0 };
-        phy_type y{ 0 };
+        draw_t x{ 0 };
+        draw_t y{ 0 };
         void* pFont{ nullptr };
     };
 
 
-    struct RECT
+    struct Rect
     {
-        phy_type left{ 0 };   
-        phy_type top{ 0 };    
-        prop_type right{ 0 }; 
-        prop_type bottom{ 0 };
+        draw_t left{ 0 };
+        draw_t top{ 0 };
+        draw_t right{ 0 };
+        draw_t bottom{ 0 };
+        
+        const draw_t width;
+        const draw_t height;
 
-        explicit RECT(phy_type x, phy_type y, prop_type w, prop_type h)
+        explicit Rect(draw_t x, draw_t y, draw_t w, draw_t h):
+            width{w},
+            height{h}
         {
             left = x;
             top = y;
@@ -26,15 +31,58 @@ namespace draw
             bottom = top + h;
         }
 
-        inline void pos(phy_type x, phy_type y)
+        explicit Rect(const Rect& rc):
+            width{ rc.right- rc.left },
+            height{ rc.bottom - rc.top }
         {
-            prop_type w = right - left;
-            prop_type h = bottom - top;
-          
+            left = rc.left;
+            top = rc.top;
+            right = rc.right;
+            bottom = rc.bottom;
+        }
+
+        inline void pos(draw_t x, draw_t y)
+        {
             left = x;
             top = y;
-            right = left + w;
-            bottom = top + h;
+            right = left + width;
+            bottom = top + height;
+        }
+
+        inline void posx(draw_t x)
+        {
+            left = x;
+            right = left + width;
+        }
+
+        inline void posy(draw_t y)
+        {
+            top = y;
+            bottom = top + height;
+        }
+
+        inline void moveUp(draw_t points)
+        {
+            top = top - points;
+            bottom = top + height;
+        }
+
+        inline void moveDown(draw_t points)
+        {
+            top = top + points;
+            bottom = top + height;
+        }
+
+        inline void moveLeft(draw_t point)
+        {
+            left = left - point;
+            right = left + width;
+        }
+
+        inline void moveRight(draw_t point)
+        {
+            left = left + point;
+            right = left + width;
         }
     };
 }

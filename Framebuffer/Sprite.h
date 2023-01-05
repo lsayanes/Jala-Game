@@ -16,10 +16,10 @@ namespace draw
 		bool	load(size_t stIndex, const char* szPath);
 		void	pos(int x, int y);
 
-		const Entity& operator[](size_t i) const;
-		inline const Entity* at(size_t i) const { return m_Entities[i]; }
+		[[nodiscard]] const Entity& operator[](size_t i) const;
+		[[nodiscard]] inline const Entity* at(size_t i) const { return m_Entities[i]; }
 		
-		Entity* operator&(size_t i) const { return m_Entities.at(i); }
+		[[nodiscard]] Entity* operator&(size_t i) const { return m_Entities.at(i); }
 	};
 
 }//draw

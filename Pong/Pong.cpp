@@ -51,6 +51,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_ LPWSTR    lpCmdLine,
                      _In_ int       nCmdShow)
 {
+
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
@@ -62,7 +63,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     size_t width, height;
     unsigned char bitpx;
     int x, y;
-    draw::Device::getVideoMode(width, height, bitpx);
+    if (!draw::Device::getVideoMode(width, height, bitpx))
+    {
+        OutputDebugString("!draw::Device::getVideoMode!\n");
+        return FALSE;
+    }
 
     x = (width / 2) - (PongGame::SCREEN_W / 2);
     y = (height / 2) - (PongGame::SCREEN_H / 2);
@@ -248,3 +253,5 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     }
     return (INT_PTR)FALSE;
 }
+
+

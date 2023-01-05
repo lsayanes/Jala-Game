@@ -37,7 +37,7 @@ char			binToChar(const char *szBin);
 
 const char *lastError();
 
-#if defined(_WINDOWS)
+#if defined(WIN32)
 wchar_t *towchar_t(const char* charArray);
 char	*win_strerror(unsigned long dwError);
 char	*toChar(wchar_t *wstr);

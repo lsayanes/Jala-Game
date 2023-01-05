@@ -17,7 +17,7 @@
 #define MAX_WSTR_FORMAT		1024*8
 
 
-#if defined(_WINDOWS)
+#if defined(WIN32)
 static wchar_t		s_wString_uni_s[MAX_WSTR_FORMAT];
 static char		s_strMsg_error_s[MAX_STR_FORMAT];
 static char		s_st_str_tochar_[MAX_STR_FORMAT];
@@ -191,14 +191,14 @@ unsigned long toBigEndian(const unsigned char *pbyHex)
 
 const char *lastError()
 {
-#if defined(_WINDOWS)
+#if defined(WIN32)
     return win_strerror(GetLastError());
 #else
     return strerror(errno);
 #endif
 }
 
-#if defined(_WINDOWS)
+#if defined(WIN32)
 wchar_t *towchar_t(const char* charArray)
 {
 	size_t stLen = strlen(charArray);

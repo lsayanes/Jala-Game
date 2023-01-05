@@ -31,8 +31,8 @@ namespace draw
 		CharSet& operator=(const CharSet&) = delete;
 		CharSet& operator=(CharSet&&) = delete;
 
-		std::vector<Entity*> *flatText(const char* sText, int x, int y);
-		inline std::vector<Entity*>* get() { return &m_vctText; }
+		[[nodiscard]] std::vector<Entity*> *flatText(const char* sText, int x, int y);
+		[[nodiscard]] inline std::vector<Entity*>* get() { return &m_vctText; }
 	};
 
 }//draw

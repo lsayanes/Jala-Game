@@ -20,12 +20,12 @@ namespace draw
 			m_Text[szName] = pVct;
 		}
 
-		const size_t create(std::string szName, draw_t w, draw_t h) noexcept;
-		const size_t create(std::string szName, draw_t w, draw_t h, std::string szPath) noexcept;
+		[[nodiscard]] const size_t create(std::string szName, draw_t w, draw_t h) noexcept;
+		[[nodiscard]] const size_t create(std::string szName, draw_t w, draw_t h, std::string szPath) noexcept;
 		
 		Entity& operator[](std::string szName) const;
 
-		inline Entity* get(std::string szName) const noexcept
+		[[nodiscard]] inline Entity* get(std::string szName) const noexcept
 		{
 			auto it = m_Entities.find(szName);
 			if (it != m_Entities.end())
@@ -34,8 +34,8 @@ namespace draw
 			return nullptr;
 		}
 
-		inline FrameBuffer& frameBuffer() const noexcept  { return m_FrameBufferRef; };
-		inline unsigned char bpp() const noexcept { return m_FrameBufferRef.properties().bpp(); }
+		[[nodiscard]] inline FrameBuffer& frameBuffer() const noexcept  { return m_FrameBufferRef; };
+		[[nodiscard]] inline unsigned char bpp() const noexcept { return m_FrameBufferRef.properties().bpp(); }
 		inline void fill(uint8_t r, uint8_t g, uint8_t b) noexcept { m_FrameBufferRef.fill(r, g, b); };
 		inline void flip() const noexcept { m_FrameBufferRef.flip(); }
 	};

@@ -26,14 +26,7 @@ namespace draw
 			{
 			}
 
-			/*
-				horizontal example: 
-						entity.x = draw_t &point
-						prop_type point_reach = entity.w
-						
-						draw_t from = screenImg.x, 
-						draw_t to = screenImg.x + screenImg.w
-			*/
+
 			inline void center(draw_t &point, draw_t point_reach, draw_t from, draw_t to)
 			{
 				point = (from + ((to - from) / 2)) - (point_reach / 2);

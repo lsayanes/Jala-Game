@@ -17,7 +17,7 @@ namespace draw
 		static FontLib* instance();
 
 		void	free();
-		void	*newFont(const char* szFontPath, size_t stSize) const;
+		[[nodiscard]] void	*newFont(const char* szFontPath, size_t stSize) const;
 	};
 
 }//draw

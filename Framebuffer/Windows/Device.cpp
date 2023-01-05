@@ -32,7 +32,8 @@ namespace draw
 		m_Properties{ components::Properties {0, 0, 0, 0} },
 		m_stWidth{ 0 }, m_stHeight{0}
 	{
-		getVideoMode();
+		if (!getVideoMode())
+			throw "Device::getVideoMode FAIL";
 	}
 
 	Device::~Device() 

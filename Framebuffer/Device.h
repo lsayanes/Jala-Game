@@ -22,7 +22,7 @@ namespace draw
 		
 		explicit Device(void* pDevHandle);
 		
-		void *createBackbuffer(size_t stWidth, size_t stHeight, unsigned short unPlanes, unsigned char byBitPerPixel);
+		[[nodiscard]] void *createBackbuffer(size_t stWidth, size_t stHeight, unsigned short unPlanes, unsigned char byBitPerPixel);
 
 
 		virtual bool	isOk() const = 0;
@@ -36,7 +36,7 @@ namespace draw
 
 		virtual ~Device();
 	
-		 bool setVideoMode(
+		[[nodiscard]] bool setVideoMode(
 			size_t	stWidth,
 			size_t	stHeight,
 			 unsigned char& byPixel,
@@ -45,7 +45,7 @@ namespace draw
 
 		void	retoreVideo() const;
 
-		bool getVideoMode();
+		[[nodiscard]] bool getVideoMode();
 		
 		void *create(size_t stWidth, size_t stlHeight, unsigned char byBitPerPixel);
 		void* create();
@@ -54,10 +54,10 @@ namespace draw
 
 		void flip();
 
-		inline const void *getHandle() const { return m_DevHandle; };
-		inline const components::Properties &properties() const { return m_Properties; }
+		[[nodiscard]] inline const void *getHandle() const { return m_DevHandle; };
+		[[nodiscard]] inline const components::Properties &properties() const { return m_Properties; }
 
-		static bool	getVideoMode(
+		[[nodiscard]] static bool	getVideoMode(
 			size_t& lWidth,
 			size_t& lHeight,
 			unsigned char& byBitPixel

@@ -22,11 +22,11 @@ namespace draw
 		Entity& operator=(const Entity&) = delete;
 		Entity& operator=(Entity&&) = delete;
 
-		bool loadPng(const char* szPath);
+		[[nodiscard]]  bool loadPng(const char* szPath);
 
-		inline components::Physics&					physics()		{ return m_Physics; };
-		inline components::Properties&				properties()	{ return m_Properties; };
-		inline std::unique_ptr<unsigned char[]>&	data()			{ return m_Data; };
+		[[nodiscard]] inline components::Physics&					physics()		{ return m_Physics; };
+		[[nodiscard]] inline components::Properties&				properties()	{ return m_Properties; };
+		[[nodiscard]] inline std::unique_ptr<unsigned char[]>&	data()				{ return m_Data; };
 		
 		inline void renderWithAlpha() { m_Properties.alpha = 1; };
 

@@ -25,7 +25,7 @@ struct Png
 	void*				pRawData{nullptr}; //GBRA
 	unsigned long		ulSize{0};
 
-	bool load(const char* szFile, unsigned char byBpp = 32, unsigned char byBitdepth = 8);
+	[[nodiscard]] bool load(const char* szFile, unsigned char byBpp = 32, unsigned char byBitdepth = 8);
 };
 
 

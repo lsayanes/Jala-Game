@@ -141,7 +141,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="WinConsole.cpp" />
     <ClCompile Include="wtf.cpp" />
+    <ClCompile Include="wtfApp.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="WinConsole.h" />
+    <ClInclude Include="Wtf.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -3,6 +3,7 @@
 #include <Windows.h>
 #endif
 
+#include <cstring>
 #include <stdio.h>
 #include <stdlib.h>
 #include <fstream>

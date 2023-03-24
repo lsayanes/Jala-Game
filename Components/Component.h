@@ -28,6 +28,9 @@ namespace draw
 
 		struct Component
 		{
+			protected:
+				size_t	m_componentID{ 0 };
+
 			explicit Component(size_t compID) :
 				m_componentID{ compID }
 			{
@@ -35,8 +38,6 @@ namespace draw
 
 			const size_t componentID() const { return m_componentID; }
 
-		protected:
-			size_t	m_componentID{ 0 }; 
 		};
 
 	}; //component

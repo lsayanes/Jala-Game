@@ -1,11 +1,11 @@
 
-
+#if defined(WIN32)
 #include <Windows.h>
-#include <stdlib.h>
-
-#if defined(LINUX)
+#else
 #include <errno.h>
 #endif
+#include <stdlib.h>
+
 
 #include <ctype.h>
 #include <stdio.h>

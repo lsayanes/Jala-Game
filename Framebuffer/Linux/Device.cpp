@@ -1,9 +1,7 @@
 //leandro_say
 
-#include <windows.h>
-
 #include <stdint.h>
-#include <iostream>
+#include <cstddef>
 
 #include <Config.h>
 #include <Types.h>
@@ -15,7 +13,7 @@
 
 namespace draw
 {
-
+	/*
 	typedef struct MEMBMP
 	{
 		HBITMAP             hHandle;
@@ -23,6 +21,7 @@ namespace draw
 		BITMAPINFO			dbmi;
 		void* pBits;
 	}MEMBMP;
+	*/
 
 	Device::Device(void* pDevHandle):
 		m_DevHandle{ pDevHandle },
@@ -34,18 +33,15 @@ namespace draw
 		m_stWidth{ 0 }, m_stHeight{0}
 	{
 		if (!getVideoMode())
-		{
-			std::cout << "Device::getVideoMode FAIL" << std::endl;
 			throw "Device::getVideoMode FAIL";
-		}
 	}
 
 	Device::~Device() 
 	{
 		retoreVideo();
 
-		if (m_BackBufferHandle)
-			DeleteObject(m_BackBufferHandle);
+//		if (m_BackBufferHandle)
+//			DeleteObject(m_BackBufferHandle);
 
 		if (m_BackBuffer)
 			delete m_BackBuffer;
@@ -54,8 +50,8 @@ namespace draw
 	
 	void *Device::beginPain() 
 	{
-		if(m_DevHandle)
-			m_DeviceContext = GetDC(static_cast<HWND>(m_DevHandle));
+//		if(m_DevHandle)
+//			m_DeviceContext = GetDC(static_cast<HWND>(m_DevHandle));
 		return m_DeviceContext;
 	};
 
@@ -64,7 +60,7 @@ namespace draw
 
 		if (m_DevHandle && m_DeviceContext)
 		{
-			ReleaseDC(static_cast<HWND>(m_DevHandle), static_cast<HDC>(m_DeviceContext));
+//			ReleaseDC(static_cast<HWND>(m_DevHandle), static_cast<HDC>(m_DeviceContext));
 			m_DeviceContext = nullptr;
 		}
 	}
@@ -75,7 +71,7 @@ namespace draw
 								unsigned char& byPixel,
 								bool	bFullScreen)
 	{
-
+		/*
 		DEVMODE		Mode;
 		DWORD		dwFlag = 0;
 
@@ -91,11 +87,14 @@ namespace draw
 			dwFlag = CDS_FULLSCREEN;
 
 		return (DISP_CHANGE_SUCCESSFUL == ChangeDisplaySettings(&Mode, dwFlag));
+		*/
+
+		return false;
 	}
 
 	void Device::retoreVideo() const
 	{
-		ChangeDisplaySettings(NULL, 0);
+		//ChangeDisplaySettings(NULL, 0);
 	}
 
 	bool Device::getVideoMode(
@@ -104,7 +103,7 @@ namespace draw
 								unsigned char& byBitPixel
 	)
 	{
-
+		/*
 		BOOL		bRet = false;
 		DEVMODE		Mode;
 		memset(&Mode, 0, sizeof(Mode));
@@ -116,7 +115,10 @@ namespace draw
 		}
 
 		return static_cast<bool>(bRet);
+		*/
 
+
+		return false;
 	}
 
 	bool Device::getVideoMode()
@@ -135,29 +137,32 @@ namespace draw
 
 		if (!m_BackBufferHandle)
 		{
-			HBITMAP		hDev;
+			//HBITMAP		hDev;
 			
 			//create a context device to the window handle
-			m_BackBufferHandle = CreateCompatibleDC(GetDC(static_cast<HWND>(m_DevHandle)));
+			//m_BackBufferHandle = CreateCompatibleDC(GetDC(static_cast<HWND>(m_DevHandle)));
 			
 			/*
 			* I created this temp bitmap just to select the device context with this measures
 			*/
+			/*
 			hDev = CreateBitmap(
 				stWidth,
 				stHeight,
 				unPlanes,
 				static_cast<UINT>(byBitPerPixel),
 				nullptr);
-
+				*/
 			if (m_BackBufferHandle)
 			{
 				//bind this temp bmp measures with the back context device handle
-				SelectObject(static_cast<HDC>(m_BackBufferHandle), hDev);
+				//SelectObject(static_cast<HDC>(m_BackBufferHandle), hDev);
 
 				//this will be (on Windows) the back buffer
+				/*
 				size_t stRGBSize = stWidth * stHeight * (byBitPerPixel>>3);
 				unsigned char*  pbPixels = new unsigned char[stRGBSize];	
+				
 				MEMBMP* pBitMap = new MEMBMP;
 
 				for (size_t i = 0; i < stRGBSize; i++)
@@ -175,7 +180,7 @@ namespace draw
 				pBitMap->bmih.biClrUsed = 0;
 				pBitMap->bmih.biClrImportant = 0;
 
-				ZeroMemory(&pBitMap->dbmi, sizeof(pBitMap->dbmi));
+				//ZeroMemory(&pBitMap->dbmi, sizeof(pBitMap->dbmi));
 				pBitMap->dbmi.bmiHeader = pBitMap->bmih;
 				pBitMap->dbmi.bmiColors->rgbBlue = 0;
 				pBitMap->dbmi.bmiColors->rgbGreen = 0;
@@ -183,14 +188,14 @@ namespace draw
 				pBitMap->dbmi.bmiColors->rgbReserved = 0;
 				pBitMap->pBits = (void*)&(pbPixels[0]);
 					
-				pBitMap->hHandle = CreateDIBSection(static_cast<HDC>(m_BackBufferHandle), &pBitMap->dbmi, DIB_RGB_COLORS, &pBitMap->pBits, nullptr, 0);
+				//pBitMap->hHandle = CreateDIBSection(static_cast<HDC>(m_BackBufferHandle), &pBitMap->dbmi, DIB_RGB_COLORS, &pBitMap->pBits, nullptr, 0);
 					
 				m_BackBuffer = pBitMap;
-
+				
 				delete[] pbPixels;
 
 				return static_cast<MEMBMP*>(m_BackBuffer)->pBits;
-
+				*/
 				}
 		}
 
@@ -226,6 +231,7 @@ namespace draw
 
 	void Device::flip()
 	{
+		/*
 		if (m_DevHandle && !IsIconic(static_cast<HWND>(m_DevHandle)))
 		{
 			HDC hdc;
@@ -240,7 +246,9 @@ namespace draw
 			hdc = static_cast<HDC>(beginPain());
 			BitBlt(hdc, 0, 0, m_stWidth, m_stHeight, static_cast<HDC>(m_BackBufferHandle), 0, 0, SRCCOPY);
 			endPaint();
+
 		}
+		*/
 	};
 
 }//draw

@@ -1,5 +1,6 @@
 
 
+
 #include <memory>
 #include <vector>
 #include <stdint.h>
@@ -20,6 +21,7 @@
 
 namespace draw
 {
+
 
 	FrameBuffer::FrameBuffer(draw_t w, draw_t h, uint8_t bits, void* pDevHandle) :
         Device{ pDevHandle },

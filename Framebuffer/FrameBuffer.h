@@ -12,6 +12,7 @@ namespace draw
 		draw_t									m_Width;
 		draw_t									m_Height;
 		uint8_t									*m_pbyBuffer;
+		uint8_t									*m_pbyOwnBuffer; //workaround Device::create == null
 
 		std::unique_ptr<unsigned char[]>		m_Line;
 	private:

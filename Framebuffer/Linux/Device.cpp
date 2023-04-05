@@ -2,13 +2,16 @@
 
 #include <stdint.h>
 #include <cstddef>
+#include <stdlib.h>
 
-#include <Config.h>
-#include <Types.h>
-#include <Component.h>
-#include <Physics.h>
-#include <Properties.h>
-#include <Device.h>
+#include "../Config.h"
+#include "../Types.h"
+
+#include "../Components/Component.h"
+#include "../Components/Physics.h"
+#include "../Components/Properties.h"
+
+#include "../Device.h"
 
 
 namespace draw
@@ -32,6 +35,7 @@ namespace draw
 		m_Properties{ components::Properties {0, 0, 0, 0} },
 		m_stWidth{ 0 }, m_stHeight{0}
 	{
+
 		if (!getVideoMode())
 			throw "Device::getVideoMode FAIL";
 	}
@@ -44,7 +48,10 @@ namespace draw
 //			DeleteObject(m_BackBufferHandle);
 
 		if (m_BackBuffer)
-			delete m_BackBuffer;
+		{
+			free(m_BackBuffer);
+			m_BackBuffer = nullptr;
+		}
 	}
 
 	
@@ -117,8 +124,12 @@ namespace draw
 		return static_cast<bool>(bRet);
 		*/
 
+		stWidth = 1920;
+		stHeight = 1056;
+		byBitPixel = 32;
+		 
 
-		return false;
+		return true;
 	}
 
 	bool Device::getVideoMode()

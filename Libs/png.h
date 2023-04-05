@@ -8,7 +8,7 @@ struct Png
 	{
 	}
 
-	explicit Png(unsigned long w, unsigned h, unsigned char bpp, void* pData) :
+	explicit Png(uint32_t w, unsigned h, unsigned char bpp, void* pData) :
 		ulWidth{w},
 		ulHeight{h},
 		byBpp{bpp},
@@ -19,11 +19,11 @@ struct Png
 
 	virtual ~Png();
 
-	unsigned long		ulWidth{0};
-	unsigned long		ulHeight{0};
-	unsigned char		byBpp{0};
-	void*				pRawData{nullptr}; //GBRA
-	unsigned long		ulSize{0};
+	uint32_t		ulWidth{0};
+	uint32_t		ulHeight{0};
+	unsigned char	byBpp{0};
+	void*			pRawData{nullptr}; //GBRA
+	uint32_t		ulSize{0};
 
 	[[nodiscard]] bool load(const char* szFile, unsigned char byBpp = 32, unsigned char byBitdepth = 8);
 };

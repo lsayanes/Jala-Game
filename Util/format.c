@@ -7,6 +7,7 @@
 #include <stdlib.h>
 
 
+#include <inttypes.h>
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
@@ -101,7 +102,7 @@ long bufferToPrintAscii(unsigned char *pbyBuff, long lSize, char *strPrintableOu
 }
 
 
-void uLongToBuffer(unsigned long ul, unsigned char *pOut, unsigned char bLittleEndian)
+void uLongToBuffer(uint32_t ul, unsigned char *pOut, unsigned char bLittleEndian)
 {
 	if(bLittleEndian)
 	{
@@ -119,7 +120,7 @@ void uLongToBuffer(unsigned long ul, unsigned char *pOut, unsigned char bLittleE
 	}
 }
 
-void uLongLongToBuffer(unsigned long long ull, unsigned char *pOut, unsigned char bLittleEndian)
+void uLongLongToBuffer(uint32_t long ull, unsigned char *pOut, unsigned char bLittleEndian)
 {
 
 	//0 a las iquierda es big
@@ -161,30 +162,30 @@ void uIntToBuffer(short int w, unsigned char *pOut, unsigned char bLittleEndian)
 	}
 }
 
-unsigned long toLittleEndian(const unsigned char *pbyHex)
+uint32_t toLittleEndian(const unsigned char *pbyHex)
 {
 	//AA,BB,CC,DD
 	//AABBCCDD
-	unsigned long ul = 0;
+	uint32_t ul = 0;
 	
 	ul = 0xFF & pbyHex[0];
     ul |= (0xFF & pbyHex[1]) << 8;
     ul |= (0xFF & pbyHex[2]) << 16;
-    ul |= (unsigned long)(0xFF & pbyHex[3]) << 24;
+    ul |= (uint32_t)(0xFF & pbyHex[3]) << 24;
 
 	return ul;
 }
 
-unsigned long toBigEndian(const unsigned char *pbyHex)
+uint32_t toBigEndian(const unsigned char *pbyHex)
 {
 	//AA,BB,CC,DD
 	//DDCCBBAA
-    unsigned long ul = 0;
+    uint32_t ul = 0;
 
 	ul = 0xFF & pbyHex[3];
     ul |= (0xFF & pbyHex[2]) << 8;
     ul |= (0xFF & pbyHex[1]) << 16;
-    ul |= (unsigned long)(0xFF & pbyHex[0]) << 24;
+    ul |= (uint32_t)(0xFF & pbyHex[0]) << 24;
 
     return ul;
 }
@@ -218,7 +219,7 @@ wchar_t *toWChar(char *str)
 	return towchar_t(str);
 }
 
-char *win_strerror(unsigned long dwError) 
+char *win_strerror(uint32_t dwError) 
 {
 	
 	LPVOID	lpMsgBuf = NULL;		

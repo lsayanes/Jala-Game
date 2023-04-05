@@ -10,7 +10,7 @@ namespace draw
 {
     namespace tools
     {
-        static const unsigned long I32Poli04C11DB7_Table[256] = { \
+        static const uint32_t I32Poli04C11DB7_Table[256] = { \
                                                                                     0x00000000, 0x77073096, 0xee0e612c, 0x990951ba, 0x076dc419, 0x706af48f, 0xe963a535, 0x9e6495a3, \
                                                                                     0x0edb8832, 0x79dcb8a4, 0xe0d5e91e, 0x97d2d988, 0x09b64c2b, 0x7eb17cbd, 0xe7b82d07, 0x90bf1d91, \
                                                                                     0x1db71064, 0x6ab020f2, 0xf3b97148, 0x84be41de, 0x1adad47d, 0x6ddde4eb, 0xf4d4b551, 0x83d385c7, \
@@ -62,7 +62,7 @@ namespace draw
             }
         }
 
-        inline void sleep(unsigned long ulMill)
+        inline void sleep(uint32_t ulMill)
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(ulMill));
         }
@@ -80,7 +80,7 @@ namespace draw
         }
 
 
-        [[nodiscard]] inline unsigned long crcI32(unsigned long  ulCRC, const unsigned char *pbyBuffer, unsigned short wDataLen)
+        [[nodiscard]] inline uint32_t crcI32(uint32_t  ulCRC, const unsigned char *pbyBuffer, unsigned short wDataLen)
         {
             ulCRC = ulCRC ^ 0xFFFFFFFF;
 
@@ -96,7 +96,7 @@ namespace draw
             return (T)((pb[0] << 24) | (pb[1] << 16) | (pb[2] << 8) | pb[3]);
         }
 
-        [[nodiscard]] static double random(double min, double max)
+        [[nodiscard]] inline double random(double min, double max)
         {
             return (double(rand()) / (double(RAND_MAX)) * (max - min)) + min;
         }

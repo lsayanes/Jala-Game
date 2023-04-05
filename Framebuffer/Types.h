@@ -32,8 +32,8 @@ namespace draw
         }
 
         explicit Rect(const Rect& rc):
-            width{ rc.right- rc.left },
-            height{ rc.bottom - rc.top }
+            width{ static_cast<draw_t>(rc.right- rc.left) },
+            height{ static_cast<draw_t>(rc.bottom - rc.top) }
         {
             left = rc.left;
             top = rc.top;

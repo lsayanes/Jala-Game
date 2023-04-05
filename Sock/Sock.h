@@ -2,6 +2,8 @@
 
 #define MAX_CHAR_HOST	255
 
+struct WSADATA;
+
 class Sock
 {
 private:
@@ -15,6 +17,7 @@ protected:
 	char		m_strIP[MAX_CHAR_HOST];
 	char		m_strDSN[MAX_CHAR_HOST];
 	char		m_strLocal[MAX_CHAR_HOST];
+
 
 private:
 	void			startup();

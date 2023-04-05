@@ -22,14 +22,14 @@ long	bufferToPrintAscii(unsigned char *pbyBuff, long lSize, char *strPrintableOu
 
 size_t	asciiToAsciiHex(const char *szAscii, char *strOut);
 
-void	uLongToBuffer(unsigned long ul, unsigned char *pOut, unsigned char bLittleEndian);
+void	uLongToBuffer(uint32_t ul, unsigned char *pOut, unsigned char bLittleEndian);
 void	uIntToBuffer(short int w, unsigned char *pOut, unsigned char bLittleEndian);
 
-void	uLongLongToBuffer(unsigned long long ull, unsigned char *pOut, unsigned char bLittleEndian);
+void	uLongLongToBuffer(uint32_t long ull, unsigned char *pOut, unsigned char bLittleEndian);
 
 //unsigned short	toLittleEndianShort(unsigned short w);
-unsigned long	toBigEndian(const unsigned char *pbyHex);
-unsigned long	toLittleEndian(const unsigned char *pbyHex);
+uint32_t	toBigEndian(const unsigned char *pbyHex);
+uint32_t	toLittleEndian(const unsigned char *pbyHex);
 
 
 unsigned char	charToBin(char ch, char *strBin);
@@ -39,7 +39,7 @@ const char *lastError();
 
 #if defined(WIN32)
 wchar_t *towchar_t(const char* charArray);
-char	*win_strerror(unsigned long dwError);
+char	*win_strerror(uint32_t dwError);
 char	*toChar(wchar_t *wstr);
 wchar_t *toWChar(char *str);
 #else

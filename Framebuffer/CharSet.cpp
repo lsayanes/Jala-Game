@@ -14,19 +14,20 @@
 
 #include <ft2build.h>
 #include <freetype/ftcolor.h>
-
 #include FT_FREETYPE_H
 #include FT_STROKER_H
 
 
-#include <Config.h>
-#include <Types.h>
 
-#include <Component.h>
-#include <Properties.h>
-#include <Physics.h>
+#include "Config.h"
+#include "Types.h"
 
-#include <Tools.h>
+#include "../Components/Component.h"
+#include "../Components/Physics.h"
+#include "../Components/Properties.h"
+
+
+#include "../Util/Tools.h"
 
 #include "Entity.h"
 
@@ -43,7 +44,7 @@ namespace draw
 		m_byBpp{byBpp}
 	{
 		if(!m_pFont)
-			throw std::invalid_argument("pFont is nullptr");
+			throw std::invalid_argument("CharSet::CarSet pFont is nullptr");
 
 
 		m_vctText.reserve(1024);

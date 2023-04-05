@@ -1,19 +1,27 @@
 
-#define _WINSOCK_DEPRECATED_NO_WARNINGS
+
 
 #include <stdio.h>
+
+#if defined(WIN32)
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <iphlpapi.h>
-
+#endif
+#include <sys/socket.h>
+#include <bits/socket.h>
+#include <linux/socket.h>
 #include "Sock.h"
 
-
+#if defined(WIN32)
 #pragma comment(lib, "iphlpapi")
 #pragma comment(lib, "ws2_32.lib")
 
 WSADATA *Sock::m_stpWSockData = NULL;
-
+#else
+WSADATA *Sock::m_stpWSockData = NULL;
+#endif
 
 Sock::Sock():
 	m_strIP{0},

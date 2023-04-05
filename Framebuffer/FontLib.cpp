@@ -1,4 +1,5 @@
 
+#include <iostream>
 #include <vector>
 #include <memory>
 
@@ -8,12 +9,12 @@
 #include FT_FREETYPE_H
 #include FT_STROKER_H
 
-#include <Config.h>
-#include <Types.h>
+#include "Config.h"
+#include "Types.h"
 
-#include <Component.h>
-#include <Physics.h>
-#include <Properties.h>
+#include "../Components/Component.h"
+#include "../Components/Physics.h"
+#include "../Components/Properties.h"
 
 #include "Entity.h"
 
@@ -47,9 +48,10 @@ namespace draw
 		FT_Face face;
 		void* pRet = nullptr;
 
+		//std::cout << "newFont: " << szFontPath << std::endl;
+
 		if (0 == (err = FT_New_Face(g_ftLibrary, szFontPath, 0, &face)) && (0 == (err = FT_Set_Char_Size(face, stSize << 6, stSize << 6, 90, 90))))
 			pRet = static_cast<void*>(face);
-
 
 		return pRet;
 	}

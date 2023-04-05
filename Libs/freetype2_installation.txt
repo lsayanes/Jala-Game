@@ -1,0 +1,23 @@
+
+git clone https://git.savannah.nongnu.org/git/freetype/freetype2.git
+cd freetype2
+./autogen.sh                   # generates configure
+./configure --without-harfbuzz # generates Makefile + deactivates harfbuzz
+make                           # compile libs
+make install                   # install libs & headers
+
+
+Possible issues:
+
+aclocal: not found
+apt-get install autotools-dev
+apt-get install automake
+
+
+eval: libtoolize: not found
+apt-get install libtool
+ln -s /usr/local/bin/glibtoolize /usr/local/bin/libtoolize
+
+
+path:
+pkg-config --cflags freetype2

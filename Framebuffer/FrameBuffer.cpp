@@ -6,12 +6,12 @@
 #include <stdint.h>
 #include <algorithm>
 
-#include <Config.h>
-#include <Types.h>
+#include "Config.h"
+#include "Types.h"
 
-#include <Component.h>
-#include <Properties.h>
-#include <Physics.h>
+#include "../Components/Component.h"
+#include "../Components/Physics.h"
+#include "../Components/Properties.h"
 
 #include "Device.h"
 #include "Entity.h"
@@ -27,19 +27,33 @@ namespace draw
         Device{ pDevHandle },
         m_Properties{ components::Properties{w, h, bits, 0} },
         m_Width{w},
-        m_Height{h}
+        m_Height{h},
+        m_pbyOwnBuffer{nullptr}
     {
-
-        unsigned char comp = m_Properties.components();
 
         m_Line = std::make_unique<unsigned char[]>(m_Properties.lineSize);
         m_pbyBuffer = static_cast<unsigned char*>(Device::create(w, h, bits));
+
+        if(nullptr == m_pbyBuffer)
+        {
+            //Device no provide a buffer
+            m_pbyOwnBuffer = (unsigned char*)malloc(w * h * bits);
+            if(m_pbyOwnBuffer)
+                m_pbyBuffer = m_pbyOwnBuffer;
+            else
+                throw ("FrameBuffer::FrameBuffer m_pbyBuffer == nullptr");
+
+        }
 
     }
 
 	FrameBuffer::~FrameBuffer()
 	{
-	
+        if(m_pbyOwnBuffer)
+        {
+            free(m_pbyOwnBuffer);
+            m_pbyOwnBuffer = nullptr;
+        }
 	}
 
 	bool FrameBuffer::isOk() const 
@@ -164,7 +178,7 @@ namespace draw
 
     void FrameBuffer::fill(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
     {
-    
+   
         size_t y = 0;
         size_t offset;
         size_t lineSize = m_Properties.lineSize;
@@ -174,6 +188,7 @@ namespace draw
         unsigned char* pbyLine = m_Line.get();
 
         uint32_t pixel = buildPixel(r, g, b, a);
+        
 
         for (uint32_t ud = 0; ud < lineSize; ud += comp)
             std::memcpy(&pbyLine[ud], &pixel, comp);

@@ -1,4 +1,5 @@
 
+#include <iostream>
 #include <vector>
 #include <cstring>
 
@@ -7,16 +8,14 @@
 #include <fstream>
 #include <algorithm>
 
-#include <Config.h>
-#include <Types.h>
+#include "Config.h"
+#include "Types.h"
 
-#include <Component.h>
-#include <Properties.h>
-#include <Physics.h>
+#include "../Components/Component.h"
+#include "../Components/Physics.h"
+#include "../Components/Properties.h"
 
-#include <Tools.h>
-
-//#include "../Libs/picopng.hpp"
+#include "../Util/Tools.h"
 #include "../Libs/png.h"
 
 #include "Entity.h"
@@ -29,6 +28,7 @@ namespace draw
 		m_Data{ std::make_unique<unsigned char[]>(m_Properties.size) } /*,
 		m_typID{ typeID }*/
 	{
+		//std::cout << "Entity w:" << w << " h: " << h << " bpp: " << (int)byBitPixels << " Created" << std::endl; 
 	}
 
 
@@ -49,6 +49,7 @@ namespace draw
 			bRet = true;
 		}
 
+		//std::cout << "Entity::loadPng " << szPath << " bRet:" << bRet << std::endl; 
 		return bRet;
 	}
 

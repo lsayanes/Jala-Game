@@ -3,6 +3,7 @@
 #include <Windows.h>
 #endif
 
+#include <iostream>
 #include <cstring>
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,7 +11,7 @@
 #include <vector>
 #include <algorithm>
 
-#include <Tools.h>
+#include "../Util/Tools.h"
 
 
 #include "png.h"
@@ -145,7 +146,7 @@ static const unsigned char ADAM7_DY[ 7 ] = { 8, 8, 8, 4, 4, 2, 2 }; //y delta va
 
 /*
 * Adam7GetPassValues
-    Los valores de stPassStart tienen 8 valores: el octavo indica el byte después del final de la séptima pasada
+    Los valores de stPassStart tienen 8 valores: el octavo indica el byte despuï¿½s del final de la sï¿½ptima pasada
 */
 void pngAdam7GetPassValues(
     unsigned passw[ 7 ], unsigned passh[ 7 ], size_t stFilterPassStart[ 8 ],
@@ -242,9 +243,9 @@ void pngAdam7Deinterlace( unsigned char *pbOut, const unsigned char *pbyMem, uns
 */
 
 /*
-static unsigned long toUint32( const unsigned char *pb )
+static uint32_t toUint32( const unsigned char *pb )
 {
-    return (unsigned long)( ( pb[ 0 ] << 24 ) | ( pb[ 1 ] << 16 ) | ( pb[ 2 ] << 8 ) | pb[ 3 ] );
+    return (uint32_t)( ( pb[ 0 ] << 24 ) | ( pb[ 1 ] << 16 ) | ( pb[ 2 ] << 8 ) | pb[ 3 ] );
 }
 */
 
@@ -362,9 +363,9 @@ unsigned pngHuffmanDecodeSymbol( const unsigned char* pbMem, size_t *punBitPtr, 
 
 unsigned char pngHuffmanTreeMake2DTree(PngHuffmanTree*pTree )
 {
-    unsigned long udNodeFilled = 0;
-    unsigned long udTreePos = 0;
-    unsigned long n, i;
+    uint32_t udNodeFilled = 0;
+    uint32_t udTreePos = 0;
+    uint32_t n, i;
 
     if (nullptr != ( pTree->punTree2D = (unsigned*)malloc( pTree->unNumCodes * 2 * sizeof( unsigned ) ) ) )
     {
@@ -424,8 +425,8 @@ unsigned char pngHuffmanTreeMakeFromLengths1D( PngHuffmanTree *pTree )
     unsigned char bRet = 1;
     unsigned bits, n;
 
-    std::vector<unsigned long> vctBitLenCount;
-    std::vector<unsigned long> vctNextCode;
+    std::vector<uint32_t> vctBitLenCount;
+    std::vector<uint32_t> vctNextCode;
 
     if (nullptr != ( pTree->punTree1D = (unsigned*)malloc( pTree->unNumCodes * sizeof( unsigned ) ) ) )
     {
@@ -748,7 +749,7 @@ unsigned char pngGetTreeInflateDynamic( PngHuffmanTree *pTreeLLengths, PngHuffma
 unsigned char pngInflateHuffmanBlock( std::vector<unsigned char> &out, const unsigned char *pbMem, size_t stMemSize, size_t *pBPtr, size_t *pstPos, unsigned char bByteType )
 {
     unsigned char                   bRet = 0;
-    PngHuffmanTree                  TreeLLengths;        //literales y tamaño de codigos
+    PngHuffmanTree                  TreeLLengths;        //literales y tamaï¿½o de codigos
     PngHuffmanTree                  TreeDist;             //codigos de distancias
     size_t                          stMemBitLength = stMemSize * 8;
 
@@ -971,8 +972,8 @@ unsigned char pngDecompress( unsigned char **pbOut, size_t *pstOutSize, const un
                 bRet = pngInflate( pbOut, pstOutSize, pbMem + 2, stMemSize - 2/*, pDecoder*/ );
                 if ( 0 == bRet && !pDecoder->bIgnoreAdler32 )
                 {
-                    unsigned long ADLER32 = draw::tools::to32bitData<unsigned long>( &pbMem[ stMemSize - 4 ] );
-                    unsigned long checksum = draw::tools::crcI32( 0, *pbOut, (unsigned short)(*pstOutSize ));
+                    uint32_t ADLER32 = draw::tools::to32bitData<uint32_t>( &pbMem[ stMemSize - 4 ] );
+                    uint32_t checksum = draw::tools::crcI32( 0, *pbOut, (unsigned short)(*pstOutSize ));
                     bRet = ( checksum == ADLER32 ) ? 0 : 1;
                 }
             }
@@ -1415,8 +1416,8 @@ unsigned char pngReadChunk_iTXt( PngState_t *pState, const unsigned char *pbData
 
 unsigned char pngChunk_Crc( const unsigned char *pbChunk )
 {
-    uint32_t udLength = draw::tools::to32bitData<unsigned long>( pbChunk );
-    uint32_t udCRC = draw::tools::to32bitData<unsigned long>( &pbChunk[ udLength + 8 ] );
+    uint32_t udLength = draw::tools::to32bitData<uint32_t>( pbChunk );
+    uint32_t udCRC = draw::tools::to32bitData<uint32_t>( &pbChunk[ udLength + 8 ] );
     uint32_t udSum = draw::tools::crcI32( 0, &pbChunk[ 4 ], (uint16_t)( udLength + 4 ) );
 
     return ( udCRC != udSum ) ? 1 : 0;
@@ -1425,7 +1426,7 @@ unsigned char pngChunk_Crc( const unsigned char *pbChunk )
 
 const unsigned char *pngChunk_NextConst( const unsigned char *pbChunk )
 {
-    uint32_t udChunkLength = draw::tools::to32bitData<unsigned long>( pbChunk ) + 12;
+    uint32_t udChunkLength = draw::tools::to32bitData<uint32_t>( pbChunk ) + 12;
     return &pbChunk[ udChunkLength ];
 }
 
@@ -1677,7 +1678,7 @@ unsigned char pngColorModeCopy( PngColorMode_t *pCModeDest, const PngColorMode_t
 }
 
 
-unsigned char pngInspect( unsigned long *w, unsigned long *h, PngState_t *pState, const unsigned char *pbyMem, size_t stMemSize )
+unsigned char pngInspect( uint32_t *w, uint32_t *h, PngState_t *pState, const unsigned char *pbyMem, size_t stMemSize )
 {
 
     PngInfo_t *pInfo = &pState->Info;
@@ -1690,22 +1691,22 @@ unsigned char pngInspect( unsigned long *w, unsigned long *h, PngState_t *pState
 
     if ( pbyMem[ 0 ] != 137 || pbyMem[ 1 ] != 80 || pbyMem[ 2 ] != 78 || pbyMem[ 3 ] != 71
          || pbyMem[ 4 ] != 13 || pbyMem[ 5 ] != 10 || pbyMem[ 6 ] != 26 || pbyMem[ 7 ] != 10 )
-    {
-        return 1;
+    {       
+        return 2;
     }
 
-    if ( 13 != draw::tools::to32bitData<unsigned long>( &pbyMem[ 8 ] ) )
-        return 1;
+    if ( 13 != draw::tools::to32bitData<uint32_t>( &pbyMem[ 8 ] ) )
+        return 3;
 
     if ( !pngIsChunk( pbyMem + 8, "IHDR" ) )
-        return 1;
+        return 4;
 
 
-    *w = (unsigned long)draw::tools::to32bitData<unsigned long>( &pbyMem[ 16 ] );
-    *h = (unsigned long)draw::tools::to32bitData<unsigned long>( &pbyMem[ 20 ] );
+    *w = (uint32_t)draw::tools::to32bitData<uint32_t>( &pbyMem[ 16 ] );
+    *h = (uint32_t)draw::tools::to32bitData<uint32_t>( &pbyMem[ 20 ] );
 
     if ( *w == 0 || *h == 0 )
-        return 1;
+        return 5;
 
     pInfo->Color.bBitdepth = pbyMem[ 24 ];
     pInfo->Color.ColorType = (PngColorType)pbyMem[ 25 ];
@@ -1714,12 +1715,12 @@ unsigned char pngInspect( unsigned long *w, unsigned long *h, PngState_t *pState
     pInfo->bInterlaceMethod = pbyMem[ 28 ];
 
     if ( 0 != pInfo->bFilterMethod || 0 != pInfo->bFilterMethod || pInfo->bInterlaceMethod > 1 )
-        return 1;
+        return 6;
 
     if ( !pState->Decoder.bIgnoreCrc )
     {
-        if (draw::tools::to32bitData<unsigned long>( &pbyMem[ 29 ] ) != draw::tools::crcI32( 0, &pbyMem[ 12 ], 17 ) )
-            return 1;
+        if (draw::tools::to32bitData<uint32_t>( &pbyMem[ 29 ] ) != draw::tools::crcI32( 0, &pbyMem[ 12 ], 17 ) )
+            return 7;
     }
 
     return pngCheckColorValidity( pInfo->Color.ColorType, pInfo->Color.bBitdepth );
@@ -1729,7 +1730,7 @@ unsigned char pngInspect( unsigned long *w, unsigned long *h, PngState_t *pState
 /*
 IsPixelOverflow:
 
-    Comprueba de forma segura cantidad de píxeles puede haber overflow en un tipo de dato size_t
+    Comprueba de forma segura cantidad de pï¿½xeles puede haber overflow en un tipo de dato size_t
     Si esta funcion retorna 0 entonces se podra calcular de forma segura
         (size_t) w * (size_t) h * 8
         * cantidad de bytes en IDAT (incluyendo filtro, relleno y Adam7)
@@ -1788,11 +1789,11 @@ unsigned char pngPaethPredictor( short a, short b, short c )
 
 /*
 * UnfilterScanline
-Para el método de filtro PNG 0
-Anula el filtrado de una línea de escaneo de imagen PNG por línea de escaneo.
-Cuando los píxeles son más pequeños que 1 byte, el filtro funciona byte por byte (stByteWidth = 1)
-pbPrecon es la línea de escaneo anterior sin filtrar, reconocer el resultado, escanear la línea de escaneo actual.
-las líneas de escaneo entrantes NO incluyen el byte de tipo de filtro, que se da en el parámetro bFilterType
+Para el mï¿½todo de filtro PNG 0
+Anula el filtrado de una lï¿½nea de escaneo de imagen PNG por lï¿½nea de escaneo.
+Cuando los pï¿½xeles son mï¿½s pequeï¿½os que 1 byte, el filtro funciona byte por byte (stByteWidth = 1)
+pbPrecon es la lï¿½nea de escaneo anterior sin filtrar, reconocer el resultado, escanear la lï¿½nea de escaneo actual.
+las lï¿½neas de escaneo entrantes NO incluyen el byte de tipo de filtro, que se da en el parï¿½metro bFilterType
 */
 
 unsigned pngUnfilterScanline(
@@ -1877,11 +1878,11 @@ unsigned pngUnfilterScanline(
 
 /*
 * Unfilter
-Para el método de filtro PNG 0
-esta función elimina el filtro de una sola imagen (por ejemplo, sin entrelazar, esto se llama una vez, con Adam7 siete veces)
-pbOut debe tener suficientes bytes asignados, pbyMem debe tener las líneas de escaneo + 1 byte de tipo de filtro por línea de escaneo
-w y h son dimensiones de imagen o dimensiones de imagen reducida, bpp son bits por píxel
-Se permite que la entrada y la salida tengan la misma dirección de memoria (pero no son del mismo tamaño ya que tiene los bytes de filtro adicionales)
+Para el mï¿½todo de filtro PNG 0
+esta funciï¿½n elimina el filtro de una sola imagen (por ejemplo, sin entrelazar, esto se llama una vez, con Adam7 siete veces)
+pbOut debe tener suficientes bytes asignados, pbyMem debe tener las lï¿½neas de escaneo + 1 byte de tipo de filtro por lï¿½nea de escaneo
+w y h son dimensiones de imagen o dimensiones de imagen reducida, bpp son bits por pï¿½xel
+Se permite que la entrada y la salida tengan la misma direcciï¿½n de memoria (pero no son del mismo tamaï¿½o ya que tiene los bytes de filtro adicionales)
 */
 
 unsigned pngUnfilter( unsigned char *pbOut, const unsigned char* pbyMem, size_t w, size_t h, size_t stBpp )
@@ -1914,7 +1915,7 @@ void pngSetBitOfReversedStream( size_t *pstBitPtr, unsigned char* pbBitStream, u
 {
     if ( 0 == bit )
         pbBitStream[ ( *pstBitPtr ) >> 3 ] &= (unsigned char)( ~( 1 << ( 7 - ( ( *pstBitPtr ) & 0x7 ) ) ) );
-    
+    else
         pbBitStream[ ( *pstBitPtr ) >> 3 ] |= (unsigned char)( 1 << ( 7 - ( ( *pstBitPtr ) & 0x7 ) ) );
 
     ++( *pstBitPtr );
@@ -1996,7 +1997,7 @@ unsigned char pngPostProcessScanines( unsigned char *pbOut, unsigned char *pbyMe
 
             if ( stBpp < 8 )
             {
-                //Eliminar los bits de relleno en las lineas de exploracion, todavía puede haber bits de relleno entre las diferentes imágenes reducidas 
+                //Eliminar los bits de relleno en las lineas de exploracion, todavï¿½a puede haber bits de relleno entre las diferentes imï¿½genes reducidas 
                 pngRemovePaddingBits( &pbyMem[ passstart[ i ] ], &pbyMem[ padded_passstart[ i ] ], passw[ i ] * stBpp, ( ( passw[ i ] * stBpp + 7 ) / 8 ) * 8, passh[ i ] );
             }
         }
@@ -2009,7 +2010,7 @@ unsigned char pngPostProcessScanines( unsigned char *pbOut, unsigned char *pbyMe
 
 
 unsigned char pngDecode(
-    unsigned char** ppbOut, unsigned long *w, unsigned long *h,
+    unsigned char** ppbOut, uint32_t *w, uint32_t *h,
     PngState_t *pState,
     const unsigned char *pbyMem, size_t stMemSize
 )
@@ -2051,25 +2052,25 @@ unsigned char pngDecode(
         while ( !IEND && !pState->bError )
         {
             if ( (size_t)( ( pbChunk - pbyMem ) + 12 ) > stMemSize || pbChunk < pbyMem )
-            {
+            {         
                 if ( pState->Decoder.bIgnoreEnd )
                     break;
 
                 pState->bError = 1; //TODO: especificar si es necesario..
             }
 
-            udChunkLength = draw::tools::to32bitData<unsigned long>( pbChunk );
-            if ( ( udChunkLength = draw::tools::to32bitData<unsigned long>( pbChunk ) ) > 2147483647 )
+            udChunkLength = draw::tools::to32bitData<uint32_t>( pbChunk );
+            if ( ( udChunkLength = draw::tools::to32bitData<uint32_t>( pbChunk ) ) > 2147483647 )
             {
                 if ( pState->Decoder.bIgnoreEnd )
                     break;
 
-                pState->bError = 1; //TODO: especificar si es necesario..
+                pState->bError = 2; //TODO: especificar si es necesario..
             }
 
             if ( (size_t)(( (size_t)( pbChunk - pbyMem ) + (size_t)(udChunkLength + 12) )) > stMemSize || ( pbChunk + udChunkLength + 12 ) < pbyMem )
             {
-                pState->bError = 1; //TODO: especificar si es necesario..
+                pState->bError = 3; //TODO: especificar si es necesario..
                 break;
             }
 
@@ -2082,7 +2083,7 @@ unsigned char pngDecode(
 
                 if ( addofl( stOldSize, udChunkLength, &stNewSize ) )
                 {
-                    pState->bError = 1; //TODO: especificar si es necesario..
+                    pState->bError = 4; //TODO: especificar si es necesario..
                     break;
                 }
 
@@ -2144,7 +2145,7 @@ unsigned char pngDecode(
             {
                 if ( !pState->Decoder.bIgnoreCritical && !( ( pbChunk[ 4 ] & 32 ) != 0 ) )
                 {
-                    pState->bError = 1; //TODO: especificar si es necesario..
+                    pState->bError = 5; //TODO: especificar si es necesario..
                     break;
                 }
 
@@ -2155,7 +2156,7 @@ unsigned char pngDecode(
             {
                 if ( pngChunk_Crc( pbChunk ) )
                 {
-                    pState->bError = 1; //TODO: especificar si es necesario..
+                    pState->bError = 6; //TODO: especificar si es necesario..
                     break;
                 }
             }
@@ -2203,7 +2204,9 @@ unsigned char pngDecode(
             delete[] pOut;
 
             if ( !pState->bError && vctScanLines.size() != stPredict )
-                pState->bError = 1; //el tamaño de la descompresion no conincide con el predictivo...
+            {
+                pState->bError = 7; //el tamanio de la descompresion no conincide con el predictivo...
+            }
         }
 
         vctIdat.clear();
@@ -2213,7 +2216,7 @@ unsigned char pngDecode(
             stOutSize = pngChunk_GetRawSizeLct( (uint32_t)*w, (uint32_t)*h, &pState->Info.Color );
             *ppbOut = (unsigned char*)malloc( stOutSize );
             if ( !*ppbOut )
-                pState->bError = 1;
+                pState->bError = 7;
         }
         if ( !pState->bError )
         {
@@ -2250,8 +2253,8 @@ unsigned char pngDecode(
  */
 bool  pngDecode_File(
     unsigned char                  **ppbOut,
-    unsigned long                  *w,
-    unsigned long                  *h,
+    uint32_t                  *w,
+    uint32_t                  *h,
     const char                     *szPath,
     PngColorType                    ColorType,
     unsigned char                   bBitdepth
@@ -2281,11 +2284,10 @@ bool  pngDecode_File(
             pngCleanup_Palette(&State.InfoRaw);
             pngCleanup_Info(&State.Info);
         }
-
+    
         file.close();
 
     }
-
 
     return bRet;
 }

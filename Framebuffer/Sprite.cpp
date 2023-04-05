@@ -7,13 +7,13 @@
 #include <algorithm>
 
 
-#include <Config.h>
-#include <Types.h>
+#include "Config.h"
+#include "Types.h"
 
-#include <Component.h>
-#include <Properties.h>
-#include <Physics.h>
-#include <Tools.h>
+#include "../Components/Component.h"
+#include "../Components/Physics.h"
+#include "../Components/Properties.h"
+
 #include "Device.h"
 #include "Entity.h"
 
@@ -54,7 +54,7 @@ namespace draw
 				if (file.read(buffer.data(), size))
 				{
 					Entity* pe{ m_Entities[stIndex] };
-					unsigned long w{ pe->properties().w }, h{ pe->properties().h };
+					uint32_t w{ pe->properties().w }, h{ pe->properties().h };
 					char* p{ buffer.data() };
 					unsigned char* pEntData = pe->data().get();
 				

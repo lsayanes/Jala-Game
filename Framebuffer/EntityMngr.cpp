@@ -10,14 +10,13 @@
 #include <algorithm>
 //#include <optional>
 
-#include <Config.h>
+#include "Config.h"
 
-#include <Types.h>
-#include <Component.h>
-#include <Properties.h>
-#include <Physics.h>
+#include "Types.h"
 
-#include <Tools.h>
+#include "../Components/Component.h"
+#include "../Components/Physics.h"
+#include "../Components/Properties.h"
 
 #include "Device.h"
 #include "Entity.h"

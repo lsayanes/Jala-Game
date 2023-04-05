@@ -24,7 +24,7 @@
 #include <FrameBuffer.h>
 
 #include <EntityMngr.h>
-
+#include <Tools.h>
 
 #include "Demo.h"
 
@@ -32,7 +32,8 @@
 Demo::Demo(void* pDevHandle, draw::FrameBuffer& fbuffer):
 	m_phDevHandle{pDevHandle},
 	m_EnMan{fbuffer},
-	m_bRun{false}
+	m_bRun{false},
+	m_bRendering{false}
 {
 
 }
@@ -78,23 +79,21 @@ bool Demo::create()
 }
 
 void Demo::updateDbg(std::string sz)
-{	
-	std::cout << "updateDbg:" << sz << std::endl;
-	
+{		
 	std::string str = Demo::TXT_ID_DBG + ": " + sz;
 	auto vc = m_pDbgFont->flatText(str.c_str(), DGB_X, DGB_Y);
 	m_EnMan.addText(Demo::TXT_ID_DBG, vc);
-
-	std::cout << "updateEnd"  << std::endl;
-
 }
 
 
 void Demo::render()
 {
 
-	int i = 0;
+	m_bRendering = true;
+	
+	int fps = 0;
 	auto lasttime = std::chrono::steady_clock::now();
+
 
 	while (m_bRun)
 	{
@@ -105,30 +104,15 @@ void Demo::render()
 
 		if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - lasttime).count() > 1000)
 		{
-			/*
-			sprintf(str, "fps :%d (min :%d max :%d) seconds :%d ", i, min, max, seconds++);
-			updateDbg(str);
-
-			if (seconds > 4)
-			{
-				if (min > i)
-				{
-					min = i;
-				}
-				else if (max < i)
-				{
-					max = i;
-				}
-			}
-			*/
-
-			i = 0;
-
+			printf("fps:%4d\r", fps); 
+			fps = 0;
 			lasttime = std::chrono::steady_clock::now();
 		}
 		else
-			i++;		
+			fps++;		
 	}
+
+	m_bRendering = false;
 }
 
 void Demo::start()
@@ -142,6 +126,12 @@ void Demo::start()
 void Demo::stop()
 {
 	m_bRun = false;
+
+	while(m_bRendering)
+	{
+		std::cout << "Waiting for render thread... " << std::endl;
+		draw::tools::sleep(10);
+	}
 }
 
 

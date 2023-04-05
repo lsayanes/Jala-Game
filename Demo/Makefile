@@ -9,13 +9,14 @@ BIN		:= ./bin/
 OBJ		:= ./obj/
 LIBS	:= -lfreetype -lX11 -lXext 
 
+.PHONY : copy
 
 #build: $(BIN) $(OBJ) $(patsubst %.cpp, $(OBJ)%.o, $(wildcard $(SRC))) $(wildcard *.h)
 #	$(CC) -o $(BIN)$(OUT) $(patsubst %.cpp, $(OBJ)%.o, $(wildcard $(SRC))) $(LIBS)
 
+
 build: $(BIN) $(OBJ) $(patsubst %.cpp, $(OBJ)%.o, $(wildcard $(SRC))) $(patsubst %.c, $(OBJ)%.o, $(wildcard *.c)) $(wildcard *.h)
 	$(CC) -o $(BIN)$(OUT) $(patsubst %.cpp, $(OBJ)%.o, $(wildcard $(SRC))) $(patsubst %.c, $(OBJ)%.o, $(wildcard *.c)) $(LIBS)
-
 
 
 $(OBJ)%.o: %.cpp
@@ -26,13 +27,15 @@ $(OBJ)%.o: %.c
 	$(MKDIR) $(@D)
 	$(CC) $(CCFLAGS) $(INC) -c -o $@ $<
 
-$(BIN):
+$(BIN):  
 	$(MKDIR) $(BIN)
 
-
-$(OBJ):
+$(OBJ): copy
 	$(MKDIR) $(OBJ)
 
+copy:
+	$(shell cp ./WhiteOnBlack.ttf ${BIN})
+	$(shell cp ./bgd_test.png ${BIN})
 	
 clean: 
 	$(shell rm -rf ./Framebuffer)

@@ -27,33 +27,18 @@ namespace draw
         Device{ pDevHandle },
         m_Properties{ components::Properties{w, h, bits, 0} },
         m_Width{w},
-        m_Height{h},
-        m_pbyOwnBuffer{nullptr}
+        m_Height{h}
     {
 
         m_Line = std::make_unique<unsigned char[]>(m_Properties.lineSize);
         m_pbyBuffer = static_cast<unsigned char*>(Device::create(w, h, bits));
 
         if(nullptr == m_pbyBuffer)
-        {
-            //Device no provide a buffer
-            m_pbyOwnBuffer = (unsigned char*)malloc(w * h * bits);
-            if(m_pbyOwnBuffer)
-                m_pbyBuffer = m_pbyOwnBuffer;
-            else
-                throw ("FrameBuffer::FrameBuffer m_pbyBuffer == nullptr");
-
-        }
-
+            throw ("FrameBuffer::FrameBuffer m_pbyBuffer == nullptr");
     }
 
 	FrameBuffer::~FrameBuffer()
 	{
-        if(m_pbyOwnBuffer)
-        {
-            free(m_pbyOwnBuffer);
-            m_pbyOwnBuffer = nullptr;
-        }
 	}
 
 	bool FrameBuffer::isOk() const 

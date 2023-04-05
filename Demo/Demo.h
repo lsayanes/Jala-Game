@@ -8,12 +8,13 @@ private:
 	draw::EntityMngr		m_EnMan;
 
 	bool					m_bRun;
+	bool					m_bRendering;
 
 	draw::Rect				*m_pGameArea{nullptr};
 
 
 	const std::string TXT_ID_DBG{ "dbg" };
-	const std::string DBGFONTPATH  { "./White On Black.ttf" };
+	const std::string DBGFONTPATH  { "./WhiteOnBlack.ttf" };
 	
 	static constexpr size_t BCKGRND_W{ 1024 };
 	static constexpr size_t BCKGRND_H{ 600 };

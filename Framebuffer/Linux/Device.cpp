@@ -5,12 +5,25 @@
 #include <cstddef>
 #include <stdlib.h>
 
+
+
+#include <X11/X.h>
+#include <X11/keysym.h>
+
+extern "C"
+{
+    #include <tinyptc.h>
+}
+
 #include "../Config.h"
 #include "../Types.h"
 
 #include "../Components/Component.h"
 #include "../Components/Physics.h"
 #include "../Components/Properties.h"
+
+
+
 
 #include "../Device.h"
 
@@ -43,6 +56,9 @@ namespace draw
 
 	Device::~Device() 
 	{
+
+		ptc_close();
+
 		retoreVideo();
 
 		if (m_BackBuffer)
@@ -50,6 +66,7 @@ namespace draw
 			free(m_BackBuffer);
 			m_BackBuffer = nullptr;
 		}
+
 	}
 
 	
@@ -159,6 +176,8 @@ namespace draw
 			m_stWidth = stWidth;
 			m_stHeight = stHeight;
 			m_Properties.bpp(byBitPerPixel);
+
+			ptc_open("...", m_stWidth, m_stHeight);
 		}
 		
 		return pRet;
@@ -179,24 +198,22 @@ namespace draw
 
 	void Device::flip()
 	{
-		/*
-		if (m_DevHandle && !IsIconic(static_cast<HWND>(m_DevHandle)))
+		if(m_BackBuffer)
 		{
-			HDC hdc;
-			//copy the fake buffer (BMP) on back context device
-			HDC hMem = CreateCompatibleDC(0);
-			MEMBMP* pBitMap = static_cast<MEMBMP*>(m_BackBuffer);
-			SelectObject(hMem, pBitMap->hHandle);
-			BitBlt(static_cast<HDC>(m_BackBufferHandle), 0, 0, m_stWidth, m_stHeight, hMem, 0, 0, SRCCOPY);
-			DeleteDC(hMem);
-			
-			//copy the the back context device on primary context device windows
-			hdc = static_cast<HDC>(beginPain());
-			BitBlt(hdc, 0, 0, m_stWidth, m_stHeight, static_cast<HDC>(m_BackBufferHandle), 0, 0, SRCCOPY);
-			endPaint();
-
+			m_mtxSync.lock();
+			ptc_update(m_BackBuffer);
+			m_mtxSync.unlock();
 		}
-		*/
 	};
+
+
+	 const int32_t Device::processEvent()
+	 {
+		m_mtxSync.lock();
+		int32_t ret = ptc_process_events();
+		m_mtxSync.unlock();
+		
+		return ret;
+	 }
 
 }//draw

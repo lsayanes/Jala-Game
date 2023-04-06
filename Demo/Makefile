@@ -3,17 +3,13 @@ OUT 	:= fbApp
 CCFLAGS	:= -std=c++17 -Wall -pedantic --debug
 CC		:= g++
 MKDIR 	:= mkdir -p
-SRC		:= ./*.cpp ../Framebuffer/*.cpp  ../Framebuffer/Linux/*.cpp ../Libs/*.cpp ../Util/*.c  
-INC		:= -I. -I../Components -I../Framebuffer -I../Libs -I../Util -I/home/parallels/freetype2/include
+SRC		:= ./*.cpp ../Framebuffer/*.cpp  ../Framebuffer/Linux/*.cpp ../Libs/*.cpp ../Util/*.c ../Libs/tinyPTC/*.c
+INC		:= -I. -I../Components -I../Framebuffer -I../Libs -I../Util -I/usr/include/freetype2/ -I../Libs/tinyPTC/
 BIN		:= ./bin/
 OBJ		:= ./obj/
 LIBS	:= -lfreetype -lX11 -lXext 
 
 .PHONY : copy
-
-#build: $(BIN) $(OBJ) $(patsubst %.cpp, $(OBJ)%.o, $(wildcard $(SRC))) $(wildcard *.h)
-#	$(CC) -o $(BIN)$(OUT) $(patsubst %.cpp, $(OBJ)%.o, $(wildcard $(SRC))) $(LIBS)
-
 
 build: $(BIN) $(OBJ) $(patsubst %.cpp, $(OBJ)%.o, $(wildcard $(SRC))) $(patsubst %.c, $(OBJ)%.o, $(wildcard *.c)) $(wildcard *.h)
 	$(CC) -o $(BIN)$(OUT) $(patsubst %.cpp, $(OBJ)%.o, $(wildcard $(SRC))) $(patsubst %.c, $(OBJ)%.o, $(wildcard *.c)) $(LIBS)

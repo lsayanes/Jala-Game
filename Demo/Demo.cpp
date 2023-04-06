@@ -26,6 +26,10 @@
 #include <EntityMngr.h>
 #include <Tools.h>
 
+
+
+
+
 #include "Demo.h"
 
 
@@ -65,10 +69,12 @@ bool Demo::create()
 	if ((bRet = t > 0))
 	{
 		//initial positions
+
+		//center the background
 		auto& bckphy = m_EnMan[BACKGROUND].physics();
 		bckphy.rc.pos(static_cast<draw::draw_t>((SCREEN_W / 2) - (BCKGRND_W / 2)), 80);
 
-		m_pGameArea = new draw::Rect{ bckphy.rc };	
+		//m_pGameArea = new draw::Rect{ bckphy.rc };	
 	}
 	else
 	{
@@ -80,7 +86,7 @@ bool Demo::create()
 
 void Demo::updateDbg(std::string sz)
 {		
-	std::string str = Demo::TXT_ID_DBG + ": " + sz;
+	std::string str = Demo::TXT_ID_DBG + ": " + sz + " - ESC Quit";
 	auto vc = m_pDbgFont->flatText(str.c_str(), DGB_X, DGB_Y);
 	m_EnMan.addText(Demo::TXT_ID_DBG, vc);
 }
@@ -98,13 +104,15 @@ void Demo::render()
 	while (m_bRun)
 	{
 
-		m_EnMan.fill(255, 255, 255);
+		m_EnMan.fill(0, 0, 0);
 		m_EnMan.renderAll();
 		m_EnMan.flip();
 
 		if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - lasttime).count() > 1000)
 		{
-			printf("fps:%4d\r", fps); 
+			char str[1024];
+			sprintf(str,"fps:%4d", fps); 
+			updateDbg(str);
 			fps = 0;
 			lasttime = std::chrono::steady_clock::now();
 		}
@@ -133,5 +141,4 @@ void Demo::stop()
 		draw::tools::sleep(10);
 	}
 }
-
 

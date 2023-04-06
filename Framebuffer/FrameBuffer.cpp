@@ -43,7 +43,7 @@ namespace draw
 
 	bool FrameBuffer::isOk() const 
 	{
-		return getHandle() && m_pbyBuffer ? true : false;
+		return m_pbyBuffer ? true : false;
 	}
 
     void FrameBuffer::put(Entity& e) const

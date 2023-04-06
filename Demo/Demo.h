@@ -36,8 +36,8 @@ public:
 	static constexpr size_t SCREEN_W{ 1024 };
 	static constexpr size_t SCREEN_H{ 800 };
 
-	static constexpr int DGB_X{ 0 };
-	static constexpr int DGB_Y{ SCREEN_H - 100 };
+	static constexpr int DGB_X{ SCREEN_W / 2};
+	static constexpr int DGB_Y{ SCREEN_H / 2};
 
 public:
 	explicit Demo(void *pDevHandle, draw::FrameBuffer& fbuffer);
@@ -46,6 +46,8 @@ public:
 	bool create();
 	void start();
 	void stop();
+
+	[[nodiscard]]inline const bool isRunning() const { return m_bRun; } 
 
 	void updateDbg(std::string sz);
 

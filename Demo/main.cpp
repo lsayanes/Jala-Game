@@ -5,6 +5,15 @@
 #include <fcntl.h>
 
 #include <iostream>
+
+#include <X11/X.h>
+#include <X11/keysym.h>
+
+extern "C"
+{
+    #include <tinyptc.h>
+}
+
 #include <Config.h>
 
 #include <Tools.h>
@@ -77,13 +86,14 @@ int main()
 
         demo.start();
   
-        while(!kbhit())
-            ;
+        while(!fb.processEvent())
+            draw::tools::sleep(500);
   
         demo.stop();
     }
 
-    
+    std::cout << "Demo end" << std::endl;
+  
     return 0;
 
 }

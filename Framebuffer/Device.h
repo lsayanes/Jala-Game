@@ -1,5 +1,7 @@
 #pragma once
 
+#include <mutex>
+
 namespace draw
 {
 
@@ -17,6 +19,11 @@ namespace draw
 
 		size_t				m_stWidth; 
 		size_t				m_stHeight;
+
+		const char 			*m_szName;
+
+
+		std::mutex				m_mtxSync{};
 
 	protected:
 		
@@ -54,7 +61,8 @@ namespace draw
 
 		void flip();
 
-		[[nodiscard]] inline const void *getHandle() const { return m_DevHandle; };
+		[[nodiscard]] const int32_t processEvent();
+		
 		[[nodiscard]] inline const components::Properties &properties() const { return m_Properties; }
 
 		[[nodiscard]] static bool	getVideoMode(

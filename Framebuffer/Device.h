@@ -7,32 +7,35 @@ namespace draw
 
 	class Device
 	{
+	private:
+		void	*m_DevHandle;	//window handle
+		void	*m_Instance;	//just for Windows System
 	protected:
-		void				*m_DevHandle;
-		void				*m_DeviceContext;
+		
+		void				*m_SurfaceDev; //surface of client area of a specified window
 		bool				m_bFullScreen;
 
-		void				*m_BackBufferHandle;
-		void				*m_BackBuffer;
-
-		components::Properties m_Properties;
-
-		size_t				m_stWidth; 
-		size_t				m_stHeight;
+		//Back buffer
+		void				*m_BackBufferHandle;	//file handle
+		void				*m_BackBuffer;			//buffer	
 
 		const char 			*m_szName;
 
 
 		std::mutex				m_mtxSync{};
 
+		bool					m_bRunning;
+
+	public:
+		draw_t				width;
+		draw_t				height;
+		draw_t				bpp;
 	protected:
 		
-		explicit Device(void* pDevHandle);
-		
+	
 		[[nodiscard]] void *createBackbuffer(size_t stWidth, size_t stHeight, unsigned short unPlanes, unsigned char byBitPerPixel);
 
 
-		virtual bool	isOk() const = 0;
 		virtual void	*beginPain();
 		virtual void	endPaint();
 
@@ -41,38 +44,30 @@ namespace draw
 		Device& operator=(const Device&) = delete;
 		Device& operator=(Device&&) = delete;
 
+		void	retoreVideo() const;
+
+	public:
+
+		explicit Device(void *pParam);
 		virtual ~Device();
-	
-		[[nodiscard]] bool setVideoMode(
-			size_t	stWidth,
-			size_t	stHeight,
-			 unsigned char& byPixel,
+
+		virtual void flip();
+
+		[[nodiscard]] virtual void* create(draw_t w, draw_t h, draw_t bitPerPixel);
+		[[nodiscard]] virtual bool isRunning();
+		[[nodiscard]] virtual bool setVideoMode(
+			draw_t	stWidth,
+			draw_t	stHeight,
+			draw_t& byPixel,
 			bool	bFullScreen
 		);
 
-		void	retoreVideo() const;
+		[[nodiscard]] virtual bool getVideoMode();
 
-		[[nodiscard]] bool getVideoMode();
+
+		virtual void onClose();
 		
-		void *create(size_t stWidth, size_t stlHeight, unsigned char byBitPerPixel);
-		void* create();
-	
-	public:
-
-		void flip();
-
-		[[nodiscard]] const int32_t processEvent();
-		
-		[[nodiscard]] inline const components::Properties &properties() const { return m_Properties; }
-
-		[[nodiscard]] static bool	getVideoMode(
-			size_t& lWidth,
-			size_t& lHeight,
-			unsigned char& byBitPixel
-
-		);
 
 	};
 
-
-}
+}//draw

@@ -3,7 +3,7 @@
 class Demo
 {
 private:
-	void					*m_phDevHandle{nullptr};
+
 	draw::CharSet			*m_pDbgFont{nullptr};
 	draw::EntityMngr		m_EnMan;
 
@@ -11,6 +11,8 @@ private:
 	bool					m_bRendering;
 
 	draw::Rect				*m_pGameArea{nullptr};
+
+	int						m_fps;
 
 
 	const std::string TXT_ID_DBG{ "dbg" };
@@ -28,8 +30,8 @@ private:
 
 	const std::string ERR_CREATING{ "Error try to create " };
 
-private:
-	void render();
+//private:
+//	void render();
 
 
 public:
@@ -40,8 +42,10 @@ public:
 	static constexpr int DGB_Y{ SCREEN_H / 2};
 
 public:
-	explicit Demo(void *pDevHandle, draw::FrameBuffer& fbuffer);
+	explicit Demo(draw::FrameBuffer& fbuffer);
 	virtual ~Demo();
+
+	void render();
 
 	bool create();
 	void start();

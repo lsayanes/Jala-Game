@@ -1,10 +1,20 @@
 
+
+#if defined(_WINDOWS)
+#include "framework.h"
+#endif
+
 #include <stdio.h>
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+
+#if defined(LINUX)
 #include <termios.h>
 #include <unistd.h>
 #include <fcntl.h>
 
-#include <iostream>
+
 
 #include <X11/X.h>
 #include <X11/keysym.h>
@@ -14,6 +24,7 @@ extern "C"
     #include <tinyptc.h>
 }
 
+#endif
 #include <Config.h>
 
 #include <Tools.h>
@@ -35,7 +46,7 @@ extern "C"
 
 #include "Demo.h"
 
- 
+#if defined(LINUX)
 int kbhit(void)
 {
     struct termios oldt, newt;
@@ -62,9 +73,19 @@ int kbhit(void)
  
     return 0;
 }
- 
+#endif
 
+#if defined(LINUX)
 int main()
+#endif
+
+#if defined(_WINDOWS)
+int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
+    _In_opt_ HINSTANCE hPrevInstance,
+    _In_ LPWSTR    lpCmdLine,
+    _In_ int       nCmdShow)
+#endif
+
 {
 
     void *pdh = nullptr;
@@ -72,24 +93,33 @@ int main()
     size_t width, height;
     unsigned char bitpx;
   
-    if (!draw::Device::getVideoMode(width, height, bitpx))
-    {
-        std::cout << "draw::Device::getVideoMode ERROR" << std::endl;
-    }
+  
+    draw::Device dev{ hInstance };
 
-    draw::FrameBuffer fb{ Demo::SCREEN_W , Demo::SCREEN_H, bitpx, pdh };
-    Demo demo{pdh, fb};
+    //get video carateristics
+    dev.getVideoMode();
+
+    //set windows and screen size
+    dev.width = Demo::SCREEN_W;
+    dev.height = Demo::SCREEN_H;
+
+    //create a farmebuffer fomr a Device
+    draw::FrameBuffer fb{ dev };
+    
+
+    Demo demo{fb};
 
     if(demo.create())
     {
         std::cout << "Demo created" << std::endl;
 
-        demo.start();
+ 
+        while (dev.isRunning())
+        {
+            demo.render();
+            dev.flip();
+        }
   
-        while(!fb.processEvent())
-            draw::tools::sleep(500);
-  
-        demo.stop();
     }
 
     std::cout << "Demo end" << std::endl;

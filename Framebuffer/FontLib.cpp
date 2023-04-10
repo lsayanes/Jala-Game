@@ -50,7 +50,7 @@ namespace draw
 
 		//std::cout << "newFont: " << szFontPath << std::endl;
 
-		if (0 == (err = FT_New_Face(g_ftLibrary, szFontPath, 0, &face)) && (0 == (err = FT_Set_Char_Size(face, stSize << 6, stSize << 6, 90, 90))))
+		if (0 == (err = FT_New_Face(g_ftLibrary, szFontPath, 0, &face)) && (0 == (err = FT_Set_Char_Size(face, (FT_F26Dot6)stSize << 6, (FT_F26Dot6)stSize << 6, 90, 90))))
 			pRet = static_cast<void*>(face);
 
 		return pRet;

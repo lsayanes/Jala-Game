@@ -26,17 +26,22 @@ namespace draw
 		};
 		*/
 
+		enum TYPE_COMPONENT { TC_BACKBUFFER_DEV, TC_MALLOC_BUFFER, TC_NONE };
+
 		struct Component
 		{
+			
+				explicit Component(int compID) :
+					m_componentID{ compID }
+				{
+				}
+
+
+				const int componentID() const { return m_componentID; }
+
 			protected:
-				size_t	m_componentID{ 0 };
+				int	m_componentID{ TC_BACKBUFFER_DEV };
 
-			explicit Component(size_t compID) :
-				m_componentID{ compID }
-			{
-			}
-
-			const size_t componentID() const { return m_componentID; }
 
 		};
 

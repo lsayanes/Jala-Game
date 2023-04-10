@@ -23,27 +23,38 @@ namespace draw
 {
 
 
-	FrameBuffer::FrameBuffer(draw_t w, draw_t h, uint8_t bits, void* pDevHandle) :
-        Device{ pDevHandle },
-        m_Properties{ components::Properties{w, h, bits, 0} },
-        m_Width{w},
-        m_Height{h}
+	FrameBuffer::FrameBuffer(draw_t w, draw_t h, uint8_t bits) :
+        m_Properties{ components::Properties{w, h, bits, components::TC_MALLOC_BUFFER} }
+
     {
 
         m_Line = std::make_unique<unsigned char[]>(m_Properties.lineSize);
-        m_pbyBuffer = static_cast<unsigned char*>(Device::create(w, h, bits));
+        m_pbyBuffer = static_cast<unsigned char*>(malloc(w * h *bits));
 
         if(nullptr == m_pbyBuffer)
             throw ("FrameBuffer::FrameBuffer m_pbyBuffer == nullptr");
     }
 
+    FrameBuffer::FrameBuffer(Device& Dev) :
+        m_Properties{ components::Properties{Dev.width, Dev.height, static_cast<uint8_t>(Dev.bpp), components::TC_BACKBUFFER_DEV}}
+
+    {
+
+        m_Line = std::make_unique<unsigned char[]>(m_Properties.lineSize);
+        m_pbyBuffer = static_cast<unsigned char*>(Dev.create(Dev.width, Dev.height, Dev.bpp));
+
+        if (nullptr == m_pbyBuffer)
+            throw ("FrameBuffer::FrameBuffer m_pbyBuffer == nullptr");
+    }
+
 	FrameBuffer::~FrameBuffer()
 	{
-	}
+        if (m_pbyBuffer && components::TC_MALLOC_BUFFER == m_Properties.componentID())
+        {
+            free(m_pbyBuffer);
+            m_pbyBuffer = nullptr;
+        }
 
-	bool FrameBuffer::isOk() const 
-	{
-		return m_pbyBuffer ? true : false;
 	}
 
     void FrameBuffer::put(Entity& e) const
@@ -64,9 +75,9 @@ namespace draw
         {
             size_t i;
             unsigned char* psrc, *pdest;
-            while (line < static_cast<size_t>(physicsRef.rc.height) && y < m_Height - 1 && y >= 0)
+            while (line < static_cast<size_t>(physicsRef.rc.height) && y < m_Properties.width - 1 && y >= 0)
             {
-                y = (line + physicsRef.rc.top);
+                y = static_cast<int>((line + physicsRef.rc.top));
                 pdest = m_pbyBuffer + ((y * m_Properties.lineSize) + x);
                 psrc = data + (line * linSizeEnt);
                
@@ -85,9 +96,9 @@ namespace draw
         }
         else
         {
-            while (line < static_cast<size_t>(physicsRef.rc.height) && y < (m_Height - 1) && y >= 0)
+            while (line < static_cast<size_t>(physicsRef.rc.height) && y < (m_Properties.height - 1) && y >= 0)
             {
-                y = (line + physicsRef.rc.top);
+                y = static_cast<int>((line + physicsRef.rc.top));
                 offset = (y * m_Properties.lineSize) + x;
                 std::memcpy(pbyPix + offset, data + (line * linSizeEnt), linSizeEnt);
                 line++;
@@ -178,7 +189,7 @@ namespace draw
         for (uint32_t ud = 0; ud < lineSize; ud += comp)
             std::memcpy(&pbyLine[ud], &pixel, comp);
 
-        while (y < static_cast<size_t>(m_Height))
+        while (y < static_cast<size_t>(m_Properties.height))
         {
             offset = (y * lineSize);
             std::memcpy(pbyPix + offset, pbyLine, lineSize);

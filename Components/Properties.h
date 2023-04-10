@@ -6,15 +6,20 @@ namespace draw
 	{
 		struct Properties : Component
 		{
-			size_t size{ 0 };
-			size_t lineSize{ 0 };
-			unsigned char alpha{ 0 }; //if it have alpha channel
+			size_t			size{0};
+			size_t			lineSize{0};
+			unsigned char	alpha{0}; //if it have alpha channel
+			draw_t			width{0};
+			draw_t			height{0};
 
 			explicit Properties(draw_t w, draw_t h, unsigned char b_t, size_t eID) : Component{eID}
 			{
 				bpp(b_t);
 				size = (w * (m_components)) * h;
 				lineSize = w * m_components;
+
+				width = w;
+				height = h;
 			}
 
 			Properties(const Properties&) = delete;

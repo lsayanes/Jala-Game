@@ -4,22 +4,23 @@
 
 namespace draw
 {
+	class Device;
 
-	class FrameBuffer : public Device
+	class FrameBuffer
 	{
 	private:
 		components::Properties					m_Properties;
-		draw_t									m_Width;
-		draw_t									m_Height;
 		uint8_t									*m_pbyBuffer;
 
 		std::unique_ptr<unsigned char[]>		m_Line;
+
 	private:
 		void fill(components::Properties& Prop, draw_t w, draw_t h, unsigned char* pbySurface, uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255);
 	
 	public:
 		
-		explicit FrameBuffer(draw_t w, draw_t h, uint8_t bits, void *pDevHandle);
+		explicit FrameBuffer(draw_t w, draw_t h, uint8_t bits);
+		explicit FrameBuffer(Device& Dev);
 	
 		virtual ~FrameBuffer();
 
@@ -28,7 +29,6 @@ namespace draw
 		FrameBuffer& operator=(const FrameBuffer&) = delete;
 		FrameBuffer& operator=(FrameBuffer&&) = delete;
 
-		[[nodiscard]] bool	isOk() const override final;
 		
 		void	put(Entity& e) const;
 		void	put(std::vector<Entity*> &v) const;

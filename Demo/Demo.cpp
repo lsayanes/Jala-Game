@@ -33,11 +33,11 @@
 #include "Demo.h"
 
 
-Demo::Demo(void* pDevHandle, draw::FrameBuffer& fbuffer):
-	m_phDevHandle{pDevHandle},
+Demo::Demo(draw::FrameBuffer& fbuffer):
 	m_EnMan{fbuffer},
 	m_bRun{false},
-	m_bRendering{false}
+	m_bRendering{false},
+	m_fps{0}
 {
 
 }
@@ -97,30 +97,29 @@ void Demo::render()
 
 	m_bRendering = true;
 	
-	int fps = 0;
-	auto lasttime = std::chrono::steady_clock::now();
+	//int fps = 0;
+	static auto lasttime = std::chrono::steady_clock::now();
 
 
-	while (m_bRun)
+	//if (m_bRun)
 	{
 
 		m_EnMan.fill(0, 0, 0);
 		m_EnMan.renderAll();
-		m_EnMan.flip();
 
 		if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - lasttime).count() > 1000)
 		{
 			char str[1024];
-			sprintf(str,"fps:%4d", fps); 
+			sprintf(str,"fps:%4d", m_fps);
 			updateDbg(str);
-			fps = 0;
+			m_fps = 0;
 			lasttime = std::chrono::steady_clock::now();
 		}
 		else
-			fps++;		
+			m_fps++;
 	}
 
-	m_bRendering = false;
+	//m_bRendering = false;
 }
 
 void Demo::start()

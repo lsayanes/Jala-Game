@@ -12,9 +12,45 @@
 #include <Properties.h>
 #include <Device.h>
 
-
 namespace draw
 {
+
+	struct FunctionClass
+	{
+
+		static Device *pDev;
+
+		FunctionClass() = default;
+
+		static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+		{
+			switch (message)
+			{
+			case WM_KEYDOWN:
+				switch (wParam)
+				{
+				case VK_ESCAPE:
+					PostMessage(hWnd, WM_DESTROY, 0, 0);
+					break;
+				default:
+					break;
+				}
+				break;
+			case WM_COMMAND:
+				break;
+			case WM_DESTROY:
+				pDev->onClose();
+				PostQuitMessage(0);
+				break;
+			default:
+				return DefWindowProc(hWnd, message, wParam, lParam);
+			}
+
+			return FALSE;
+		}
+	}WindProcClass;
+
+	Device* FunctionClass::pDev{ nullptr };
 
 	typedef struct MEMBMP
 	{
@@ -24,20 +60,16 @@ namespace draw
 		void* pBits;
 	}MEMBMP;
 
-	Device::Device(void* pDevHandle):
-		m_DevHandle{ pDevHandle },
-		m_DeviceContext{nullptr},
+	Device::Device(void* pParam):
+		m_SurfaceDev{nullptr},
+		m_Instance{pParam},
 		m_bFullScreen{false},
 		m_BackBufferHandle{nullptr},
 		m_BackBuffer{nullptr},
-		m_Properties{ components::Properties {0, 0, 0, 0} },
-		m_stWidth{ 0 }, m_stHeight{0}
+		width{0}, height{0}, bpp{0}
 	{
 		if (!getVideoMode())
-		{
-			std::cout << "Device::getVideoMode FAIL" << std::endl;
 			throw "Device::getVideoMode FAIL";
-		}
 	}
 
 	Device::~Device() 
@@ -49,30 +81,32 @@ namespace draw
 
 		if (m_BackBuffer)
 			delete m_BackBuffer;
+
+
 	}
 
 	
 	void *Device::beginPain() 
 	{
 		if(m_DevHandle)
-			m_DeviceContext = GetDC(static_cast<HWND>(m_DevHandle));
-		return m_DeviceContext;
+			m_SurfaceDev = GetDC(static_cast<HWND>(m_DevHandle));
+		return m_SurfaceDev;
 	};
 
 	void Device::endPaint() 
 	{
 
-		if (m_DevHandle && m_DeviceContext)
+		if (m_DevHandle && m_SurfaceDev)
 		{
-			ReleaseDC(static_cast<HWND>(m_DevHandle), static_cast<HDC>(m_DeviceContext));
-			m_DeviceContext = nullptr;
+			ReleaseDC(static_cast<HWND>(m_DevHandle), static_cast<HDC>(m_SurfaceDev));
+			m_SurfaceDev = nullptr;
 		}
 	}
 
 	bool Device::setVideoMode(
-								size_t	stWidth,
-								size_t	stHeight,
-								unsigned char& byPixel,
+								draw_t	stWidth,
+								draw_t	stHeight,
+								draw_t& byPixel,
 								bool	bFullScreen)
 	{
 
@@ -82,8 +116,8 @@ namespace draw
 		memset(&Mode, 0, sizeof(DEVMODE));
 
 		Mode.dmSize = sizeof(DEVMODE);
-		Mode.dmPelsWidth = stWidth;
-		Mode.dmPelsHeight = stHeight;
+		Mode.dmPelsWidth = static_cast<DWORD>(stWidth);
+		Mode.dmPelsHeight = static_cast<DWORD>(stHeight);
 		Mode.dmBitsPerPel = static_cast<DWORD>(byPixel);
 		Mode.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
 
@@ -98,33 +132,23 @@ namespace draw
 		ChangeDisplaySettings(NULL, 0);
 	}
 
-	bool Device::getVideoMode(
-								size_t& stWidth,
-								size_t& stHeight,
-								unsigned char& byBitPixel
-	)
-	{
-
-		BOOL		bRet = false;
-		DEVMODE		Mode;
-		memset(&Mode, 0, sizeof(Mode));
-		if (TRUE == (bRet = EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &Mode))) 
-		{
-			stWidth = Mode.dmPelsWidth;
-			stHeight = Mode.dmPelsHeight;
-			byBitPixel = static_cast<unsigned char>(Mode.dmBitsPerPel);
-		}
-
-		return static_cast<bool>(bRet);
-
-	}
 
 	bool Device::getVideoMode()
 	{
 		unsigned char b{0};
 
-		bool bRet = Device::getVideoMode(m_stWidth, m_stHeight, b);
-		m_Properties.bpp(b);
+
+		BOOL		bRet = false;
+		DEVMODE		Mode;
+		memset(&Mode, 0, sizeof(Mode));
+		if (TRUE == (bRet = EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &Mode)))
+		{
+			width = Mode.dmPelsWidth;
+			height = Mode.dmPelsHeight;
+			bpp = static_cast<unsigned char>(Mode.dmBitsPerPel);
+			bRet = true;
+		}
+
 
 		return bRet;
 
@@ -144,8 +168,8 @@ namespace draw
 			* I created this temp bitmap just to select the device context with this measures
 			*/
 			hDev = CreateBitmap(
-				stWidth,
-				stHeight,
+				static_cast<int>(stWidth),
+				static_cast<int>(stHeight),
 				unPlanes,
 				static_cast<UINT>(byBitPerPixel),
 				nullptr);
@@ -165,7 +189,7 @@ namespace draw
 
 				pBitMap->bmih.biSize = sizeof(BITMAPINFOHEADER);
 				pBitMap->bmih.biWidth = stWidth;
-				pBitMap->bmih.biHeight = (-1) * stHeight;
+				pBitMap->bmih.biHeight = static_cast<LONG>((-1) * stHeight);
 				pBitMap->bmih.biPlanes = 1;
 				pBitMap->bmih.biBitCount = byBitPerPixel;
 				pBitMap->bmih.biCompression = BI_RGB;
@@ -191,38 +215,62 @@ namespace draw
 
 				return static_cast<MEMBMP*>(m_BackBuffer)->pBits;
 
-				}
+			}
 		}
 
 		return nullptr;
 
 	}
 
-	void *Device::create(size_t stWidth, size_t stHeight, unsigned char byBitPerPixel)
+	void *Device::create(draw_t w, draw_t h, draw_t bitPerPixel)
 	{
 		void* pRet{ nullptr };
-		if (nullptr != (pRet = createBackbuffer(stWidth, stHeight, 1, byBitPerPixel)))
+		if (nullptr != (pRet = createBackbuffer(w, h, 1, bitPerPixel)))
 		{
-			m_stWidth = stWidth;
-			m_stHeight = stHeight;
-			m_Properties.bpp(byBitPerPixel);
+			width = w;
+			height = h;
+			bpp = bitPerPixel;
+
+			WNDCLASSEX wcex;
+
+			WindProcClass.pDev = this;
+
+			wcex.cbSize = sizeof(WNDCLASSEX);
+
+			wcex.style = CS_HREDRAW | CS_VREDRAW;
+			wcex.lpfnWndProc = WindProcClass.WndProc;
+			wcex.cbClsExtra = 0;
+			wcex.cbWndExtra = 0;
+			wcex.hInstance = (HINSTANCE)m_Instance;
+			wcex.hIcon = NULL;
+			wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
+			wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+			wcex.lpszMenuName = NULL;
+			wcex.lpszClassName = "JalaGameDeviceClass";
+			wcex.hIconSm = NULL;
+
+			if (RegisterClassEx(&wcex))
+			{
+
+				HWND hWnd = CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, "JalaGameDeviceClass", "...", WS_OVERLAPPEDWINDOW,
+					CW_USEDEFAULT,  CW_USEDEFAULT, width,  height, nullptr, nullptr, (HINSTANCE)m_Instance, nullptr);
+
+				if (!hWnd)
+					return nullptr;
+
+				m_DevHandle = hWnd;
+				m_bRunning = true;
+
+				ShowWindow(hWnd, SW_SHOW);
+				UpdateWindow(hWnd);
+
+
+			}
 		}
 		
 		return pRet;
 	}
 
-	void *Device::create()
-	{
-		size_t w{0}, h{0};
-		unsigned char b{0};
-		
-		void* pRet{ nullptr };
-
-		if (Device::getVideoMode(w, h, b))
-			pRet = create(w, h, b);
-
-		return pRet;
-	}
 
 	void Device::flip()
 	{
@@ -233,14 +281,39 @@ namespace draw
 			HDC hMem = CreateCompatibleDC(0);
 			MEMBMP* pBitMap = static_cast<MEMBMP*>(m_BackBuffer);
 			SelectObject(hMem, pBitMap->hHandle);
-			BitBlt(static_cast<HDC>(m_BackBufferHandle), 0, 0, m_stWidth, m_stHeight, hMem, 0, 0, SRCCOPY);
+			BitBlt(static_cast<HDC>(m_BackBufferHandle), 0, 0, static_cast<int>(width), static_cast<int>(height), hMem, 0, 0, SRCCOPY);
 			DeleteDC(hMem);
 			
 			//copy the the back context device on primary context device windows
 			hdc = static_cast<HDC>(beginPain());
-			BitBlt(hdc, 0, 0, m_stWidth, m_stHeight, static_cast<HDC>(m_BackBufferHandle), 0, 0, SRCCOPY);
+			BitBlt(hdc, 0, 0, width, height, static_cast<HDC>(m_BackBufferHandle), 0, 0, SRCCOPY);
 			endPaint();
 		}
 	};
+
+	bool Device::isRunning()
+	{
+		if (m_bRunning)
+		{
+			MSG msg;
+			HWND hWnd = static_cast<HWND>(m_DevHandle);
+
+			while (PeekMessage(&msg, hWnd, 0, 0, PM_NOREMOVE))
+			{
+				if(GetMessage(&msg, hWnd, 0, 0) > 0)
+				{
+					TranslateMessage(&msg);
+					DispatchMessage(&msg);
+				}
+			}
+		}
+		
+		return m_bRunning;
+	}
+
+	void Device::onClose()
+	{
+		m_bRunning = false;
+	}
 
 }//draw

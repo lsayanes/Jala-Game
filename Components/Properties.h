@@ -12,7 +12,7 @@ namespace draw
 			draw_t			width{0};
 			draw_t			height{0};
 
-			explicit Properties(draw_t w, draw_t h, unsigned char b_t, size_t eID) : Component{eID}
+			explicit Properties(draw_t w, draw_t h, unsigned char b_t, TYPE_COMPONENT eID) : Component{eID}
 			{
 				bpp(b_t);
 				size = (w * (m_components)) * h;

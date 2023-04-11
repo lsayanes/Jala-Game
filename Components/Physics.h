@@ -10,7 +10,7 @@ namespace draw
 			draw_t	vx;
 			draw_t	vy;
 
-			explicit Physics(draw_t w, draw_t h, size_t eID):
+			explicit Physics(draw_t w, draw_t h, TYPE_COMPONENT eID):
 				Component{eID},
 				rc{0, 0, w, h},
 				vx{ 0 }, vy{ 0 }

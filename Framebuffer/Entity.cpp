@@ -22,11 +22,10 @@
 
 namespace draw
 {
-	Entity::Entity(draw_t w, draw_t h, unsigned char byBitPixels, size_t typeID):
+	Entity::Entity(draw_t w, draw_t h, unsigned char byBitPixels, components::TYPE_COMPONENT typeID):
 		m_Physics{ components::Physics{w, h, typeID} },
 		m_Properties{ components::Properties{w, h, byBitPixels, typeID} },
-		m_Data{ std::make_unique<unsigned char[]>(m_Properties.size) } /*,
-		m_typID{ typeID }*/
+		m_Data{ std::make_unique<unsigned char[]>(m_Properties.size) } 	
 	{
 		//std::cout << "Entity w:" << w << " h: " << h << " bpp: " << (int)byBitPixels << " Created" << std::endl; 
 	}

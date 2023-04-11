@@ -29,7 +29,7 @@ namespace draw
 			throw std::invalid_argument("Total entities==0");
 
 		for (size_t i = 0; i < stTotal; i++)
-			m_Entities[i] = new Entity{ w, h, bits, 0 };
+			m_Entities[i] = new Entity{ w, h, bits, components::TC_NONE };
 	}
 
 	Sprite::~Sprite()

@@ -1,5 +1,6 @@
 #pragma once
 
+
 namespace draw
 {
 	class Entity 
@@ -14,7 +15,7 @@ namespace draw
 		std::unique_ptr<unsigned char[]>	m_Data{};
 
 	public:
-		explicit Entity(draw_t w, draw_t h, unsigned char byBitPixels, size_t typeID);
+		explicit Entity(draw_t w, draw_t h, unsigned char byBitPixels, components::TYPE_COMPONENT typeID);
 		virtual ~Entity();
 
 		Entity(const Entity&) = delete;

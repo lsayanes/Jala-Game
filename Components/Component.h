@@ -31,7 +31,7 @@ namespace draw
 		struct Component
 		{
 			
-				explicit Component(int compID) :
+				explicit Component(TYPE_COMPONENT compID) :
 					m_componentID{ compID }
 				{
 				}
@@ -40,7 +40,7 @@ namespace draw
 				const int componentID() const { return m_componentID; }
 
 			protected:
-				int	m_componentID{ TC_BACKBUFFER_DEV };
+				TYPE_COMPONENT	m_componentID{ TC_BACKBUFFER_DEV };
 
 
 		};

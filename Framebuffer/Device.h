@@ -54,11 +54,11 @@ namespace draw
 		virtual void flip();
 
 		[[nodiscard]] virtual void* create(draw_t w, draw_t h, draw_t bitPerPixel);
-		[[nodiscard]] virtual bool isRunning();
+		[[nodiscard]] virtual bool isRunning() ;
 		[[nodiscard]] virtual bool setVideoMode(
-			draw_t	stWidth,
-			draw_t	stHeight,
-			draw_t& byPixel,
+			draw_t	width,
+			draw_t	height,
+			draw_t 	bpp,
 			bool	bFullScreen
 		);
 

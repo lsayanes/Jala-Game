@@ -75,29 +75,24 @@ int kbhit(void)
 }
 #endif
 
-#if defined(LINUX)
-int main()
-#endif
-
 #if defined(_WINDOWS)
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _In_opt_ HINSTANCE hPrevInstance,
     _In_ LPWSTR    lpCmdLine,
     _In_ int       nCmdShow)
-#endif
+    
+    {
 
+
+#else
+int main()
 {
 
-    void *pdh = nullptr;
+    void *hInstance = nullptr;
 
-    size_t width, height;
-    unsigned char bitpx;
-  
-  
+#endif
+ 
     draw::Device dev{ hInstance };
-
-    //get video carateristics
-    dev.getVideoMode();
 
     //set windows and screen size
     dev.width = Demo::SCREEN_W;

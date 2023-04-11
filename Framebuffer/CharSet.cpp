@@ -85,7 +85,7 @@ namespace draw
 
 			Slot = face->glyph;
 
-			pEntity = new Entity{ static_cast<draw_t>(face->glyph->bitmap.width), static_cast<draw_t>(face->glyph->bitmap.rows),  m_byBpp, 0 };
+			pEntity = new Entity{ static_cast<draw_t>(face->glyph->bitmap.width), static_cast<draw_t>(face->glyph->bitmap.rows),  m_byBpp, components::TC_NONE };
 			dAdvance = face->glyph->metrics.horiAdvance >> 6;
 			pbyData = pEntity->data().get();
 			auto& phyRef = pEntity->physics();

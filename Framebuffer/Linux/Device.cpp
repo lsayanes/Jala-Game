@@ -30,24 +30,13 @@ extern "C"
 
 namespace draw
 {
-	/*
-	typedef struct MEMBMP
-	{
-		HBITMAP             hHandle;
-		BITMAPINFOHEADER	bmih;
-		BITMAPINFO			dbmi;
-		void* pBits;
-	}MEMBMP;
-	*/
 
 	Device::Device(void* pDevHandle):
 		m_DevHandle{ pDevHandle },
-		m_DeviceContext{nullptr},
 		m_bFullScreen{false},
 		m_BackBufferHandle{nullptr},
 		m_BackBuffer{nullptr},
-		m_Properties{ components::Properties {0, 0, 0, 0} },
-		m_stWidth{ 0 }, m_stHeight{0}
+		width{ 0 }, height{0}
 	{
 
 		if (!getVideoMode())
@@ -72,86 +61,42 @@ namespace draw
 	
 	void *Device::beginPain() 
 	{
-		return m_DeviceContext;
+		return nullptr;
 	};
 
 	void Device::endPaint() 
 	{
 
-		if (m_DevHandle && m_DeviceContext)
+		if (m_DevHandle)
 		{
-			m_DeviceContext = nullptr;
 		}
 	}
 
 	bool Device::setVideoMode(
-								size_t	stWidth,
-								size_t	stHeight,
-								unsigned char& byPixel,
+								draw_t	w,
+								draw_t	h,
+								draw_t 	bitpp,
 								bool	bFullScreen)
 	{
-		/*
-		DEVMODE		Mode;
-		DWORD		dwFlag = 0;
-
-		memset(&Mode, 0, sizeof(DEVMODE));
-
-		Mode.dmSize = sizeof(DEVMODE);
-		Mode.dmPelsWidth = stWidth;
-		Mode.dmPelsHeight = stHeight;
-		Mode.dmBitsPerPel = static_cast<DWORD>(byPixel);
-		Mode.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
-
-		if (bFullScreen)
-			dwFlag = CDS_FULLSCREEN;
-
-		return (DISP_CHANGE_SUCCESSFUL == ChangeDisplaySettings(&Mode, dwFlag));
-		*/
-
+		width = w;
+		height = h;
+		bpp = bitpp;
+		
 		return false;
 	}
 
 	void Device::retoreVideo() const
 	{
-		//ChangeDisplaySettings(NULL, 0);
 	}
 
-	bool Device::getVideoMode(
-								size_t& stWidth,
-								size_t& stHeight,
-								unsigned char& byBitPixel
-	)
-	{
-		/*
-		BOOL		bRet = false;
-		DEVMODE		Mode;
-		memset(&Mode, 0, sizeof(Mode));
-		if (TRUE == (bRet = EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &Mode))) 
-		{
-			stWidth = Mode.dmPelsWidth;
-			stHeight = Mode.dmPelsHeight;
-			byBitPixel = static_cast<unsigned char>(Mode.dmBitsPerPel);
-		}
-
-		return static_cast<bool>(bRet);
-		*/
-
-		stWidth = 1920;
-		stHeight = 1056;
-		byBitPixel = 32;
-		 
-
-		return true;
-	}
-
+	
 	bool Device::getVideoMode()
 	{
-		unsigned char b{0};
+		width = 1920;
+		height = 1056;
+		bpp = 32;
 
-		bool bRet = Device::getVideoMode(m_stWidth, m_stHeight, b);
-		m_Properties.bpp(b);
-
-		return bRet;
+		return true;
 
 	}
 	
@@ -168,31 +113,17 @@ namespace draw
 		return m_BackBuffer;
 	}
 
-	void *Device::create(size_t stWidth, size_t stHeight, unsigned char byBitPerPixel)
+	void *Device::create(draw_t w, draw_t h, draw_t bitPerPixel)
 	{
 		void* pRet{ nullptr };
-		if (nullptr != (pRet = createBackbuffer(stWidth, stHeight, 1, byBitPerPixel)))
+		if (nullptr != (pRet = createBackbuffer(w, h, 1, bitPerPixel)))
 		{
-			m_stWidth = stWidth;
-			m_stHeight = stHeight;
-			m_Properties.bpp(byBitPerPixel);
+			width = w;
+			height = h;
 
-			ptc_open("...", m_stWidth, m_stHeight);
+			ptc_open("...", width, height);
 		}
 		
-		return pRet;
-	}
-
-	void *Device::create()
-	{
-		size_t w{0}, h{0};
-		unsigned char b{0};
-		
-		void* pRet{ nullptr };
-
-		if (Device::getVideoMode(w, h, b))
-			pRet = create(w, h, b);
-
 		return pRet;
 	}
 
@@ -207,13 +138,17 @@ namespace draw
 	};
 
 
-	 const int32_t Device::processEvent()
+	 bool Device::isRunning() 
 	 {
 		m_mtxSync.lock();
-		int32_t ret = ptc_process_events();
+		int32_t ret = !ptc_process_events();
 		m_mtxSync.unlock();
 		
 		return ret;
+	 }
+
+	 void Device::onClose()
+	 {
 	 }
 
 }//draw

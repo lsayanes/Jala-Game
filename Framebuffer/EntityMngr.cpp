@@ -63,6 +63,26 @@ namespace draw
 			});
 	}
 
+	void EntityMngr::renderEntities() noexcept
+	{
+		std::for_each(m_Entities.begin(), m_Entities.end(),
+			[&](std::unordered_map<std::string, Entity*>::value_type &it)
+			{
+				m_FrameBufferRef.put(*it.second); 
+			});
+
+	}
+	
+	void EntityMngr::renderText() noexcept
+	{
+		std::for_each(m_Text.begin(), m_Text.end(),
+			[&](std::unordered_map <std::string, std::vector<Entity*>*>::value_type& txt)
+			{
+				m_FrameBufferRef.put(*txt.second);
+			});
+	}
+
+
 
 	const size_t EntityMngr::create(std::string szName, draw_t w, draw_t h) noexcept
 	{

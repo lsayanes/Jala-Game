@@ -14,6 +14,9 @@ namespace draw
 		virtual ~EntityMngr();
 
 		void renderAll() noexcept;
+		void renderEntities() noexcept;
+		void renderText() noexcept;
+		
 
 		inline void addText(std::string szName, std::vector<Entity*>* pVct) noexcept
 		{

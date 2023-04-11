@@ -48,7 +48,7 @@ namespace draw
 
 	public:
 
-		explicit Device(void *pParam);
+		explicit Device(void *pParam = nullptr);
 		virtual ~Device();
 
 		virtual void flip();

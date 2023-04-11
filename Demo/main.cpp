@@ -9,22 +9,6 @@
 #include <vector>
 #include <unordered_map>
 
-#if defined(LINUX)
-#include <termios.h>
-#include <unistd.h>
-#include <fcntl.h>
-
-
-
-#include <X11/X.h>
-#include <X11/keysym.h>
-
-extern "C"
-{
-    #include <tinyptc.h>
-}
-
-#endif
 #include <Config.h>
 
 #include <Tools.h>
@@ -40,40 +24,11 @@ extern "C"
 #include <FontLib.h>
 #include <CharSet.h>
 #include <FrameBuffer.h>
-
 #include <EntityMngr.h>
 
 
 #include "Demo.h"
 
-#if defined(LINUX)
-int kbhit(void)
-{
-    struct termios oldt, newt;
-    int ch;
-    int oldf;
- 
-    tcgetattr(STDIN_FILENO, &oldt);
-    newt = oldt;
-    newt.c_lflag &= ~(ICANON | ECHO);
-    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-    oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
-    fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
- 
-    ch = getchar();
- 
-    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-    fcntl(STDIN_FILENO, F_SETFL, oldf);
- 
-    if(ch != EOF)
-    {
-        ungetc(ch, stdin);
-        return 1;
-    }
- 
-    return 0;
-}
-#endif
 
 #if defined(_WINDOWS)
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -83,41 +38,36 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     
     {
 
-
+        draw::Device dev{hInstance};
 #else
 int main()
 {
 
-    void *hInstance = nullptr;
+    draw::Device dev{};
 
 #endif
  
-    draw::Device dev{ hInstance };
-
-    //set windows and screen size
+   //set windows and screen size
     dev.width = Demo::SCREEN_W;
     dev.height = Demo::SCREEN_H;
 
-    //create a farmebuffer fomr a Device
-    draw::FrameBuffer fb{ dev };
-    
+    //create a farmebuffer from Device
+    draw::FrameBuffer fb{dev};
 
     Demo demo{fb};
 
     if(demo.create())
     {
-        std::cout << "Demo created" << std::endl;
-
- 
         while (dev.isRunning())
         {
+            
             demo.render();
+            
+            //copy all from "render" back buffer to screen
             dev.flip();
         }
   
     }
-
-    std::cout << "Demo end" << std::endl;
   
     return 0;
 

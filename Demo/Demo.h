@@ -7,11 +7,6 @@ private:
 	draw::CharSet			*m_pDbgFont{nullptr};
 	draw::EntityMngr		m_EnMan;
 
-	bool					m_bRun;
-	bool					m_bRendering;
-
-	draw::Rect				*m_pGameArea{nullptr};
-
 	int						m_fps;
 
 
@@ -30,10 +25,6 @@ private:
 
 	const std::string ERR_CREATING{ "Error try to create " };
 
-//private:
-//	void render();
-
-
 public:
 	static constexpr size_t SCREEN_W{ 1024 };
 	static constexpr size_t SCREEN_H{ 800 };
@@ -42,16 +33,12 @@ public:
 	static constexpr int DGB_Y{ SCREEN_H / 2};
 
 public:
+	
 	explicit Demo(draw::FrameBuffer& fbuffer);
 	virtual ~Demo();
 
 	void render();
-
 	bool create();
-	void start();
-	void stop();
-
-	[[nodiscard]]inline const bool isRunning() const { return m_bRun; } 
 
 	void updateDbg(std::string sz);
 

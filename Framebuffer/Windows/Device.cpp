@@ -106,7 +106,7 @@ namespace draw
 	bool Device::setVideoMode(
 								draw_t	stWidth,
 								draw_t	stHeight,
-								draw_t& byPixel,
+								draw_t  byPixel,
 								bool	bFullScreen)
 	{
 
@@ -143,9 +143,9 @@ namespace draw
 		memset(&Mode, 0, sizeof(Mode));
 		if (TRUE == (bRet = EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &Mode)))
 		{
-			width = Mode.dmPelsWidth;
-			height = Mode.dmPelsHeight;
-			bpp = static_cast<unsigned char>(Mode.dmBitsPerPel);
+			width = static_cast<draw_t>(Mode.dmPelsWidth);
+			height = static_cast<draw_t>(Mode.dmPelsHeight);
+			bpp = static_cast<draw_t>(Mode.dmBitsPerPel);
 			bRet = true;
 		}
 
@@ -225,7 +225,7 @@ namespace draw
 	void *Device::create(draw_t w, draw_t h, draw_t bitPerPixel)
 	{
 		void* pRet{ nullptr };
-		if (nullptr != (pRet = createBackbuffer(w, h, 1, bitPerPixel)))
+		if (nullptr != (pRet = createBackbuffer(w, h, 1, static_cast<uint8_t>(bitPerPixel))))
 		{
 			width = w;
 			height = h;

@@ -38,33 +38,28 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     
     {
 
-        draw::Device dev{hInstance};
+        
 #else
 int main()
 {
 
-    draw::Device dev{};
-
 #endif
  
-   //set windows and screen size
-    dev.width = Demo::SCREEN_W;
-    dev.height = Demo::SCREEN_H;
 
-    //create a farmebuffer from Device
-    draw::FrameBuffer fb{dev};
+    Demo demo{};
+    
+    draw::FrameBuffer fb{ Demo::SCREEN_W, Demo::SCREEN_H, 32 };
 
-    Demo demo{fb};
-
-    if(demo.create())
+    if(demo.create(fb))
     {
-        while (dev.isRunning())
+
+        while (demo.isRunning())
         {
             
             demo.render();
             
             //copy all from "render" back buffer to screen
-            dev.flip();
+            demo.flip();
         }
   
     }

@@ -67,6 +67,10 @@ bool Demo::create()
 		//center the background
 		auto& bckphy = m_EnMan[BACKGROUND].physics();
 		bckphy.rc.pos(static_cast<draw::draw_t>((SCREEN_W / 2) - (BCKGRND_W / 2)), 80);
+		/*
+		auto &fbp{ m_EnMan.frameBuffer().properties() };
+		bRet = Device::create(SCREEN_W, BCKGRND_W, fbp.bpp());
+		*/
 	}
 	else
 	{
@@ -89,7 +93,7 @@ void Demo::render()
 	
 	static auto lasttime {std::chrono::steady_clock::now()};
 
-	m_EnMan.fill(0, 0, 0);
+	m_EnMan.fill(255, 255, 255);
 
 	if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - lasttime).count() > 1000)
 	{
@@ -106,3 +110,15 @@ void Demo::render()
 
 }
 
+
+void Demo::onKeyDown(int nKey) 
+{
+
+	if (0x1B == nKey)
+		onClose();
+
+}
+void Demo::onClose()
+{
+	m_bRunning = 0;
+}

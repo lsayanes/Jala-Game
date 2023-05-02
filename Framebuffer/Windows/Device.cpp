@@ -27,6 +27,8 @@ namespace draw
 			switch (message)
 			{
 			case WM_KEYDOWN:
+				pDev->onKeyDown(static_cast<WPARAM>(wParam));
+				/*
 				switch (wParam)
 				{
 				case VK_ESCAPE:
@@ -35,6 +37,7 @@ namespace draw
 				default:
 					break;
 				}
+				*/
 				break;
 			case WM_COMMAND:
 				break;
@@ -310,10 +313,17 @@ namespace draw
 		
 		return m_bRunning;
 	}
-
+/*
 	void Device::onClose()
 	{
 		m_bRunning = false;
 	}
+
+	void Device::onKeyDown(int nKey)
+	{
+		if (m_keyDownFunction)
+			m_keyDownFunction(nKey);
+	}
+	*/
 
 }//draw

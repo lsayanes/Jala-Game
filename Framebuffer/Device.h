@@ -4,7 +4,6 @@
 
 namespace draw
 {
-
 	class Device
 	{
 	private:
@@ -25,6 +24,8 @@ namespace draw
 		std::mutex				m_mtxSync{};
 
 		bool					m_bRunning;
+
+		void (*m_keyDownFunction)(int) {nullptr};
 
 	public:
 		draw_t				width;
@@ -62,10 +63,18 @@ namespace draw
 			bool	bFullScreen
 		);
 
+
+
+		inline void setkeyDownCallback(void (*function)(int))
+		{
+			m_keyDownFunction = function;
+		}
+
 		[[nodiscard]] virtual bool getVideoMode();
 
 
-		virtual void onClose();
+		virtual void onClose() = 0;
+		virtual void onKeyDown(int nKey) = 0;
 		
 
 	};

@@ -1,6 +1,8 @@
 #pragma once
 
-class Demo
+//#include <Device.h>
+
+class Demo : public draw::Device
 {
 private:
 
@@ -41,6 +43,9 @@ public:
 	bool create();
 
 	void updateDbg(std::string sz);
+
+	void onClose(); 
+	void onKeyDown(int nKey);
 
 };
 

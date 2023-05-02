@@ -26,7 +26,7 @@ namespace draw
 		};
 		*/
 
-		enum TYPE_COMPONENT { TC_BACKBUFFER_DEV, TC_MALLOC_BUFFER, TC_NONE };
+		enum TYPE_COMPONENT { TC_BUFFER_DEV, TC_MALLOC_BUFFER, TC_NONE };
 
 		struct Component
 		{
@@ -40,7 +40,7 @@ namespace draw
 				const int componentID() const { return m_componentID; }
 
 			protected:
-				TYPE_COMPONENT	m_componentID{ TC_BACKBUFFER_DEV };
+				TYPE_COMPONENT	m_componentID{ TC_NONE };
 
 
 		};

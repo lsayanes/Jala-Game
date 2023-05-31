@@ -7,8 +7,8 @@ namespace draw
 	class Device
 	{
 	private:
-		void	*m_DevHandle;	//window handle
-		void	*m_Instance;	//just for Windows System
+		void				*m_DevHandle;	//window handle
+		void				*m_Instance;	//just for Windows System
 	protected:
 		
 		void				*m_SurfaceDev; //surface of client area of a specified window
@@ -21,16 +21,14 @@ namespace draw
 		const char 			*m_szName;
 
 
-		std::mutex				m_mtxSync{};
+		std::mutex			m_mtxSync{};
 
-		bool					m_bRunning;
-
-		void (*m_keyDownFunction)(int) {nullptr};
+		bool				m_bRunning;
 
 	public:
 		draw_t				width;
 		draw_t				height;
-		draw_t				bpp;
+		uint8_t				bpp;
 	protected:
 		
 	
@@ -63,20 +61,12 @@ namespace draw
 			bool	bFullScreen
 		);
 
-
-
-		inline void setkeyDownCallback(void (*function)(int))
-		{
-			m_keyDownFunction = function;
-		}
-
+		[[nodiscard]] inline bool isCreated() { return m_DevHandle?true:false; } 
 		[[nodiscard]] virtual bool getVideoMode();
-
 
 		virtual void onClose() = 0;
 		virtual void onKeyDown(int nKey) = 0;
 		
-
 	};
 
 }//draw

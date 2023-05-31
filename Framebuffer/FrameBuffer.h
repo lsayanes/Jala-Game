@@ -21,7 +21,6 @@ namespace draw
 		
 		explicit FrameBuffer(draw_t w, draw_t h, uint8_t bits);
 		explicit FrameBuffer(uint8_t *pBuffer, draw_t w, draw_t h, uint8_t bits);
-		//explicit FrameBuffer(Device& Dev);
 	
 		virtual ~FrameBuffer();
 

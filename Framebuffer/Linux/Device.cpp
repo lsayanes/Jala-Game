@@ -143,12 +143,6 @@ namespace draw
 		m_mtxSync.lock();
 		int32_t ret = !ptc_process_events();
 		m_mtxSync.unlock();
-		
 		return ret;
 	 }
-
-	 void Device::onClose()
-	 {
-	 }
-
 }//draw

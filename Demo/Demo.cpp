@@ -32,9 +32,19 @@
 
 #include "Demo.h"
 
-
+/*
 Demo::Demo(draw::FrameBuffer& fbuffer):
 	m_EnMan{fbuffer},
+	m_fps{0},
+	m_frmbuffProp{fbuffer.properties()}
+{
+	std::cout << "Demo::Demo(FrameBuffer &)" << std::endl;
+}
+*/
+Demo::Demo(draw::draw_t w, draw::draw_t h, uint8_t bpp):
+	m_frmBuffer { static_cast<uint8_t*>(Device::create(w, h, bpp)), w, h, bpp},
+	m_frmbuffProp{m_frmBuffer.properties()},
+	m_EnMan{m_frmBuffer},
 	m_fps{0}
 {
 
@@ -60,17 +70,13 @@ bool Demo::create()
 	create_font(DBGFONTPATH, &m_pDbgFont, 16);
 
 	size_t t = m_EnMan.create(BACKGROUND, BCKGRND_W, BCKGRND_H, BCKGRNDTPATH);
-	if ((bRet = t > 0))
+
+	if ((bRet = (t > 0)))
 	{
 		//initial positions
-
 		//center the background
 		auto& bckphy = m_EnMan[BACKGROUND].physics();
 		bckphy.rc.pos(static_cast<draw::draw_t>((SCREEN_W / 2) - (BCKGRND_W / 2)), 80);
-		/*
-		auto &fbp{ m_EnMan.frameBuffer().properties() };
-		bRet = Device::create(SCREEN_W, BCKGRND_W, fbp.bpp());
-		*/
 	}
 	else
 	{

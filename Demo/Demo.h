@@ -1,16 +1,18 @@
 #pragma once
 
+#include <Config.h>
 //#include <Device.h>
 
 class Demo : public draw::Device
 {
 private:
 
-	draw::CharSet			*m_pDbgFont{nullptr};
-	draw::EntityMngr		m_EnMan;
+	draw::CharSet						*m_pDbgFont{nullptr};
+	draw::FrameBuffer					m_frmBuffer;
+	const draw::components::Properties	&m_frmbuffProp;
+	draw::EntityMngr					m_EnMan;
 
-	int						m_fps;
-
+	int 								m_fps;
 
 	const std::string TXT_ID_DBG{ "dbg" };
 	const std::string DBGFONTPATH  { "./WhiteOnBlack.ttf" };
@@ -36,7 +38,8 @@ public:
 
 public:
 	
-	explicit Demo(draw::FrameBuffer& fbuffer);
+	//explicit Demo(draw::FrameBuffer& fbuffer);
+	explicit Demo(draw::draw_t w, draw::draw_t h, uint8_t bpp);
 	virtual ~Demo();
 
 	void render();

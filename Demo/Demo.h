@@ -30,16 +30,21 @@ private:
 	const std::string ERR_CREATING{ "Error try to create " };
 
 public:
-	static constexpr size_t SCREEN_W{ 1024 };
-	static constexpr size_t SCREEN_H{ 800 };
+/*
+	static constexpr size_t GAME_W{ 1024 };
+	static constexpr size_t GAME_H{ 800 };
 
-	static constexpr int DGB_X{ SCREEN_W / 2};
-	static constexpr int DGB_Y{ SCREEN_H / 2};
+	static constexpr int DGB_X{ GAME_W / 2};
+	static constexpr int DGB_Y{ GAME_H / 2};
+*/
 
+
+	const int DGB_X{ width / 2};
+	const int DGB_Y{ height / 2};
 public:
 	
 	//explicit Demo(draw::FrameBuffer& fbuffer);
-	explicit Demo(draw::draw_t w, draw::draw_t h, uint8_t bpp);
+	explicit Demo(draw::draw_t w, draw::draw_t h, draw::draw_t bpp);
 	virtual ~Demo();
 
 	void render();
@@ -48,7 +53,7 @@ public:
 	void updateDbg(std::string sz);
 
 	void onClose(); 
-	void onKeyDown(int nKey);
+	void onKeyDown(unsigned long  nKey);
 
 };
 

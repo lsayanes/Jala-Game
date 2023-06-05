@@ -23,37 +23,27 @@ namespace draw
 {
 
 
-	FrameBuffer::FrameBuffer(draw_t w, draw_t h, uint8_t bits) :
-        m_Properties{ components::Properties{w, h, bits, components::TC_MALLOC_BUFFER} }
+	FrameBuffer::FrameBuffer(draw_t w, draw_t h, draw_t bits) :
+        m_Properties{ components::Properties{w, h, static_cast<uint8_t>(bits), components::TC_MALLOC_BUFFER} }
 
     {
 
-        m_Line = std::make_unique<unsigned char[]>(m_Properties.lineSize);
-        m_pbyBuffer = static_cast<unsigned char*>(malloc(w * h *bits));
+        m_Line = std::make_unique<uint8_t[]>(m_Properties.lineSize);
+        m_pbyBuffer = static_cast<uint8_t*>(malloc(w * h *bits));
 
         if(nullptr == m_pbyBuffer)
             throw ("FrameBuffer::FrameBuffer m_pbyBuffer == nullptr");
-    }
-    /*
-    FrameBuffer::FrameBuffer(Device& Dev) :
-        m_Properties{ components::Properties{Dev.width, Dev.height, static_cast<uint8_t>(Dev.bpp), components::TC_BACKBUFFER_DEV}}
 
+    }
+
+    FrameBuffer::FrameBuffer(uint8_t* pBuffer, draw_t w, draw_t h, draw_t bits) :
+        m_Properties{ components::Properties{w, h, static_cast<uint8_t>(bits), components::TC_BUFFER_DEV} }
     {
 
-        m_Line = std::make_unique<unsigned char[]>(m_Properties.lineSize);
-        m_pbyBuffer = static_cast<unsigned char*>(Dev.create(Dev.width, Dev.height, Dev.bpp));
-
-        if (nullptr == m_pbyBuffer)
-            throw ("FrameBuffer::FrameBuffer m_pbyBuffer == nullptr");
-    }
-    */
-
-    FrameBuffer::FrameBuffer(uint8_t* pBuffer, draw_t w, draw_t h, uint8_t bits) :
-        m_Properties{ components::Properties{w, h, bits, components::TC_BUFFER_DEV} }
-    {
-
-        m_Line = std::make_unique<unsigned char[]>(m_Properties.lineSize);
+        m_Line = std::make_unique<uint8_t[]>(m_Properties.lineSize);
         m_pbyBuffer = pBuffer;
+
+        printf("DEBUG:FrameBuffer:%d %s\n", __LINE__, m_Properties.infoDebug());
     }
 
 	FrameBuffer::~FrameBuffer()
@@ -187,7 +177,7 @@ namespace draw
         size_t y = 0;
         size_t offset;
         size_t lineSize = m_Properties.lineSize;
-        unsigned char comp = m_Properties.components();
+        uint8_t comp = m_Properties.components();
 
         unsigned char* pbyPix = m_pbyBuffer;
         unsigned char* pbyLine = m_Line.get();

@@ -9,6 +9,7 @@
 
 #include <X11/X.h>
 #include <X11/keysym.h>
+#include <X11/extensions/Xrandr.h>
 
 extern "C"
 {
@@ -31,12 +32,27 @@ extern "C"
 namespace draw
 {
 
+
+	struct CallbackDeviceClass 
+	{
+		static Device *pCallbackInstance;
+
+		
+		static void keyPress(unsigned long lParam)
+		{
+			pCallbackInstance->onKeyDown(lParam);
+		}
+	};
+	
+	Device *CallbackDeviceClass::pCallbackInstance{nullptr}; 
+
+
 	Device::Device(void* pDevHandle):
 		m_DevHandle{ pDevHandle },
 		m_bFullScreen{false},
 		m_BackBufferHandle{nullptr},
 		m_BackBuffer{nullptr},
-		width{ 0 }, height{0}
+		width{0}, height{0}, bpp{0}
 	{
 
 		if (!getVideoMode())
@@ -90,22 +106,46 @@ namespace draw
 	}
 
 	
+	bool Device::getVideoMode(draw_t &w, draw_t &h, draw_t &b)
+	{
+
+    	Display *display = XOpenDisplay(NULL);
+		if(display)
+		{
+			Window root = DefaultRootWindow(display);
+
+			XRRScreenResources *screen_resources = XRRGetScreenResources(display, root);
+			XRRCrtcInfo *crtc_info = XRRGetCrtcInfo(display, screen_resources, screen_resources->crtcs[0]);
+		
+			w = static_cast<draw_t>(crtc_info->width);
+			h = static_cast<draw_t>(crtc_info->height);
+			
+			b = static_cast<draw_t>(DefaultDepth(display, DefaultScreen(display)));
+		
+			std::cout << "Video Resolution: " << w << "x" << h << ":" << static_cast<int>(b) << std::endl;
+		
+			XRRFreeCrtcInfo(crtc_info);
+			XRRFreeScreenResources(screen_resources);
+
+			XCloseDisplay(display);
+
+			return true;
+		}
+
+		return false;
+	}
+
 	bool Device::getVideoMode()
 	{
-		width = 1920;
-		height = 1056;
-		bpp = 32;
-
-		return true;
-
+		return Device::getVideoMode(width, height, bpp);
 	}
 	
-	void *Device::createBackbuffer(size_t stWidth, size_t stHeight, unsigned short unPlanes, unsigned char byBitPerPixel)
+	void *Device::createBackbuffer(draw_t w, draw_t h, draw_t bitPerPixel, draw_t planes)
 	{
 
 		if (!m_BackBuffer)
 		{
-			if(NULL == (m_BackBuffer = malloc(stHeight * stWidth * byBitPerPixel)))
+			if(NULL == (m_BackBuffer = malloc(w * h * bpp)))
 				std::cout << "m_BackBuffer malloc == NULL" << std::endl;	
 			
 		}
@@ -116,12 +156,19 @@ namespace draw
 	void *Device::create(draw_t w, draw_t h, draw_t bitPerPixel)
 	{
 		void* pRet{ nullptr };
-		if (nullptr != (pRet = createBackbuffer(w, h, 1, bitPerPixel)))
+		if (nullptr != (pRet = createBackbuffer(w, w, bitPerPixel, 1)))
 		{
 			width = w;
 			height = h;
+			bpp = bitPerPixel;
 
-			ptc_open("...", width, height);
+			CallbackDeviceClass::pCallbackInstance = this;
+
+			ptc_open("...", w, h);
+		  	
+			ptc_set_on_keypress(&CallbackDeviceClass::keyPress);
+    		//ptc_set_on_keyrelease(onKeyRelease);	
+
 		}
 		
 		return pRet;
@@ -138,11 +185,36 @@ namespace draw
 	};
 
 
-	 bool Device::isRunning() 
-	 {
+	bool Device::isRunning() 
+	{
 		m_mtxSync.lock();
 		int32_t ret = !ptc_process_events();
 		m_mtxSync.unlock();
 		return ret;
-	 }
+	}
+
+/*
+
+void onKeyPress(KeySym  k)
+{
+    if(XK_Escape == k)
+    {
+        bRun = false;
+    }
+  
+}
+
+void onKeyRelease(KeySym k)
+{
+    if(XK_Escape)
+    {
+
+    }
+}
+
+int main()
+{
+
+    ptc_open("windows", WIDTH, HEIGHT);
+*/
 }//draw

@@ -28,11 +28,11 @@ namespace draw
 	public:
 		draw_t				width;
 		draw_t				height;
-		uint8_t				bpp;
+		draw_t				bpp;
 	protected:
 		
 	
-		[[nodiscard]] void *createBackbuffer(size_t stWidth, size_t stHeight, unsigned short unPlanes, unsigned char byBitPerPixel);
+		[[nodiscard]] void *createBackbuffer(draw_t w, draw_t h, draw_t bitPerPixel, draw_t planes = 1);
 
 
 		virtual void	*beginPain();
@@ -52,6 +52,8 @@ namespace draw
 
 		virtual void flip();
 
+		[[nodiscard]] static bool getVideoMode(draw_t &w, draw_t &h, draw_t &b);
+
 		[[nodiscard]] virtual void* create(draw_t w, draw_t h, draw_t bitPerPixel);
 		[[nodiscard]] virtual bool isRunning() ;
 		[[nodiscard]] virtual bool setVideoMode(
@@ -65,7 +67,7 @@ namespace draw
 		[[nodiscard]] virtual bool getVideoMode();
 
 		virtual void onClose() = 0;
-		virtual void onKeyDown(int nKey) = 0;
+		virtual void onKeyDown(unsigned long  ulKey) = 0;
 		
 	};
 

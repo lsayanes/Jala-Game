@@ -75,10 +75,16 @@ int main()
     en Device quedan desconectados
 
 */
+/*
+    draw::draw_t w, h, bpp;
 
-
-
-    Demo demo { Demo::SCREEN_W, Demo::SCREEN_H, 32 };
+    if(!Demo::getVideoMode(w, h, bpp))
+    {
+        std::cout << "ERROR getting video mode" << std::endl;
+        return 1;
+    }
+*/
+    Demo demo { 1024, 800, 32 };
 
     if(demo.create())
     {

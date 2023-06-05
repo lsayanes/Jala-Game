@@ -7,7 +7,7 @@ SRC		:= ./*.cpp ../Framebuffer/*.cpp  ../Framebuffer/Linux/*.cpp ../Libs/*.cpp .
 INC		:= -I. -I../Components -I../Framebuffer -I../Libs -I../Util -I/usr/include/freetype2/ -I../Libs/tinyPTC/
 BIN		:= ./bin/
 OBJ		:= ./obj/
-LIBS	:= -lfreetype -lX11 -lXext 
+LIBS	:= -lfreetype -lX11 -lXext -lXrandr
 
 .PHONY : copy
 

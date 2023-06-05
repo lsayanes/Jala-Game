@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdio.h>
+
 namespace draw
 {
 	namespace components
@@ -8,14 +10,14 @@ namespace draw
 		{
 			size_t			size{0};
 			size_t			lineSize{0};
-			unsigned char	alpha{0}; //if it have alpha channel
+			uint8_t			alpha{0}; //if it have alpha channel
 			draw_t			width{0};
 			draw_t			height{0};
 
-			explicit Properties(draw_t w, draw_t h, unsigned char b_t, TYPE_COMPONENT eID) : Component{eID}
+			explicit Properties(draw_t w, draw_t h, uint8_t b_t, TYPE_COMPONENT eID) : Component{eID}
 			{
 				bpp(b_t);
-				size = (w * (m_components)) * h;
+				size = (w * m_components) * h;
 				lineSize = w * m_components;
 
 				width = w;
@@ -32,18 +34,28 @@ namespace draw
 			}
 
 
-			inline void bpp(unsigned char b)
+			inline void bpp(uint8_t b)
 			{
 				m_bpp = b;
-				m_components = static_cast<const unsigned char>(b >> 3);
+				m_components = static_cast<const uint8_t>(b >> 3);
 			}
 
-			inline const unsigned char bpp() const { return m_bpp; };
-			inline const unsigned char components() const { return m_components; };
+			inline const uint8_t bpp() const { return m_bpp; };
+			inline const uint8_t components() const { return m_components; };
+
+			[[nodiscard]] const char *infoDebug()
+			{
+				static char ret[256];
+
+				sprintf(ret, "Properties component id:%d, w:%d h:%d bpp:%d, comp:%d size:%lu, lineSize:%lu alpha:%d", 
+					componentID(), width, height, m_bpp, m_components, size, lineSize, alpha);
+
+				return ret;
+			}
 
 		private:
-			unsigned char	m_bpp{ 0 };
-			unsigned char	m_components{ 0 }; // bpp/8
+			uint8_t	m_bpp{ 0 };
+			uint8_t m_components{ 0 }; // bpp/8
 
 		};
 	}//components

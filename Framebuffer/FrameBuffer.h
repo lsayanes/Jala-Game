@@ -19,8 +19,8 @@ namespace draw
 	
 	public:
 		
-		explicit FrameBuffer(draw_t w, draw_t h, uint8_t bits);
-		explicit FrameBuffer(uint8_t *pBuffer, draw_t w, draw_t h, uint8_t bits);
+		explicit FrameBuffer(draw_t w, draw_t h, draw_t bits);
+		explicit FrameBuffer(uint8_t *pBuffer, draw_t w, draw_t h, draw_t bits);
 	
 		virtual ~FrameBuffer();
 

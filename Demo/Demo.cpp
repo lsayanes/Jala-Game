@@ -41,7 +41,7 @@ Demo::Demo(draw::FrameBuffer& fbuffer):
 	std::cout << "Demo::Demo(FrameBuffer &)" << std::endl;
 }
 */
-Demo::Demo(draw::draw_t w, draw::draw_t h, uint8_t bpp):
+Demo::Demo(draw::draw_t w, draw::draw_t h, draw::draw_t bpp):
 	m_frmBuffer { static_cast<uint8_t*>(Device::create(w, h, bpp)), w, h, bpp},
 	m_frmbuffProp{m_frmBuffer.properties()},
 	m_EnMan{m_frmBuffer},
@@ -76,7 +76,7 @@ bool Demo::create()
 		//initial positions
 		//center the background
 		auto& bckphy = m_EnMan[BACKGROUND].physics();
-		bckphy.rc.pos(static_cast<draw::draw_t>((SCREEN_W / 2) - (BCKGRND_W / 2)), 80);
+		bckphy.rc.pos(static_cast<draw::draw_t>((width / 2) - (BCKGRND_W / 2)), 80);
 	}
 	else
 	{
@@ -117,10 +117,12 @@ void Demo::render()
 }
 
 
-void Demo::onKeyDown(int nKey) 
+void Demo::onKeyDown(unsigned long ulKey) 
 {
 
-	if (0x1B == nKey)
+	std::cout << "onKedown :" << ulKey << std::endl; 
+
+	if (0x1B == ulKey)
 		onClose();
 
 }

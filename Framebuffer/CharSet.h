@@ -7,7 +7,6 @@ namespace draw
 	{
 		std::vector<Entity*> m_vctText{};
 		void		*m_pFont;
-		uint8_t		m_byBpp;
 	
 	private:
 		/*
@@ -23,7 +22,7 @@ namespace draw
 		}
 		*/
 	public:
-		explicit CharSet(void *pFont, uint8_t byBpp);
+		explicit CharSet(void *pFont);
 		virtual ~CharSet();
 
 		CharSet(const CharSet&) = delete;

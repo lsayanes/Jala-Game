@@ -39,9 +39,8 @@
 namespace draw
 {
 
-	CharSet::CharSet(void* pFont, uint8_t byBpp) :
-		m_pFont{pFont},
-		m_byBpp{byBpp}
+	CharSet::CharSet(void* pFont) :
+		m_pFont{pFont}
 	{
 		if(!m_pFont)
 			throw std::invalid_argument("CharSet::CarSet pFont is nullptr");
@@ -85,7 +84,7 @@ namespace draw
 
 			Slot = face->glyph;
 
-			pEntity = new Entity{ static_cast<draw_t>(face->glyph->bitmap.width), static_cast<draw_t>(face->glyph->bitmap.rows),  m_byBpp, components::TC_NONE };
+			pEntity = new Entity{ static_cast<draw_t>(face->glyph->bitmap.width), static_cast<draw_t>(face->glyph->bitmap.rows), components::TC_NONE };
 			dAdvance = face->glyph->metrics.horiAdvance >> 6;
 			pbyData = pEntity->data().get();
 			auto& phyRef = pEntity->physics();

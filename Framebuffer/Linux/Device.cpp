@@ -52,7 +52,7 @@ namespace draw
 		m_bFullScreen{false},
 		m_BackBufferHandle{nullptr},
 		m_BackBuffer{nullptr},
-		width{0}, height{0}, bpp{0}
+		width{0}, height{0}
 	{
 
 		if (!getVideoMode())
@@ -91,13 +91,11 @@ namespace draw
 	bool Device::setVideoMode(
 								draw_t	w,
 								draw_t	h,
-								draw_t 	bitpp,
 								bool	bFullScreen)
 	{
 		width = w;
 		height = h;
-		bpp = bitpp;
-		
+
 		return false;
 	}
 
@@ -137,6 +135,7 @@ namespace draw
 
 	bool Device::getVideoMode()
 	{
+		draw_t bpp {0};
 		return Device::getVideoMode(width, height, bpp);
 	}
 	
@@ -153,14 +152,14 @@ namespace draw
 		return m_BackBuffer;
 	}
 
-	void *Device::create(draw_t w, draw_t h, draw_t bitPerPixel)
+	void *Device::create(draw_t w, draw_t h)
 	{
 		void* pRet{ nullptr };
-		if (nullptr != (pRet = createBackbuffer(w, w, bitPerPixel, 1)))
+
+		if (nullptr != (pRet = createBackbuffer(w, w, Device::bpp, 1)))
 		{
 			width = w;
 			height = h;
-			bpp = bitPerPixel;
 
 			CallbackDeviceClass::pCallbackInstance = this;
 

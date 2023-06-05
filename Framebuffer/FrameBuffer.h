@@ -9,18 +9,18 @@ namespace draw
 	class FrameBuffer
 	{
 	private:
-		components::Properties					m_Properties;
-		uint8_t									*m_pbyBuffer;
+		components::Properties			m_Properties;
+		uint8_t							*m_pbyBuffer;
 
-		std::unique_ptr<unsigned char[]>		m_Line;
+		std::unique_ptr<uint8_t[]>		m_Line;
 
 	private:
-		void fill(components::Properties& Prop, draw_t w, draw_t h, unsigned char* pbySurface, uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255);
+		void fill(components::Properties& Prop, draw_t w, draw_t h, uint8_t* pbySurface, uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255);
 	
 	public:
 		
-		explicit FrameBuffer(draw_t w, draw_t h, draw_t bits);
-		explicit FrameBuffer(uint8_t *pBuffer, draw_t w, draw_t h, draw_t bits);
+		explicit FrameBuffer(draw_t w, draw_t h);
+		explicit FrameBuffer(uint8_t *pBuffer, draw_t w, draw_t h);
 	
 		virtual ~FrameBuffer();
 

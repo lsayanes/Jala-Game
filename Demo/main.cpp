@@ -45,46 +45,7 @@ int main()
 
 #endif
  
-/*
-    Device crea el backbuffer ya que es el buffer del device en cuestion y este debe ser pasado a framebuffer
-    quien dibuja en el
-
-    Antiguo contructor FrameBuffer;
-
-   	FrameBuffer::FrameBuffer(draw_t w, draw_t h, uint8_t bits, void* pDevHandle) :
-        Device{ pDevHandle },
-        m_Properties{ components::Properties{w, h, bits, 0} },
-        m_Width{w},
-        m_Height{h}
-    {
-
-        unsigned char comp = m_Properties.components();
-
-        m_Line = std::make_unique<unsigned char[]>(m_Properties.lineSize);
-        m_pbyBuffer = static_cast<unsigned char*>(Device::create(w, h, bits));
-
-    }
-
-    ahora  FrameBuffer no hereda de Device (no se justifica)
-    y la plantilla para crear juegos Demo sí hereda de Device para
-    poder reescribir todas las funciones que maneja el device en cuestion 
-    como onKey, onClose, etc. 
-    
-    Demo necesita la referencia a un FrameBuffer. 
-    El backbuffer devuelto por device y el puntero (m_pbyBuffer) a este backbuffer
-    en Device quedan desconectados
-
-*/
-/*
-    draw::draw_t w, h, bpp;
-
-    if(!Demo::getVideoMode(w, h, bpp))
-    {
-        std::cout << "ERROR getting video mode" << std::endl;
-        return 1;
-    }
-*/
-    Demo demo { 1024, 800, 32 };
+    Demo demo {1024, 800};
 
     if(demo.create())
     {

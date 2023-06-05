@@ -5,17 +5,13 @@ namespace draw
 {
 	class Entity 
 	{
-
-		//std::optional<std::reference_wrapper<components::Physics<unsigned short>>> physics {};
-		//components::Physics<unsigned short>		*physics {nullptr};
-
 	protected:
 		components::Physics					m_Physics;
 		components::Properties				m_Properties;
 		std::unique_ptr<unsigned char[]>	m_Data{};
 
 	public:
-		explicit Entity(draw_t w, draw_t h, unsigned char byBitPixels, components::TYPE_COMPONENT typeID);
+		explicit Entity(draw_t w, draw_t h, components::TYPE_COMPONENT typeID);
 		virtual ~Entity();
 
 		Entity(const Entity&) = delete;
@@ -31,8 +27,6 @@ namespace draw
 		
 		inline void renderWithAlpha() { m_Properties.alpha = 1; };
 
-	//private:
-	//	size_t		m_typID{0};
 	};
 
 }

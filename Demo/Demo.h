@@ -44,7 +44,7 @@ public:
 public:
 	
 	//explicit Demo(draw::FrameBuffer& fbuffer);
-	explicit Demo(draw::draw_t w, draw::draw_t h, draw::draw_t bpp);
+	explicit Demo(draw::draw_t w, draw::draw_t h);
 	virtual ~Demo();
 
 	void render();

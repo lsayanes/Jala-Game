@@ -22,14 +22,14 @@
 
 namespace draw
 {
-	Sprite::Sprite(draw_t w, draw_t h, uint8_t bits, size_t stTotal):
+	Sprite::Sprite(draw_t w, draw_t h, size_t stTotal):
 		m_Entities {stTotal}
 	{
 		if(0 == stTotal)
 			throw std::invalid_argument("Total entities==0");
 
 		for (size_t i = 0; i < stTotal; i++)
-			m_Entities[i] = new Entity{ w, h, bits, components::TC_NONE };
+			m_Entities[i] = new Entity{ w, h, components::TC_NONE };
 	}
 
 	Sprite::~Sprite()

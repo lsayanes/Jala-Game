@@ -41,8 +41,8 @@ Demo::Demo(draw::FrameBuffer& fbuffer):
 	std::cout << "Demo::Demo(FrameBuffer &)" << std::endl;
 }
 */
-Demo::Demo(draw::draw_t w, draw::draw_t h, draw::draw_t bpp):
-	m_frmBuffer { static_cast<uint8_t*>(Device::create(w, h, bpp)), w, h, bpp},
+Demo::Demo(draw::draw_t w, draw::draw_t h):
+	m_frmBuffer { static_cast<uint8_t*>(Device::create(w, h)), w, h},
 	m_frmbuffProp{m_frmBuffer.properties()},
 	m_EnMan{m_frmBuffer},
 	m_fps{0}
@@ -63,7 +63,7 @@ bool Demo::create()
 
 	auto create_font = [&](std::string szPath, draw::CharSet** pFnt, size_t size)
 	{
-		if (nullptr == (*pFnt = new draw::CharSet{ draw::FontLib::instance()->newFont(szPath.c_str(), size), m_EnMan.bpp() }))
+		if (nullptr == (*pFnt = new draw::CharSet{ draw::FontLib::instance()->newFont(szPath.c_str(), size) }))
 			printf("lambda::create_font::create %s", std::string{ ERR_CREATING + szPath }.c_str());
 	};
 

@@ -22,9 +22,9 @@
 
 namespace draw
 {
-	Entity::Entity(draw_t w, draw_t h, unsigned char byBitPixels, components::TYPE_COMPONENT typeID):
+	Entity::Entity(draw_t w, draw_t h, components::TYPE_COMPONENT typeID):
 		m_Physics{ components::Physics{w, h, typeID} },
-		m_Properties{ components::Properties{w, h, byBitPixels, typeID} },
+		m_Properties{ components::Properties{w, h, typeID} },
 		m_Data{ std::make_unique<unsigned char[]>(m_Properties.size) } 	
 	{
 		//std::cout << "Entity w:" << w << " h: " << h << " bpp: " << (int)byBitPixels << " Created" << std::endl; 
@@ -40,7 +40,7 @@ namespace draw
 		bool bRet = false;
 		Png png{};
 		
-		if (png.load(szPath, m_Properties.bpp()))
+		if (png.load(szPath, components::Properties::bpp))
 		{
 			unsigned char* pData = m_Data.get();
 			std::memcpy(pData, png.pRawData, m_Properties.size);

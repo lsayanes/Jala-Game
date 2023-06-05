@@ -86,13 +86,13 @@ namespace draw
 
 	const size_t EntityMngr::create(std::string szName, draw_t w, draw_t h) noexcept
 	{
-		m_Entities.emplace(std::make_pair(szName, new Entity{ w, h, bpp(), components::TC_NONE }));
+		m_Entities.emplace(std::make_pair(szName, new Entity{ w, h, components::TC_NONE }));
 		return m_Entities.size();
 	}
 
 	const size_t EntityMngr::create(std::string szName, draw_t w, draw_t h, std::string szPath) noexcept
 	{
-		draw::Entity *img = new draw::Entity{ w, h, bpp(), components::TC_NONE };
+		draw::Entity *img = new draw::Entity{ w, h, components::TC_NONE };
 		if (img->loadPng(szPath.c_str()))
 		{
 			m_Entities.emplace(std::make_pair(szName, img));

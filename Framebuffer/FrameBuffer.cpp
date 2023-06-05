@@ -23,21 +23,21 @@ namespace draw
 {
 
 
-	FrameBuffer::FrameBuffer(draw_t w, draw_t h, draw_t bits) :
-        m_Properties{ components::Properties{w, h, static_cast<uint8_t>(bits), components::TC_MALLOC_BUFFER} }
+	FrameBuffer::FrameBuffer(draw_t w, draw_t h) :
+        m_Properties{ components::Properties{w, h, components::TC_MALLOC_BUFFER} }
 
     {
-
+    
         m_Line = std::make_unique<uint8_t[]>(m_Properties.lineSize);
-        m_pbyBuffer = static_cast<uint8_t*>(malloc(w * h *bits));
+        m_pbyBuffer = static_cast<uint8_t*>(malloc(w * h * components::Properties::bpp));
 
         if(nullptr == m_pbyBuffer)
             throw ("FrameBuffer::FrameBuffer m_pbyBuffer == nullptr");
 
     }
 
-    FrameBuffer::FrameBuffer(uint8_t* pBuffer, draw_t w, draw_t h, draw_t bits) :
-        m_Properties{ components::Properties{w, h, static_cast<uint8_t>(bits), components::TC_BUFFER_DEV} }
+    FrameBuffer::FrameBuffer(uint8_t* pBuffer, draw_t w, draw_t h) :
+        m_Properties{ components::Properties{w, h, components::TC_BUFFER_DEV} }
     {
 
         m_Line = std::make_unique<uint8_t[]>(m_Properties.lineSize);

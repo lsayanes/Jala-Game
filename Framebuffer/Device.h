@@ -28,7 +28,9 @@ namespace draw
 	public:
 		draw_t				width;
 		draw_t				height;
-		draw_t				bpp;
+
+	private:		
+		static constexpr draw_t		bpp{32};
 	protected:
 		
 	
@@ -54,12 +56,11 @@ namespace draw
 
 		[[nodiscard]] static bool getVideoMode(draw_t &w, draw_t &h, draw_t &b);
 
-		[[nodiscard]] virtual void* create(draw_t w, draw_t h, draw_t bitPerPixel);
+		[[nodiscard]] virtual void* create(draw_t w, draw_t h);
 		[[nodiscard]] virtual bool isRunning() ;
 		[[nodiscard]] virtual bool setVideoMode(
 			draw_t	width,
 			draw_t	height,
-			draw_t 	bpp,
 			bool	bFullScreen
 		);
 

@@ -38,7 +38,6 @@ namespace draw
 		}
 
 		[[nodiscard]] inline FrameBuffer& frameBuffer() const noexcept  { return m_FrameBufferRef; };
-		[[nodiscard]] inline unsigned char bpp() const noexcept { return m_FrameBufferRef.properties().bpp(); }
 		inline void fill(uint8_t r, uint8_t g, uint8_t b) noexcept { m_FrameBufferRef.fill(r, g, b); };
 
 	};

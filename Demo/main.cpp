@@ -4,6 +4,8 @@
 #include "framework.h"
 #endif
 
+#include <errno.h>
+
 #include <stdio.h>
 #include <iostream>
 #include <vector>
@@ -44,8 +46,16 @@ int main()
 {
 
 #endif
+
+    draw::draw_t w{1024}, h{800}, b;
+
+    if(!Demo::getVideoMode(w, h, b))
+    {
+        std::cout << "ERROR: Get video mode :" << strerror(errno) << std::endl; 
+    }
+
  
-    Demo demo {1024, 800};
+    Demo demo {w, h};
 
     if(demo.create())
     {

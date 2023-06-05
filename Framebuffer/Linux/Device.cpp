@@ -120,7 +120,7 @@ namespace draw
 			
 			b = static_cast<draw_t>(DefaultDepth(display, DefaultScreen(display)));
 		
-			std::cout << "Video Resolution: " << w << "x" << h << ":" << static_cast<int>(b) << std::endl;
+			std::cout << "DEBUG:Device::getVideoMode : " << __LINE__ << " Video Resolution: " << w << "x" << h << ":" << static_cast<int>(b) << std::endl;
 		
 			XRRFreeCrtcInfo(crtc_info);
 			XRRFreeScreenResources(screen_resources);

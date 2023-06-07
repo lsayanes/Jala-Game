@@ -8,7 +8,7 @@ namespace draw
 	protected:
 		components::Physics					m_Physics;
 		components::Properties				m_Properties;
-		std::unique_ptr<unsigned char[]>	m_Data{};
+		std::unique_ptr<uint8_t[]>			m_Data{};
 
 	public:
 		explicit Entity(draw_t w, draw_t h, components::TYPE_COMPONENT typeID);
@@ -21,9 +21,9 @@ namespace draw
 
 		[[nodiscard]]  bool loadPng(const char* szPath);
 
-		[[nodiscard]] inline components::Physics&					physics()		{ return m_Physics; };
-		[[nodiscard]] inline components::Properties&				properties()	{ return m_Properties; };
-		[[nodiscard]] inline std::unique_ptr<unsigned char[]>&	data()				{ return m_Data; };
+		[[nodiscard]] inline components::Physics&			physics()		{ return m_Physics; };
+		[[nodiscard]] inline components::Properties&		properties()	{ return m_Properties; };
+		[[nodiscard]] inline std::unique_ptr<uint8_t[]>&	data()				{ return m_Data; };
 		
 		inline void renderWithAlpha() { m_Properties.alpha = 1; };
 

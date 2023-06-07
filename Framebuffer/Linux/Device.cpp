@@ -191,29 +191,4 @@ namespace draw
 		m_mtxSync.unlock();
 		return ret;
 	}
-
-/*
-
-void onKeyPress(KeySym  k)
-{
-    if(XK_Escape == k)
-    {
-        bRun = false;
-    }
-  
-}
-
-void onKeyRelease(KeySym k)
-{
-    if(XK_Escape)
-    {
-
-    }
-}
-
-int main()
-{
-
-    ptc_open("windows", WIDTH, HEIGHT);
-*/
 }//draw

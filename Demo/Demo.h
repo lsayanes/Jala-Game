@@ -30,14 +30,6 @@ private:
 	const std::string ERR_CREATING{ "Error try to create " };
 
 public:
-/*
-	static constexpr size_t GAME_W{ 1024 };
-	static constexpr size_t GAME_H{ 800 };
-
-	static constexpr int DGB_X{ GAME_W / 2};
-	static constexpr int DGB_Y{ GAME_H / 2};
-*/
-
 
 	const int DGB_X{ width / 2};
 	const int DGB_Y{ height / 2};

@@ -53,7 +53,12 @@ Demo::Demo(draw::draw_t w, draw::draw_t h):
 Demo::~Demo()
 {
 	if (m_pDbgFont)
+	{
 		delete m_pDbgFont;
+		m_pDbgFont = nullptr;
+	}
+
+	draw::FontLib::instance()->free();
 }
 
 

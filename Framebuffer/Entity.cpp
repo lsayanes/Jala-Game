@@ -25,7 +25,7 @@ namespace draw
 	Entity::Entity(draw_t w, draw_t h, components::TYPE_COMPONENT typeID):
 		m_Physics{ components::Physics{w, h, typeID} },
 		m_Properties{ components::Properties{w, h, typeID} },
-		m_Data{ std::make_unique<unsigned char[]>(m_Properties.size) } 	
+		m_Data{ std::make_unique<uint8_t[]>(m_Properties.size) } 	
 	{
 		//std::cout << "Entity w:" << w << " h: " << h << " bpp: " << (int)byBitPixels << " Created" << std::endl; 
 	}

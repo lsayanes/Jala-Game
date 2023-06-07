@@ -1,6 +1,6 @@
 
 OUT 	:= fbApp
-CCFLAGS	:= -std=c++17 -Wall -pedantic --debug
+CCFLAGS	:= -std=c++17 -Wall -pedantic --debug -g
 CC		:= g++
 MKDIR 	:= mkdir -p
 SRC		:= ./*.cpp ../Framebuffer/*.cpp  ../Framebuffer/Linux/*.cpp ../Libs/*.cpp ../Util/*.c ../Libs/tinyPTC/*.c

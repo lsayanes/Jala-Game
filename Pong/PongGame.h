@@ -1,19 +1,15 @@
 #pragma once
 
-class PongGame
+class PongGame : public JalaGame
 {
 public:
 	const std::string PLAYER_R_SIDE{ "PlayerR" };
 	const std::string PLAYER_L_SIDE{ "PlayerL" };
 private:
-	void					*m_phDevHandle{nullptr};
-	draw::CharSet			*m_pDbgFont{nullptr};
+
 	draw::CharSet			*m_pScoreRPlayer{nullptr};
 	draw::CharSet			*m_pScoreLPlayer{nullptr};
 
-	draw::EntityMngr		m_EnMan;
-
-	bool					m_bRun;
 	std::mutex				m_mtxRender;
 	std::mutex				m_mtxDbg;
 
@@ -28,14 +24,14 @@ private:
 	short unsigned			m_nScoreRPlayer{0};
 
 	const std::string TXT_ID_DBG{ "dbg" };
-	const std::string DBGFONTPATH  { "..\\Pong\\Resources\\verdana.ttf" };
-	const std::string SCOREFONTPATH{ "..\\Pong\\Resources\\Minecraft.ttf" };
+	const std::string DBGFONTPATH  { "Resources/verdana.ttf" };
+	const std::string SCOREFONTPATH{ "Resources/Minecraft.ttf" };
 	static constexpr size_t SCOREFONTSIZE{32};
 	
 	static constexpr size_t BALL_W{ 10 };
 	static constexpr size_t BALL_H{ 10 };
 	const std::string BALL{ "ball" };
-	const std::string BALLPATH{ "..\\Pong\\Resources\\ball.png" };
+	const std::string BALLPATH{ "Resources/ball.png" };
 
 	static constexpr size_t PLAYERS_W{ 10 };
 	static constexpr size_t PLAYERS_H{ 80 };
@@ -43,10 +39,10 @@ private:
 	static constexpr size_t BCKGRND_W{ 640 };
 	static constexpr size_t BCKGRND_H{ 480 };
 	const std::string BACKGROUND{ "background" };
-	const std::string BCKGRNDTPATH{ "..\\Pong\\Resources\\bck.png" };
+	const std::string BCKGRNDTPATH{ "Resources/bck.png" };
 
 
-	const enum PLAY_STATUS { PLAYER_L_HOLD, PLAYER_R_HOLD, PLAYING, PAUSE };
+	enum PLAY_STATUS { PLAYER_L_HOLD, PLAYER_R_HOLD, PLAYING, PAUSE };
 
 
 	/*
@@ -56,7 +52,7 @@ private:
 	const std::string ERR_CREATING{ "Error try to create " };
 
 private:
-	void render();
+
 
 	void locateBall();
 	void holdBall();
@@ -80,19 +76,19 @@ public:
 	static constexpr int DGB_Y{ SCREEN_H - 100 };
 
 public:
-	explicit PongGame(void *pDevHandle, draw::FrameBuffer& fbuffer);
+	explicit PongGame(draw::draw_t w, draw::draw_t h);
 	virtual ~PongGame();
 
 	bool create();
-	void start();
-	void stop();
 
 	void moveUp(std::string szPlayer);
 	void moveDown(std::string szPlayer);
 
 	void shot();
 
-	void updateDbg(std::string sz);
+ 	void render();
+	void onClose(); 
+	void onKeyDown(unsigned long  nKey);
 
 };
 

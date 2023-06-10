@@ -1,13 +1,18 @@
 // Pong.cpp : Define el punto de entrada de la aplicación.
 //
 
-#include "framework.h"
+#include <iostream>
 
+#if defined(WIN32)
+#include "framework.h"
 #include <memory>
 #include <vector>
 #include <algorithm>
 #include <unordered_map>
 #include <mutex>
+
+#endif
+
 
 #include <Config.h>
 #include <Types.h>
@@ -25,11 +30,45 @@
 
 #include <EntityMngr.h>
 
+#include "JalaGame.h"
 #include "PongGame.h"
 
 
 #include "Pong.h"
 
+
+PongGame* pPong{nullptr};
+
+#if !defined(WIN32)
+
+ int main()
+ {
+
+    draw::draw_t w{1024}, h{800}, b;
+
+    if(!JalaGame::getVideoMode(w, h, b))
+    {
+        std::cout << "ERROR: Get video mode :" << strerror(errno) << std::endl; 
+    }
+
+    
+    pPong = new PongGame {w, h};
+
+    if(pPong->create())
+    {
+        std::cout << "Demo created" << std::endl;
+        while (pPong->isRunning())
+        {
+            pPong->render();          
+            pPong->flip();
+        }
+  
+    }
+  
+    return 0;
+}
+
+#else
 #define MAX_LOADSTRING 100
 
 
@@ -38,7 +77,7 @@
 HWND            hWnd;
 HINSTANCE       hInst;                                // instancia actual
 
-PongGame* pPong{nullptr};
+
 
 // Declaraciones de funciones adelantadas incluidas en este módulo de código:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -254,4 +293,4 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     return (INT_PTR)FALSE;
 }
 
-
+#endif

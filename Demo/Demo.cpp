@@ -33,14 +33,21 @@
 #include "Demo.h"
 
 /*
-Demo::Demo(draw::FrameBuffer& fbuffer):
-	m_EnMan{fbuffer},
-	m_fps{0},
-	m_frmbuffProp{fbuffer.properties()}
-{
-	std::cout << "Demo::Demo(FrameBuffer &)" << std::endl;
-}
+
+	Aca tengo un Framebuffer que no se usa mas que para pasarselo al EntityManager.
+	El juego podria solo recibir un entity manager creado afuera?
+
+	-no se puede porque Demo o el juego es un Device que es quien crea el 
+	buffer secundario donde se dibuja con la funcion create : Device::create()
+
+	La idea de hacer este demo es que quede como una plantilla de la cual
+	heredar para otros juegos
+
 */
+
+
+
+
 Demo::Demo(draw::draw_t w, draw::draw_t h):
 	m_frmBuffer { static_cast<uint8_t*>(Device::create(w, h)), w, h},
 	m_frmbuffProp{m_frmBuffer.properties()},

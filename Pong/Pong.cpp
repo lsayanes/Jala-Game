@@ -33,6 +33,7 @@
 #include "JalaGame.h"
 #include "PongGame.h"
 
+#include <debug.h>
 
 #include "Pong.h"
 
@@ -43,20 +44,16 @@ PongGame* pPong{nullptr};
 
  int main()
  {
+  
+    draw::draw_t w{1024};
+    draw::draw_t h{600};
 
-    draw::draw_t w{1024}, h{800}, b;
-
-    if(!JalaGame::getVideoMode(w, h, b))
-    {
-        std::cout << "ERROR: Get video mode :" << strerror(errno) << std::endl; 
-    }
-
-    
     pPong = new PongGame {w, h};
 
     if(pPong->create())
     {
-        std::cout << "Demo created" << std::endl;
+        dbg("Pong created w:%d, h:%d", w, h);
+       
         while (pPong->isRunning())
         {
             pPong->render();          

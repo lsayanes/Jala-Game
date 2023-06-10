@@ -24,7 +24,7 @@ extern "C"
 #include "../Components/Properties.h"
 
 
-
+#include <debug.h>
 
 #include "../Device.h"
 
@@ -120,7 +120,7 @@ namespace draw
 			
 			b = static_cast<draw_t>(DefaultDepth(display, DefaultScreen(display)));
 		
-			std::cout << "DEBUG:Device::getVideoMode : " << __LINE__ << " Video Resolution: " << w << "x" << h << ":" << static_cast<int>(b) << std::endl;
+			dbg("getVideoMode : Video Resolution: %dx%d:%d", w, h, static_cast<int>(b));
 		
 			XRRFreeCrtcInfo(crtc_info);
 			XRRFreeScreenResources(screen_resources);
@@ -144,8 +144,10 @@ namespace draw
 
 		if (!m_BackBuffer)
 		{
-			if(NULL == (m_BackBuffer = malloc(w * h * bpp)))
-				std::cout << "m_BackBuffer malloc == NULL" << std::endl;	
+			if(NULL == (m_BackBuffer = malloc(w * h * bitPerPixel)))
+			{
+				dbg("m_BackBuffer malloc == NULL w:%d h:%d bpp:%d", w, h, bitPerPixel);	
+			}
 			
 		}
 

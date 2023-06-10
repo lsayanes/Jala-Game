@@ -26,6 +26,8 @@
 #include <EntityMngr.h>
 
 #include <JalaGame.h>
+
+#include <debug.h>
 #include "PongGame.h"
 
 
@@ -56,65 +58,51 @@ bool PongGame::create()
 {
 	bool bRet = false;
 	
-	if(JalaGame::create())
+
+	m_pScoreLPlayer = createFont(SCOREFONTPATH, SCOREFONTSIZE);
+	m_pScoreRPlayer = createFont(SCOREFONTPATH, SCOREFONTSIZE);
+
+	size_t t = EnMan.create(BACKGROUND, BCKGRND_W, BCKGRND_H, BCKGRNDTPATH);
+	t > 0 && (t = EnMan.create(BALL, BALL_W, BALL_H, BALLPATH));
+	t > 0 && (t = EnMan.create(PLAYER_L_SIDE, PLAYERS_W, PLAYERS_H));
+	t > 0 && (t = EnMan.create(PLAYER_R_SIDE, PLAYERS_W, PLAYERS_H));
+	if ((bRet = t > 0))
 	{
-		/*
-		auto score_font = [&](std::string szPath, draw::CharSet** pFnt, size_t size)
+		//initial positions
+		auto& bckphy = EnMan[BACKGROUND].physics();
+		bckphy.rc.pos(static_cast<draw::draw_t>((width / 2) - (BCKGRND_W / 2)), 80);
+
+		//auto& bckprp = EnMan[BACKGROUND].properties();
+		m_pGameArea = new draw::Rect{ bckphy.rc };
+	
+		auto &ball = EnMan[BALL];
+		//auto& ballphy = ball.physics();
+		ball.renderWithAlpha();
+
+		auto init_player = [&](std::string szPlayer) 
 		{
-			std::cout << "Path: " << szPath << std::endl;
-			if (nullptr == (*pFnt = new draw::CharSet{ draw::FontLib::instance()->newFont(szPath.c_str(), size)}))
-				std::cout << (std::string{ ERR_CREATING + szPath }.c_str()) << std::endl;
+			auto &phy = EnMan[szPlayer].physics();
+			phy.centery(PLAYERS_H, bckphy.rc.top, bckphy.rc.bottom);
+			EnMan.frameBuffer().fill(EnMan[szPlayer], 0, 255, 0);
+
+			//velocity
+			phy.vy = 10;
+			phy.vx = 0;
 		};
 
-		score_font(DBGFONTPATH, &m_pDbgFont, 16);
-		score_font(SCOREFONTPATH, &m_pScoreLPlayer, SCOREFONTSIZE);
-		score_font(SCOREFONTPATH, &m_pScoreRPlayer, SCOREFONTSIZE);
-		*/
+		init_player(PLAYER_L_SIDE);
+		init_player(PLAYER_R_SIDE);
 
-
-		m_pScoreLPlayer = createFont(SCOREFONTPATH, SCOREFONTSIZE);
-		m_pScoreRPlayer = createFont(SCOREFONTPATH, SCOREFONTSIZE);
-
-		size_t t = EnMan.create(BACKGROUND, BCKGRND_W, BCKGRND_H, BCKGRNDTPATH);
-		t > 0 && (t = EnMan.create(BALL, BALL_W, BALL_H, BALLPATH));
-		t > 0 && (t = EnMan.create(PLAYER_L_SIDE, PLAYERS_W, PLAYERS_H));
-		t > 0 && (t = EnMan.create(PLAYER_R_SIDE, PLAYERS_W, PLAYERS_H));
-		if ((bRet = t > 0))
-		{
-			//initial positions
-			auto& bckphy = EnMan[BACKGROUND].physics();
-			bckphy.rc.pos(static_cast<draw::draw_t>((SCREEN_W / 2) - (BCKGRND_W / 2)), 80);
-
-			//auto& bckprp = EnMan[BACKGROUND].properties();
-			m_pGameArea = new draw::Rect{ bckphy.rc };
-		
-			auto &ball = EnMan[BALL];
-			//auto& ballphy = ball.physics();
-			ball.renderWithAlpha();
-
-			auto init_player = [&](std::string szPlayer) 
-			{
-				auto &phy = EnMan[szPlayer].physics();
-				phy.centery(PLAYERS_H, bckphy.rc.top, bckphy.rc.bottom);
-				EnMan.frameBuffer().fill(EnMan[szPlayer], 0, 255, 0);
-
-				//velocity
-				phy.vy = 10;
-				phy.vx = 0;
-			};
-
-			init_player(PLAYER_L_SIDE);
-			init_player(PLAYER_R_SIDE);
-
-			EnMan[PLAYER_L_SIDE].physics().rc.posx(bckphy.rc.left + BALL_W);
-			EnMan[PLAYER_R_SIDE].physics().rc.posx(((bckphy.rc.right) - PLAYERS_W) - BALL_W);
-		}
-		else
-		{
-			std::cout << std::string{ ERR_CREATING + " some entities could not be created" }.c_str() << std::endl;
-		}
+		EnMan[PLAYER_L_SIDE].physics().rc.posx(bckphy.rc.left + BALL_W);
+		EnMan[PLAYER_R_SIDE].physics().rc.posx(((bckphy.rc.right) - PLAYERS_W) - BALL_W);
 	}
-	
+	else
+	{
+		dbg("%s", std::string{ ERR_CREATING + " some entities could not be created" }.c_str());
+	}
+
+	(true == bRet) && (bRet = JalaGame::create());
+
 	return bRet;
 }
 
@@ -256,7 +244,7 @@ void PongGame::locateBall()
 void PongGame::onKeyDown(unsigned long ulKey) 
 {
 
-	std::cout << "onKedown :" << ulKey << std::endl; 
+	dbg("onKeydown %lu", ulKey);
 
 	if (0x1B == ulKey)
 		onClose();

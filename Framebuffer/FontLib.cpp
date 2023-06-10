@@ -18,6 +18,8 @@
 
 #include "Entity.h"
 
+#include <debug.h>
+
 #include "FontLib.h"
 
 namespace draw
@@ -48,10 +50,11 @@ namespace draw
 		FT_Face face;
 		void* pRet = nullptr;
 
-		//std::cout << "newFont: " << szFontPath << std::endl;
-
 		if (0 == (err = FT_New_Face(g_ftLibrary, szFontPath, 0, &face)) && (0 == (err = FT_Set_Char_Size(face, (FT_F26Dot6)stSize << 6, (FT_F26Dot6)stSize << 6, 90, 90))))
 			pRet = static_cast<void*>(face);
+
+		
+		dbg("newFont path:%s size:%lu (ret:%p)", szFontPath, stSize, pRet);
 
 		return pRet;
 	}

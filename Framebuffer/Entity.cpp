@@ -18,6 +18,8 @@
 #include "../Util/Tools.h"
 #include "../Libs/png.h"
 
+#include <debug.h>
+
 #include "Entity.h"
 
 namespace draw
@@ -27,7 +29,7 @@ namespace draw
 		m_Properties{ components::Properties{w, h, typeID} },
 		m_Data{ std::make_unique<uint8_t[]>(m_Properties.size) } 	
 	{
-		//std::cout << "Entity w:" << w << " h: " << h << " bpp: " << (int)byBitPixels << " Created" << std::endl; 
+		//dbg("Entity w:%d h:%d typeID:%d", w, h, typeID); 
 	}
 
 
@@ -48,7 +50,7 @@ namespace draw
 			bRet = true;
 		}
 
-		//std::cout << "Entity::loadPng " << szPath << " bRet:" << bRet << std::endl; 
+		dbg("loadPng %s (ret:%d)", szPath, bRet); 
 		return bRet;
 	}
 

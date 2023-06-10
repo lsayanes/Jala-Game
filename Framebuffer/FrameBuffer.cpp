@@ -17,6 +17,8 @@
 #include "Entity.h"
 #include "CharSet.h"
 
+#include <debug.h>
+
 #include "FrameBuffer.h"
 
 namespace draw
@@ -43,7 +45,7 @@ namespace draw
         m_Line = std::make_unique<uint8_t[]>(m_Properties.lineSize);
         m_pbyBuffer = pBuffer;
 
-        printf("DEBUG:FrameBuffer:%d %s\n", __LINE__, m_Properties.infoDebug());
+        dbg("%s", m_Properties.infoDebug());
     }
 
 	FrameBuffer::~FrameBuffer()

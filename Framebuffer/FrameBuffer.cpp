@@ -58,6 +58,8 @@ namespace draw
 
 	}
 
+
+    
     void FrameBuffer::put(Entity& e) const
     {
         auto &physicsRef = e.physics();

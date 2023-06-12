@@ -67,14 +67,7 @@ private:
 			m_nStatus = PLAY_STATUS::PLAYER_R_HOLD;
 
 	}
-/*
-public:
-	static constexpr size_t SCREEN_W{ 1024 };
-	static constexpr size_t SCREEN_H{ 800 };
 
-	static constexpr int DGB_X{ 0 };
-	static constexpr int DGB_Y{ SCREEN_H - 100 };
-*/
 public:
 	explicit PongGame(draw::draw_t w, draw::draw_t h);
 	virtual ~PongGame();

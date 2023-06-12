@@ -83,7 +83,7 @@ bool PongGame::create()
 		{
 			auto &phy = EnMan[szPlayer].physics();
 			phy.centery(PLAYERS_H, bckphy.rc.top, bckphy.rc.bottom);
-			EnMan.frameBuffer().fill(EnMan[szPlayer], 0, 255, 0);
+			draw::FrameBuffer::fill(EnMan[szPlayer], 0, 255, 0);
 
 			//velocity
 			phy.vy = 10;
@@ -95,6 +95,8 @@ bool PongGame::create()
 
 		EnMan[PLAYER_L_SIDE].physics().rc.posx(bckphy.rc.left + BALL_W);
 		EnMan[PLAYER_R_SIDE].physics().rc.posx(((bckphy.rc.right) - PLAYERS_W) - BALL_W);
+
+
 	}
 	else
 	{
@@ -116,7 +118,7 @@ void PongGame::updateScores()
 		EnMan.addText(name, vc);
 	};
 	
-	add_score(m_nScoreLPlayer, &m_pScoreLPlayer,  "score L", m_pGameArea->left - 40);
+	add_score(m_nScoreLPlayer, &m_pScoreLPlayer, "score L", m_pGameArea->left - 40);
 	add_score(m_nScoreRPlayer, &m_pScoreRPlayer, "score R", m_pGameArea->right + 20);
 }
 
@@ -143,6 +145,7 @@ void PongGame::render()
 	}
 	
 	JalaGame::render();
+
 }
 
 

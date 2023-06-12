@@ -34,8 +34,9 @@ namespace draw
 		void	put(std::vector<Entity*> &v) const;
 		void	put(CharSet& c) const;
 
-		void	fill(Entity &e, uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255);
-        void	fill(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255);
+	    void	fill(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255);
+		
+		static void	fill(Entity &e, uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255);
 
 		[[nodiscard]]  inline const components::Properties& properties() const { return m_Properties; };
 

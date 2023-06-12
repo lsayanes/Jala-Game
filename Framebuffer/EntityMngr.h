@@ -1,12 +1,20 @@
+
+#pragma once
+#include <map>
 namespace draw
 {
 	class EntityMngr 
 	{
 	private:
-		std::unordered_map<std::string, Entity*>						m_Entities{};
-		std::unordered_map<std::string, std::vector<Entity*>*>			m_Text{};
-		
-		FrameBuffer															&m_FrameBufferRef;
+		std::unordered_map<std::string, Entity*>					m_Entities{};
+		std::unordered_map<std::string, std::vector<Entity*>*>		m_Text{};
+		std::vector<Entity*>										m_RenderLayout;
+
+		FrameBuffer													&m_FrameBufferRef;
+	
+	private:
+		[[nodiscard]] const size_t add(std::string szName, Entity *pEntity); 
+	
 	public:
 		static constexpr size_t INI_MAX_ENTITIES {1024};
 
@@ -14,9 +22,11 @@ namespace draw
 		virtual ~EntityMngr();
 
 		void renderAll() noexcept;
+		void renderLayout() noexcept;
 		void renderEntities() noexcept;
+		void render(const std::string name) noexcept;
 		void renderText() noexcept;
-		
+	
 
 		inline void addText(std::string szName, std::vector<Entity*>* pVct) noexcept
 		{
@@ -37,8 +47,6 @@ namespace draw
 			return nullptr;
 		}
 
-		[[nodiscard]] inline FrameBuffer& frameBuffer() const noexcept  { return m_FrameBufferRef; };
-		inline void fill(uint8_t r, uint8_t g, uint8_t b) noexcept { m_FrameBufferRef.fill(r, g, b); };
-
+		[[nodiscard]] inline size_t size() { return m_Entities.size(); }		
 	};
 };// draw

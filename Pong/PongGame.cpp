@@ -36,7 +36,8 @@ PongGame::PongGame(draw::draw_t w, draw::draw_t h) :
 	m_mtxRender{},
 	m_mtxDbg{},
 	m_nBallDeltaX{1},	
-	m_nBallDeltaY{-1}		
+	m_nBallDeltaY{-1},
+	m_nBallUpdate{0}		
 {
 
 }
@@ -86,7 +87,7 @@ bool PongGame::create()
 			draw::FrameBuffer::fill(EnMan[szPlayer], 0, 255, 0);
 
 			//velocity
-			phy.vy = 10;
+			phy.vy = 12;
 			phy.vx = 0;
 		};
 
@@ -135,17 +136,15 @@ void PongGame::render()
 		holdBall();
 		break;
 	case PLAY_STATUS::PLAYING:
-		//if (i && 0 == i % 3)
-			locateBall();
+		locateBall();
 		break;
 	case PLAY_STATUS::PAUSE:
 		break;
 	default:
 		break;
 	}
-	
-	JalaGame::render();
 
+	JalaGame::render();
 }
 
 
@@ -196,51 +195,56 @@ void PongGame::holdBall()
 }
 
 void PongGame::locateBall()
-{
-	auto& ballphy = EnMan[BALL].physics();
-	auto& plylphy = EnMan[PLAYER_L_SIDE].physics();
-	auto& plyrphy = EnMan[PLAYER_R_SIDE].physics();
+{	
+	if (m_nBallUpdate && 0 == (m_nBallUpdate % 3))
+	{
 
-	ballphy.rc.pos(
-						ballphy.rc.left + 1 * m_nBallDeltaX,
-						ballphy.rc.top + 1 * m_nBallDeltaY
-		);
+		auto& ballphy = EnMan[BALL].physics();
+		auto& plylphy = EnMan[PLAYER_L_SIDE].physics();
+		auto& plyrphy = EnMan[PLAYER_R_SIDE].physics();
 
-	if (
-		ballphy.rc.right <= plylphy.rc.right &&
-		ballphy.rc.top >= plylphy.rc.top && ballphy.rc.top <= plylphy.rc.bottom
-		)
-	{
-		m_nBallDeltaX = 1;
-	}
-	else if (
-		ballphy.rc.right > plyrphy.rc.left &&
-		ballphy.rc.top >= plyrphy.rc.top && ballphy.rc.top <= plyrphy.rc.bottom
-		)
-	{
-		m_nBallDeltaX = -1;
-	}
-	else if (ballphy.rc.left < m_pGameArea->left)
-	{
-		m_nScoreRPlayer++;
-		updateScores();
-		holdPlayerBall(PLAYER_L_SIDE);
-	}
-	else if (ballphy.rc.right > m_pGameArea->right)
-	{
-		m_nScoreLPlayer++;
-		updateScores();
-		holdPlayerBall(PLAYER_R_SIDE);
-	}
-	else if (ballphy.rc.top < m_pGameArea->top)
-	{
-		m_nBallDeltaY = 1;
-	}
-	else if (ballphy.rc.bottom > m_pGameArea->bottom)
-	{
-		m_nBallDeltaY = -1;
-	}
+		ballphy.rc.pos(
+							ballphy.rc.left + 1 * m_nBallDeltaX,
+							ballphy.rc.top + 1 * m_nBallDeltaY
+			);
 
+		if (
+			ballphy.rc.right <= plylphy.rc.right &&
+			ballphy.rc.top >= plylphy.rc.top && ballphy.rc.top <= plylphy.rc.bottom
+			)
+		{
+			m_nBallDeltaX = 1;
+		}
+		else if (
+			ballphy.rc.right > plyrphy.rc.left &&
+			ballphy.rc.top >= plyrphy.rc.top && ballphy.rc.top <= plyrphy.rc.bottom
+			)
+		{
+			m_nBallDeltaX = -1;
+		}
+		else if (ballphy.rc.left < m_pGameArea->left)
+		{
+			m_nScoreRPlayer++;
+			updateScores();
+			holdPlayerBall(PLAYER_L_SIDE);
+		}
+		else if (ballphy.rc.right > m_pGameArea->right)
+		{
+			m_nScoreLPlayer++;
+			updateScores();
+			holdPlayerBall(PLAYER_R_SIDE);
+		}
+		else if (ballphy.rc.top < m_pGameArea->top)
+		{
+			m_nBallDeltaY = 1;
+		}
+		else if (ballphy.rc.bottom > m_pGameArea->bottom)
+		{
+			m_nBallDeltaY = -1;
+		}	
+	}
+	
+	m_nBallUpdate++;
 }
 
 
@@ -249,11 +253,32 @@ void PongGame::onKeyDown(unsigned long ulKey)
 
 	dbg("onKeydown %lu", ulKey);
 
-	if (0x1B == ulKey)
+	switch(ulKey)
+	{
+	case 97:
+		moveDown(PLAYER_L_SIDE);
+		break;
+	case 113:
+		moveUp(PLAYER_L_SIDE);
+		break;
+	case 65364:
+		moveDown(PLAYER_R_SIDE);
+		break;
+	case 65362:
+		moveUp(PLAYER_R_SIDE);
+		break;
+	case 0x1B:
 		onClose();
+		break;
+	case 0x20:
+		shot();
+		break;
+	default:
+		break;
+	}
 
 }
 void PongGame::onClose()
 {
-	m_bRunning = 0;
+	//TODO: LINUX ahora sale por isRunning
 }

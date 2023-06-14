@@ -54,7 +54,7 @@ namespace draw
 		m_RenderLayout.clear();
 	}
 
-	void EntityMngr::renderAll() noexcept
+	void EntityMngr::renderUnordered() noexcept
 	{
 		std::for_each(m_Entities.begin(), m_Entities.end(),
 			[&](std::unordered_map<std::string, Entity*>::value_type &it)
@@ -70,7 +70,7 @@ namespace draw
 			});
 	}
 
-	void EntityMngr::renderLayout() noexcept
+	void EntityMngr::renderOrdered() noexcept
 	{
 	
 		m_FrameBufferRef.put(m_RenderLayout);

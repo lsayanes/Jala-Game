@@ -6,9 +6,9 @@ namespace draw
 	class EntityMngr 
 	{
 	private:
-		std::unordered_map<std::string, Entity*>					m_Entities{};
+		std::unordered_map<std::string, Entity*>					m_Entities{};	 //render Unordered	
 		std::unordered_map<std::string, std::vector<Entity*>*>		m_Text{};
-		std::vector<Entity*>										m_RenderLayout;
+		std::vector<Entity*>										m_RenderLayout{}; //render Ordered
 
 		FrameBuffer													&m_FrameBufferRef;
 	
@@ -21,8 +21,9 @@ namespace draw
 		explicit EntityMngr(FrameBuffer &fbuffer);
 		virtual ~EntityMngr();
 
-		void renderAll() noexcept;
-		void renderLayout() noexcept;
+		void renderUnordered() noexcept;
+		void renderOrdered() noexcept;
+
 		void renderEntities() noexcept;
 		void render(const std::string name) noexcept;
 		void renderText() noexcept;

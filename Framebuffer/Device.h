@@ -23,7 +23,7 @@ namespace draw
 
 		std::mutex			m_mtxSync{};
 
-		bool				m_bRunning;
+		//bool				m_bRunning;
 
 	public:
 		draw_t				width;

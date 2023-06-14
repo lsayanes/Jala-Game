@@ -53,7 +53,7 @@ PongGame* pPong{nullptr};
     if(pPong->create())
     {
         dbg("Pong created w:%d, h:%d", w, h);
-       
+ 
         while (pPong->isRunning())
         {
             pPong->render();          

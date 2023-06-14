@@ -15,6 +15,7 @@ private:
 
 	int m_nBallDeltaX;
 	int m_nBallDeltaY;
+	int m_nBallUpdate; //it's to control the ball velocity
 
 	draw::Rect				*m_pGameArea{nullptr};
 

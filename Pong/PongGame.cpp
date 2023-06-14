@@ -25,6 +25,8 @@
 
 #include <EntityMngr.h>
 
+#include <key.h>
+
 #include <JalaGame.h>
 
 #include <debug.h>
@@ -255,22 +257,22 @@ void PongGame::onKeyDown(unsigned long ulKey)
 
 	switch(ulKey)
 	{
-	case 97:
+	case 'a':
 		moveDown(PLAYER_L_SIDE);
 		break;
-	case 113:
+	case 'q':
 		moveUp(PLAYER_L_SIDE);
 		break;
-	case 65364:
+	case VK_DOWN:
 		moveDown(PLAYER_R_SIDE);
 		break;
-	case 65362:
+	case VK_UP:
 		moveUp(PLAYER_R_SIDE);
 		break;
-	case 0x1B:
+	case VK_SCAPE:
 		onClose();
 		break;
-	case 0x20:
+	case VK_SPACE:
 		shot();
 		break;
 	default:

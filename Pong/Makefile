@@ -4,7 +4,7 @@ CCFLAGS	:= -std=c++17 -Wall -pedantic --debug -g
 CC		:= g++
 MKDIR 	:= mkdir -p
 SRC		:= ./*.cpp ../Framebuffer/*.cpp  ../Framebuffer/Linux/*.cpp ../Libs/*.cpp ../Util/*.c ../Libs/tinyPTC/*.c
-INC		:= -I. -I../Components -I../Framebuffer -I../Libs -I../Util -I/usr/include/freetype2/ -I../Libs/tinyPTC/
+INC		:= -I. -I../Components -I../Framebuffer -I../Libs -I../Util -I../Sys -I/usr/include/freetype2/ -I../Libs/tinyPTC/
 BIN		:= ./bin/
 OBJ		:= ./obj/
 LIBS	:= -lfreetype -lX11 -lXext -lXrandr

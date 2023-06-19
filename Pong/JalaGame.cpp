@@ -36,17 +36,20 @@ JalaGame::JalaGame(draw::draw_t w, draw::draw_t h):
 	m_frmBuffer { static_cast<uint8_t*>(Device::create(w, h)), w, h},
 	m_frmbuffProp{m_frmBuffer.properties()},
 	EnMan{m_frmBuffer},
-	fps{0}
+	fpsCnt{0},
+	lastTimeFps{std::chrono::steady_clock::now()},
+	lastTimeFpsCntrl{lastTimeFps},
+	frameTime{1}
 {
 
 }
 
 JalaGame::~JalaGame()
 {
-	if (m_pDbgFont)
+	if (pDbgFont)
 	{
-		delete m_pDbgFont;
-		m_pDbgFont = nullptr;
+		delete pDbgFont;
+		pDbgFont = nullptr;
 	}
 
 	draw::FontLib::instance()->free();
@@ -55,7 +58,7 @@ JalaGame::~JalaGame()
 
 bool JalaGame::create()
 {
-	return (m_pDbgFont = createFont(DBGFONTPATH, 16));
+	return (pDbgFont = createFont(DBGFONTPATH, 16));
 }
 
 draw::CharSet *JalaGame::createFont(std::string szPath, size_t size)
@@ -66,37 +69,61 @@ draw::CharSet *JalaGame::createFont(std::string szPath, size_t size)
 void JalaGame::updateDbg(std::string sz)
 {		
 	std::string str = JalaGame::TXT_ID_DBG + ": " + sz + " - ESC Quit";
-	auto vc = m_pDbgFont->flatText(str.c_str(), DGB_X, DGB_Y);
+	auto vc = pDbgFont->flatText(str.c_str(), DGB_X, DGB_Y);
 	EnMan.addText(JalaGame::TXT_ID_DBG, vc);
 
 	dbg("%s x:%d y:%d", str.c_str(), DGB_X, DGB_Y);
 }
 
-void JalaGame::updateFPS()
+void JalaGame::renderFPS()
 {
-	static auto lasttime {std::chrono::steady_clock::now()};
-
-	if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - lasttime).count() > 1000)
+	if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - lastTimeFpsCntrl).count() > 1000)
 	{
 		char str[1024];
-		sprintf(str,"fps:%4d", fps);
+		sprintf(str,"fps:%4d", fpsCnt);
 		updateDbg(str);
-		fps = 0;
-		lasttime = std::chrono::steady_clock::now();
-
-		dbg("Total redered %lu", EnMan.size());
-
+		dbg("Total redered %lu", EnMan.size());		
+		
+		fpsCnt = 0;
+		lastTimeFpsCntrl = std::chrono::steady_clock::now();
 	}
 	else
-		fps++;
+		fpsCnt++;
+}
+
+bool JalaGame::isRenderTime()
+{
+
+	if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - lastTimeFps).count() > frameTime)
+	{	
+		lastTimeFps = std::chrono::steady_clock::now();
+		return true;
+	}
+
+	return false;
+}
+
+bool JalaGame::setFps(int fps)
+{
+	if(fps > 0 && fps < 1001)
+	{
+		frameTime = 1000 / fps;
+		return true;
+	}
+
+	return false;
 }
 
 
 void JalaGame::render()
 {
-	m_frmBuffer.fill(JalaGame::BCK_R, JalaGame::BCK_G, JalaGame::BCK_B);
-	
-	updateFPS();
 
-	EnMan.renderOrdered();
+	if(isRenderTime())
+	{
+		m_frmBuffer.fill(JalaGame::BCK_R, JalaGame::BCK_G, JalaGame::BCK_B);
+		
+		renderFPS();
+
+		EnMan.renderOrdered();
+	}
 }

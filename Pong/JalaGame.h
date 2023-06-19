@@ -18,14 +18,24 @@ private:
 	*/
 
 	const std::string ERR_CREATING {"Error try to create "};
+
+	
 private:
-	inline void updateFPS();
+	inline void renderFPS();
+	inline bool isRenderTime();
 
 protected:
-	draw::CharSet						*m_pDbgFont{nullptr};
+	draw::CharSet						*pDbgFont{nullptr};
 	draw::EntityMngr					EnMan;
-	int 								fps;
+	int 								fpsCnt;
+
+
+	std::chrono::_V2::steady_clock::time_point	lastTimeFps;
+	std::chrono::_V2::steady_clock::time_point	lastTimeFpsCntrl;
+	int64_t										frameTime;
 public:
+
+	int	Fps;	
 
 	const int DGB_X{0};
 	const int DGB_Y{height-20};
@@ -41,6 +51,8 @@ public:
 
  	virtual void render();
 	virtual bool create();
+	
+	bool setFps(int fps);
 
 	draw::CharSet *createFont(std::string szPath, size_t size);
 

@@ -2,6 +2,7 @@
 OUT 	:= Pong
 CCFLAGS	:= -std=c++17 -Wall -pedantic --debug -g
 CC		:= g++
+#CC		:= i686-w64-mingw32-g++
 MKDIR 	:= mkdir -p
 SRC		:= ./*.cpp ../Framebuffer/*.cpp  ../Framebuffer/Linux/*.cpp ../Libs/*.cpp ../Util/*.c ../Libs/tinyPTC/*.c
 INC		:= -I. -I../Components -I../Framebuffer -I../Libs -I../Util -I../Sys -I/usr/include/freetype2/ -I../Libs/tinyPTC/

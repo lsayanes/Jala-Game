@@ -14,7 +14,7 @@
 #define VK_CONTROL      (65507)
 #define VK_SPACE        (32)
 #define VK_BACKSPACE    (65288)
-#define VK_SCAPE        (27)
+#define VK_SCAPE        (65307)
 
 
 //#endif

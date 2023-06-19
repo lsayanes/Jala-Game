@@ -283,4 +283,5 @@ void PongGame::onKeyDown(unsigned long ulKey)
 void PongGame::onClose()
 {
 	//TODO: LINUX ahora sale por isRunning
+	dbg("OnClose %d\n", 1);
 }

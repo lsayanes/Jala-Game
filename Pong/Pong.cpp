@@ -54,6 +54,8 @@ PongGame* pPong{nullptr};
     {
         dbg("Pong created w:%d, h:%d", w, h);
  
+        pPong->setFps(300);
+
         while (pPong->isRunning())
         {
             pPong->render();          

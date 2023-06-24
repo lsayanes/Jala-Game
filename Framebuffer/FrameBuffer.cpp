@@ -69,12 +69,13 @@ namespace draw
         size_t line = 0;
         size_t linSizeEnt = propRef.lineSize;
         size_t offset;
+        size_t components = m_Properties.components();
         
         unsigned char* pbyPix = m_pbyBuffer;
-        const int x = (physicsRef.rc.left * m_Properties.components());
+        const int x = (physicsRef.rc.left * components);
         int y = physicsRef.rc.top;
         
-        if (propRef.alpha)
+        if (propRef.alpha && components > 3)
         {
             size_t i;
             unsigned char* psrc, *pdest;
@@ -83,8 +84,9 @@ namespace draw
                 y = static_cast<int>((line + physicsRef.rc.top));
                 pdest = m_pbyBuffer + ((y * m_Properties.lineSize) + x);
                 psrc = data + (line * linSizeEnt);
+            
                
-                for (i = 0; i < linSizeEnt; i+=4)
+                for (i = 0; i < linSizeEnt; i+=components)
                 {
                     if (0 != *(psrc + i + 3))
                     {

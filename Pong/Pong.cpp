@@ -50,18 +50,22 @@ PongGame* pPong{nullptr};
 
     pPong = new PongGame {w, h};
 
-    if(pPong->create())
-    {
-        dbg("Pong created w:%d, h:%d", w, h);
- 
-        pPong->setFps(300);
-
-        while (pPong->isRunning())
+    if(pPong)
+    { 
+        if(pPong->create())
         {
-            pPong->render();          
-            pPong->flip();
+            dbg("Pong created w:%d, h:%d", w, h);
+    
+            pPong->setFps(300);
+
+            while (pPong->isRunning())
+            {
+                pPong->render();          
+                pPong->flip();
+            }
         }
-  
+
+        delete pPong;
     }
   
     return 0;

@@ -34,7 +34,7 @@ namespace draw
 	protected:
 		
 	
-		[[nodiscard]] void *createBackbuffer(draw_t w, draw_t h, draw_t bitPerPixel, draw_t planes = 1);
+		[[nodiscard]] void *createBackbuffer(draw_t w, draw_t h, draw_t bitPerPixel);
 
 
 		virtual void	*beginPain();
@@ -45,7 +45,7 @@ namespace draw
 		Device& operator=(const Device&) = delete;
 		Device& operator=(Device&&) = delete;
 
-		void	retoreVideo() const;
+		virtual void retoreVideo() const;
 
 	public:
 

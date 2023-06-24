@@ -139,7 +139,7 @@ namespace draw
 		return Device::getVideoMode(width, height, bpp);
 	}
 	
-	void *Device::createBackbuffer(draw_t w, draw_t h, draw_t bitPerPixel, draw_t planes)
+	void *Device::createBackbuffer(draw_t w, draw_t h, draw_t bitPerPixel)
 	{
 
 		if (!m_BackBuffer)
@@ -158,7 +158,7 @@ namespace draw
 	{
 		void* pRet{ nullptr };
 
-		if (nullptr != (pRet = createBackbuffer(w, w, Device::bpp, 1)))
+		if (nullptr != (pRet = createBackbuffer(w, w, Device::bpp)))
 		{
 			width = w;
 			height = h;

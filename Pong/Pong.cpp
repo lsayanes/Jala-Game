@@ -37,7 +37,6 @@
 
 #include "Pong.h"
 
-//todo:
 PongGame* pPong{nullptr};
 
 #if !defined(WIN32)

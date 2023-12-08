@@ -39,7 +39,7 @@
 
 PongGame* pPong{nullptr};
 
-#if !defined(WIN32)
+#if !defined(_WINDOWS)
 
  int main()
  {

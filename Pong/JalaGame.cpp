@@ -67,7 +67,7 @@ draw::CharSet *JalaGame::createFont(std::string szPath, size_t size)
 }
 
 void JalaGame::updateDbg(std::string sz)
-{		
+{
 	std::string str = JalaGame::TXT_ID_DBG + ": " + sz + " - ESC Quit";
 	auto vc = pDbgFont->flatText(str.c_str(), DGB_X, DGB_Y);
 	EnMan.addText(JalaGame::TXT_ID_DBG, vc);
@@ -82,8 +82,8 @@ void JalaGame::renderFPS()
 		char str[1024];
 		sprintf(str,"fps:%4d", fpsCnt);
 		updateDbg(str);
-		dbg("Total redered %llu", EnMan.size());		
-		
+		dbg("Total redered %lu", EnMan.size());
+
 		fpsCnt = 0;
 		lastTimeFpsCntrl = std::chrono::steady_clock::now();
 	}
@@ -95,7 +95,7 @@ bool JalaGame::isRenderTime()
 {
 
 	if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - lastTimeFps).count() > frameTime)
-	{	
+	{
 		lastTimeFps = std::chrono::steady_clock::now();
 		return true;
 	}
@@ -121,7 +121,7 @@ void JalaGame::render()
 	if(isRenderTime())
 	{
 		m_frmBuffer.fill(JalaGame::BCK_R, JalaGame::BCK_G, JalaGame::BCK_B);
-		
+
 		renderFPS();
 
 		EnMan.renderOrdered();

@@ -11,7 +11,7 @@ namespace draw
 		{
 			private:
 				uint8_t m_components{0}; // bpp/8
-			
+
 			public:
 
 			size_t			size{0};
@@ -19,7 +19,7 @@ namespace draw
 			uint8_t			alpha{0}; //if it have alpha channel
 			draw_t			width{0};
 			draw_t			height{0};
-			
+
 			static constexpr uint8_t bpp{32};
 
 			explicit Properties(draw_t w, draw_t h, TYPE_COMPONENT eID) : Component{eID}
@@ -49,8 +49,10 @@ namespace draw
 			{
 				static char ret[256];
 
-				sprintf(ret, "Properties component id:%d, w:%d h:%d bpp:%d, comp:%d size:%llu, lineSize:%llu alpha:%d", 
-					componentID(), width, height, Properties::bpp, m_components, size, lineSize, alpha);
+				sprintf(ret, "Properties component id:%d, w:%d h:%d bpp:%d, comp:%d size:%lu, lineSize:%lu alpha:%d",
+					componentID(), width, height, Properties::bpp, m_components,
+					size, lineSize,
+					alpha);
 
 				return ret;
 			}

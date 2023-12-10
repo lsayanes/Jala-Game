@@ -1,11 +1,11 @@
 
 #if defined(_WINDOWS)
 #include <Windows.h>
-#include <stdarg.h>
 #else
 #include <errno.h>
 #endif
 #include <stdlib.h>
+#include <stdarg.h>
 
 
 #include <inttypes.h>
@@ -21,9 +21,10 @@
 
 #if defined(_WINDOWS)
 static wchar_t		s_wString_uni_s[MAX_WSTR_FORMAT];
-static char		s_strMsg_error_s[MAX_STR_FORMAT];
 static char		s_st_str_tochar_[MAX_STR_FORMAT];
 #endif
+
+static char		s_strMsg_error_s[MAX_STR_FORMAT];
 
 char upchar(char ch)
 {
@@ -97,7 +98,7 @@ long bufferToPrintAscii(unsigned char *pbyBuff, long lSize, char *strPrintableOu
 	long i;
 	for(i = 0; i < lSize; i++)
 		strPrintableOut[i] = isprint(pbyBuff[i])?pbyBuff[i]:'.';
-	
+
 	strPrintableOut[i] = 0;
 	return i;
 }
@@ -168,7 +169,7 @@ uint32_t toLittleEndian(const unsigned char *pbyHex)
 	//AA,BB,CC,DD
 	//AABBCCDD
 	uint32_t ul = 0;
-	
+
 	ul = 0xFF & pbyHex[0];
     ul |= (0xFF & pbyHex[1]) << 8;
     ul |= (0xFF & pbyHex[2]) << 16;
@@ -220,26 +221,26 @@ wchar_t *toWChar(char *str)
 	return towchar_t(str);
 }
 
-char *win_strerror(uint32_t dwError) 
+char *win_strerror(uint32_t dwError)
 {
-	
-	LPVOID	lpMsgBuf = NULL;		
+
+	LPVOID	lpMsgBuf = NULL;
 //	int length;
 
-	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | 
-			FORMAT_MESSAGE_FROM_SYSTEM | 
+	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER |
+			FORMAT_MESSAGE_FROM_SYSTEM |
 			FORMAT_MESSAGE_IGNORE_INSERTS,
 			NULL,
 			dwError,
-			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), 
+			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 			(LPTSTR)&lpMsgBuf, 0, NULL );
 
 	//length = WideCharToMultiByte(CP_ACP, 0, lpMsgBuf, -1, 0, 0, NULL, NULL);
-	
+
 	sprintf(s_strMsg_error_s, "%s", (LPCTSTR)lpMsgBuf);
-	
+
 	///wcstombs(s_strMsg_error_s, lpMsgBuf, length);
-	
+
 	LocalFree(lpMsgBuf);
 
 	return s_strMsg_error_s;
@@ -262,7 +263,7 @@ char binToChar(const char *szBin)
 {
 	int i = 0;
 	unsigned char byRet = 0;
-	
+
 	for (; i < 8; i++)
 	{
 		if ('1' == szBin[i])

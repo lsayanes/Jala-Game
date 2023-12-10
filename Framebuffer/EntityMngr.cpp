@@ -59,7 +59,7 @@ namespace draw
 		std::for_each(m_Entities.begin(), m_Entities.end(),
 			[&](std::unordered_map<std::string, Entity*>::value_type &it)
 			{
-				m_FrameBufferRef.put(*it.second); 
+				m_FrameBufferRef.put(*it.second);
 			});
 
 
@@ -72,28 +72,28 @@ namespace draw
 
 	void EntityMngr::renderOrdered() noexcept
 	{
-	
+
 		m_FrameBufferRef.put(m_RenderLayout);
-	
+
 		std::for_each(m_Text.begin(), m_Text.end(),
 			[&](std::unordered_map <std::string, std::vector<Entity*>*>::value_type& txt)
 			{
 				m_FrameBufferRef.put(*txt.second);
 			});
 
-	}	
+	}
 
 	void EntityMngr::renderEntities() noexcept
 	{
 		std::for_each(m_Entities.begin(), m_Entities.end(),
 			[&](std::unordered_map<std::string, Entity*>::value_type &it)
 			{
-				m_FrameBufferRef.put(*it.second); 
+				m_FrameBufferRef.put(*it.second);
 			});
 
 	}
 
-	
+
 	void EntityMngr::renderText() noexcept
 	{
 		std::for_each(m_Text.begin(), m_Text.end(),
@@ -119,7 +119,7 @@ namespace draw
 		draw::Entity *img = new draw::Entity{ w, h, components::TC_NONE };
 		if (img->loadPng(szPath.c_str()))
 			return add(szName, img);
-		
+
 		return 0;
 	}
 
@@ -127,8 +127,8 @@ namespace draw
 	{
 		m_Entities.emplace(std::make_pair(szName, pEntity));
 		m_RenderLayout.push_back(pEntity);
-		dbg("emplace :%s size: %llu", szName.c_str(), m_Entities.size()); 
-		
+		dbg("emplace :%s size: %lu", szName.c_str(), m_Entities.size());
+
 		return m_Entities.size();
 	}
 

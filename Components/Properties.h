@@ -49,7 +49,7 @@ namespace draw
 			{
 				static char ret[256];
 
-				sprintf(ret, "Properties component id:%d, w:%d h:%d bpp:%d, comp:%d size:%lu, lineSize:%lu alpha:%d", 
+				sprintf(ret, "Properties component id:%d, w:%d h:%d bpp:%d, comp:%d size:%llu, lineSize:%llu alpha:%d", 
 					componentID(), width, height, Properties::bpp, m_components, size, lineSize, alpha);
 
 				return ret;

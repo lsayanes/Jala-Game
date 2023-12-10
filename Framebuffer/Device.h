@@ -22,8 +22,8 @@ namespace draw
 
 
 		std::mutex			m_mtxSync{};
-
-		//bool				m_bRunning;
+ 
+		bool				m_bRunning{false};
 
 	public:
 		draw_t				width;
@@ -57,7 +57,7 @@ namespace draw
 		[[nodiscard]] static bool getVideoMode(draw_t &w, draw_t &h, draw_t &b);
 
 		[[nodiscard]] virtual void* create(draw_t w, draw_t h);
-		[[nodiscard]] virtual bool isRunning() ;
+		[[nodiscard]] virtual bool isRunning();
 		[[nodiscard]] virtual bool setVideoMode(
 			draw_t	width,
 			draw_t	height,

@@ -1,5 +1,7 @@
 //leandro_say
 
+#pragma warning(disable:4244)
+
 #include <windows.h>
 
 #include <stdint.h>
@@ -28,16 +30,6 @@ namespace draw
 			{
 			case WM_KEYDOWN:
 				pDev->onKeyDown(static_cast<WPARAM>(wParam));
-				/*
-				switch (wParam)
-				{
-				case VK_ESCAPE:
-					PostMessage(hWnd, WM_DESTROY, 0, 0);
-					break;
-				default:
-					break;
-				}
-				*/
 				break;
 			case WM_COMMAND:
 				break;
@@ -69,7 +61,7 @@ namespace draw
 		m_bFullScreen{false},
 		m_BackBufferHandle{nullptr},
 		m_BackBuffer{nullptr},
-		width{0}, height{0}, bpp{0}
+		width{0}, height{0}
 	{
 		if (!getVideoMode())
 			throw "Device::getVideoMode FAIL";
@@ -109,7 +101,6 @@ namespace draw
 	bool Device::setVideoMode(
 								draw_t	stWidth,
 								draw_t	stHeight,
-								draw_t  byPixel,
 								bool	bFullScreen)
 	{
 
@@ -121,7 +112,7 @@ namespace draw
 		Mode.dmSize = sizeof(DEVMODE);
 		Mode.dmPelsWidth = static_cast<DWORD>(stWidth);
 		Mode.dmPelsHeight = static_cast<DWORD>(stHeight);
-		Mode.dmBitsPerPel = static_cast<DWORD>(byPixel);
+		Mode.dmBitsPerPel = static_cast<DWORD>(bpp);
 		Mode.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
 
 		if (bFullScreen)
@@ -148,7 +139,7 @@ namespace draw
 		{
 			width = static_cast<draw_t>(Mode.dmPelsWidth);
 			height = static_cast<draw_t>(Mode.dmPelsHeight);
-			bpp = static_cast<draw_t>(Mode.dmBitsPerPel);
+			//bpp = static_cast<draw_t>(Mode.dmBitsPerPel);
 			bRet = true;
 		}
 
@@ -157,7 +148,7 @@ namespace draw
 
 	}
 	
-	void *Device::createBackbuffer(size_t stWidth, size_t stHeight, unsigned short unPlanes, unsigned char byBitPerPixel)
+	void *Device::createBackbuffer(draw_t w, draw_t h, draw_t bitPerPixel)
 	{
 
 		if (!m_BackBufferHandle)
@@ -171,10 +162,10 @@ namespace draw
 			* I created this temp bitmap just to select the device context with this measures
 			*/
 			hDev = CreateBitmap(
-				static_cast<int>(stWidth),
-				static_cast<int>(stHeight),
-				unPlanes,
-				static_cast<UINT>(byBitPerPixel),
+				static_cast<int>(w),
+				static_cast<int>(h),
+				1,
+				static_cast<UINT>(bitPerPixel),
 				nullptr);
 
 			if (m_BackBufferHandle)
@@ -183,7 +174,7 @@ namespace draw
 				SelectObject(static_cast<HDC>(m_BackBufferHandle), hDev);
 
 				//this will be (on Windows) the back buffer
-				size_t stRGBSize = stWidth * stHeight * (byBitPerPixel>>3);
+				size_t stRGBSize = w * h * (bitPerPixel >>3);
 				unsigned char*  pbPixels = new unsigned char[stRGBSize];	
 				MEMBMP* pBitMap = new MEMBMP;
 
@@ -191,10 +182,12 @@ namespace draw
 					pbPixels[i] = (i % 4 == 1) * 255;        // BGR
 
 				pBitMap->bmih.biSize = sizeof(BITMAPINFOHEADER);
-				pBitMap->bmih.biWidth = stWidth;
-				pBitMap->bmih.biHeight = static_cast<LONG>((-1) * stHeight);
+				pBitMap->bmih.biWidth = w;
+				pBitMap->bmih.biHeight = static_cast<LONG>((-1) * h);
 				pBitMap->bmih.biPlanes = 1;
-				pBitMap->bmih.biBitCount = byBitPerPixel;
+				pBitMap->bmih.biBitCount = bitPerPixel;
+				pBitMap->bmih.biBitCount = bitPerPixel;
+				pBitMap->bmih.biBitCount = bitPerPixel;
 				pBitMap->bmih.biCompression = BI_RGB;
 				pBitMap->bmih.biSizeImage = 0;
 				pBitMap->bmih.biXPelsPerMeter = 10;
@@ -225,14 +218,14 @@ namespace draw
 
 	}
 
-	void *Device::create(draw_t w, draw_t h, draw_t bitPerPixel)
+	void *Device::create(draw_t w, draw_t h)
 	{
 		void* pRet{ nullptr };
-		if (nullptr != (pRet = createBackbuffer(w, h, 1, static_cast<uint8_t>(bitPerPixel))))
+		if (nullptr != (pRet = createBackbuffer(w, h, bpp)))
 		{
 			width = w;
 			height = h;
-			bpp = bitPerPixel;
+
 
 			WNDCLASSEX wcex;
 
@@ -256,7 +249,7 @@ namespace draw
 			{
 
 				HWND hWnd = CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, "JalaGameDeviceClass", "...", WS_OVERLAPPEDWINDOW,
-					CW_USEDEFAULT,  CW_USEDEFAULT, width,  height, nullptr, nullptr, (HINSTANCE)m_Instance, nullptr);
+					CW_USEDEFAULT,  CW_USEDEFAULT, width,  height + 50, nullptr, nullptr, (HINSTANCE)m_Instance, nullptr);
 
 				if (!hWnd)
 					return nullptr;
@@ -296,34 +289,33 @@ namespace draw
 
 	bool Device::isRunning()
 	{
-		if (m_bRunning)
-		{
-			MSG msg;
-			HWND hWnd = static_cast<HWND>(m_DevHandle);
+		MSG msg;
+		HWND hWnd = static_cast<HWND>(m_DevHandle);
 
-			while (PeekMessage(&msg, hWnd, 0, 0, PM_NOREMOVE))
+		if(PeekMessage(&msg, hWnd, 0, 0, PM_NOREMOVE))
+		//if(GetMessage(&msg, hWnd, 0, 0) > 0)
+		{
+			if (
+					WM_QUIT == msg.message ||
+					WM_DESTROY == msg.message ||
+					WM_CLOSE == msg.message
+				)
 			{
-				if(GetMessage(&msg, hWnd, 0, 0) > 0)
+				return false;
+
+			}
+			else
+			{
+				if (GetMessage(&msg, hWnd, 0, 0) > 0)
 				{
 					TranslateMessage(&msg);
 					DispatchMessage(&msg);
 				}
 			}
 		}
-		
-		return m_bRunning;
-	}
-/*
-	void Device::onClose()
-	{
-		m_bRunning = false;
-	}
 
-	void Device::onKeyDown(int nKey)
-	{
-		if (m_keyDownFunction)
-			m_keyDownFunction(nKey);
+		return m_bRunning;
+				
 	}
-	*/
 
 }//draw

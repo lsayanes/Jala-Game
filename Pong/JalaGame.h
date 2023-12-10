@@ -2,6 +2,7 @@
 
 #include <Config.h>
 
+
 class JalaGame : public draw::Device
 {
 private:
@@ -30,8 +31,8 @@ protected:
 	int 								fpsCnt;
 
 
-	std::chrono::_V2::steady_clock::time_point	lastTimeFps;
-	std::chrono::_V2::steady_clock::time_point	lastTimeFpsCntrl;
+	std::chrono::steady_clock::time_point	lastTimeFps;
+	std::chrono::steady_clock::time_point	lastTimeFpsCntrl;
 	int64_t										frameTime;
 public:
 

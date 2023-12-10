@@ -1,6 +1,7 @@
 
-#if defined(WIN32)
+#if defined(_WINDOWS)
 #include <Windows.h>
+#include <stdarg.h>
 #else
 #include <errno.h>
 #endif
@@ -18,7 +19,7 @@
 #define MAX_WSTR_FORMAT		1024*8
 
 
-#if defined(WIN32)
+#if defined(_WINDOWS)
 static wchar_t		s_wString_uni_s[MAX_WSTR_FORMAT];
 static char		s_strMsg_error_s[MAX_STR_FORMAT];
 static char		s_st_str_tochar_[MAX_STR_FORMAT];
@@ -120,7 +121,7 @@ void uLongToBuffer(uint32_t ul, unsigned char *pOut, unsigned char bLittleEndian
 	}
 }
 
-void uLongLongToBuffer(uint32_t long ull, unsigned char *pOut, unsigned char bLittleEndian)
+void uLongLongToBuffer(uint64_t ull, unsigned char *pOut, unsigned char bLittleEndian)
 {
 
 	//0 a las iquierda es big
@@ -272,6 +273,15 @@ char binToChar(const char *szBin)
 }
 
 #endif
+
+const char* format(const char* msg, ...)
+{
+	va_list args;
+	va_start(args, msg);
+	vsnprintf(s_strMsg_error_s, sizeof(s_strMsg_error_s), msg, args);
+	va_end(args);
+	return s_strMsg_error_s;
+}
 
 
 const char *stringCpy(char *strDest, size_t stSize, const char *szSrc)

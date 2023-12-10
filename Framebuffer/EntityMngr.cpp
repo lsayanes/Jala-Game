@@ -127,7 +127,7 @@ namespace draw
 	{
 		m_Entities.emplace(std::make_pair(szName, pEntity));
 		m_RenderLayout.push_back(pEntity);
-		dbg("emplace :%s size: %lu", szName.c_str(), m_Entities.size()); 
+		dbg("emplace :%s size: %llu", szName.c_str(), m_Entities.size()); 
 		
 		return m_Entities.size();
 	}

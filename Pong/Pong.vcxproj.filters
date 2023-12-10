@@ -25,6 +25,12 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
+    <Filter Include="Framebuffer\Windows">
+      <UniqueIdentifier>{ecccc395-32a2-4f4a-8c6f-8f0b5039a700}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sys">
+      <UniqueIdentifier>{7ada9d70-9f4d-4aa3-81b2-988a2b5da60d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -81,14 +87,23 @@
     <ClInclude Include="PongGame.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\Util\Tools.h">
-      <Filter>Framebuffer</Filter>
-    </ClInclude>
     <ClInclude Include="..\Framebuffer\Config.h">
       <Filter>Framebuffer</Filter>
     </ClInclude>
     <ClInclude Include="..\Libs\png.h">
       <Filter>Libs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sys\key.h">
+      <Filter>Sys</Filter>
+    </ClInclude>
+    <ClInclude Include="JalaGame.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Util\debug.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Util\Tools.h">
+      <Filter>Util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -113,9 +128,6 @@
     <ClCompile Include="..\Framebuffer\Sprite.cpp">
       <Filter>Framebuffer</Filter>
     </ClCompile>
-    <ClCompile Include="..\Framebuffer\Windows\Device.cpp">
-      <Filter>Framebuffer</Filter>
-    </ClCompile>
     <ClCompile Include="..\Util\format.c">
       <Filter>Util</Filter>
     </ClCompile>
@@ -124,6 +136,15 @@
     </ClCompile>
     <ClCompile Include="..\Libs\png.cpp">
       <Filter>Libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Framebuffer\Windows\Device.cpp">
+      <Filter>Framebuffer\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="JalaGame.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="debug.c">
+      <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -140,6 +161,6 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="..\out\freetype.lib" />
+    <Library Include="Resources\Windows\freetype.lib" />
   </ItemGroup>
 </Project>

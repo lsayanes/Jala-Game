@@ -1,4 +1,8 @@
 
+#if defined(_WINDOWS)
+#include <Windows.h>
+#endif
+
 #include <iostream>
 #include <memory>
 #include <vector>
@@ -27,7 +31,7 @@
 
 #include <key.h>
 
-#include <JalaGame.h>
+#include "JalaGame.h"
 
 #include <debug.h>
 #include "PongGame.h"
@@ -257,10 +261,10 @@ void PongGame::onKeyDown(unsigned long ulKey)
 
 	switch(ulKey)
 	{
-	case 'a':
+	case VK_q:
 		moveDown(PLAYER_L_SIDE);
 		break;
-	case 'q':
+	case VK_a:
 		moveUp(PLAYER_L_SIDE);
 		break;
 	case VK_DOWN:
@@ -269,7 +273,7 @@ void PongGame::onKeyDown(unsigned long ulKey)
 	case VK_UP:
 		moveUp(PLAYER_R_SIDE);
 		break;
-	case VK_SCAPE:
+	case VK_ESCAPE:
 		onClose();
 		break;
 	case VK_SPACE:
@@ -283,5 +287,6 @@ void PongGame::onKeyDown(unsigned long ulKey)
 void PongGame::onClose()
 {
 	//TODO: LINUX ahora sale por isRunning
+	m_bRunning = false;
 	dbg("OnClose %d\n", 1);
 }

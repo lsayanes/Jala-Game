@@ -82,7 +82,7 @@ void JalaGame::renderFPS()
 		char str[1024];
 		sprintf(str,"fps:%4d", fpsCnt);
 		updateDbg(str);
-		dbg("Total redered %lu", EnMan.size());		
+		dbg("Total redered %llu", EnMan.size());		
 		
 		fpsCnt = 0;
 		lastTimeFpsCntrl = std::chrono::steady_clock::now();

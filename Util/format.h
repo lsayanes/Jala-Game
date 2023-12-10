@@ -25,7 +25,7 @@ size_t	asciiToAsciiHex(const char *szAscii, char *strOut);
 void	uLongToBuffer(uint32_t ul, unsigned char *pOut, unsigned char bLittleEndian);
 void	uIntToBuffer(short int w, unsigned char *pOut, unsigned char bLittleEndian);
 
-void	uLongLongToBuffer(uint32_t long ull, unsigned char *pOut, unsigned char bLittleEndian);
+void	uLongLongToBuffer(uint64_t ull, unsigned char *pOut, unsigned char bLittleEndian);
 
 //unsigned short	toLittleEndianShort(unsigned short w);
 uint32_t	toBigEndian(const unsigned char *pbyHex);
@@ -37,7 +37,7 @@ char			binToChar(const char *szBin);
 
 const char *lastError();
 
-#if defined(WIN32)
+#if defined(_WINDOWS)
 wchar_t *towchar_t(const char* charArray);
 char	*win_strerror(uint32_t dwError);
 char	*toChar(wchar_t *wstr);
@@ -46,6 +46,8 @@ wchar_t *toWChar(char *str);
 #define win_strerror(n)	strerror(n)
 #endif
 
+
+const char *format(const char* msg, ...);
 
 const char *stringCpy(char *strDest, size_t stSize, const char *szSrc);
 

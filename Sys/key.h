@@ -1,7 +1,7 @@
 
 #pragma once
 
-//#if defined(LINUX)
+#if defined(LINUX)
 
 
 #define VK_LEFT         (65361)
@@ -14,7 +14,16 @@
 #define VK_CONTROL      (65507)
 #define VK_SPACE        (32)
 #define VK_BACKSPACE    (65288)
-#define VK_SCAPE        (65307)
+#define VK_ESCAPE        (65307)
+#define VK_a			'a'
+#define VK_q			'q'
+
+#endif
+
+#define VK_a			(81)
+#define VK_q			(65)
 
 
-//#endif
+
+
+

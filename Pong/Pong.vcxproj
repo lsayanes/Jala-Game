@@ -43,7 +43,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -80,6 +80,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>C:\Jala-Game\Util;C:\Jala-Game\Sys;C:\Jala-Game\Components;C:\Jala-Game\Framebuffer;C:\freetype-windows-binaries\include;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)bin\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -117,8 +119,9 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -156,9 +159,12 @@
     <ClInclude Include="..\Framebuffer\Sprite.h" />
     <ClInclude Include="..\Framebuffer\Types.h" />
     <ClInclude Include="..\Libs\png.h" />
+    <ClInclude Include="..\Sys\key.h" />
+    <ClInclude Include="..\Util\debug.h" />
     <ClInclude Include="..\Util\format.h" />
     <ClInclude Include="..\Util\Tools.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="JalaGame.h" />
     <ClInclude Include="Pong.h" />
     <ClInclude Include="PongGame.h" />
     <ClInclude Include="Resource.h" />
@@ -174,6 +180,8 @@
     <ClCompile Include="..\Framebuffer\Windows\Device.cpp" />
     <ClCompile Include="..\Libs\png.cpp" />
     <ClCompile Include="..\Util\format.c" />
+    <ClCompile Include="debug.c" />
+    <ClCompile Include="JalaGame.cpp" />
     <ClCompile Include="Pong.cpp" />
     <ClCompile Include="PongGame.cpp" />
   </ItemGroup>
@@ -185,7 +193,7 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="..\out\freetype.lib" />
+    <Library Include="Resources\Windows\freetype.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

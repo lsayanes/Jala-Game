@@ -31,6 +31,9 @@
     <Filter Include="Sys">
       <UniqueIdentifier>{7ada9d70-9f4d-4aa3-81b2-988a2b5da60d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Games">
+      <UniqueIdentifier>{6739233e-ece4-4cb9-abe2-f5b74ef93e1f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -45,106 +48,106 @@
     <ClInclude Include="Pong.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\Framebuffer\CharSet.h">
-      <Filter>Framebuffer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Framebuffer\Device.h">
-      <Filter>Framebuffer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Framebuffer\Entity.h">
-      <Filter>Framebuffer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Framebuffer\EntityMngr.h">
-      <Filter>Framebuffer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Framebuffer\FontLib.h">
-      <Filter>Framebuffer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Framebuffer\FrameBuffer.h">
-      <Filter>Framebuffer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Framebuffer\Sprite.h">
-      <Filter>Framebuffer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Framebuffer\Types.h">
-      <Filter>Framebuffer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Components\Component.h">
-      <Filter>Component</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Components\Physics.h">
-      <Filter>Component</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Components\Properties.h">
-      <Filter>Component</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Components\Utilities.h">
-      <Filter>Component</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Util\format.h">
-      <Filter>Util</Filter>
-    </ClInclude>
     <ClInclude Include="PongGame.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\Framebuffer\Config.h">
+    <ClInclude Include="..\..\Framebuffer\CharSet.h">
       <Filter>Framebuffer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Libs\png.h">
+    <ClInclude Include="..\..\Framebuffer\Config.h">
+      <Filter>Framebuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Framebuffer\Device.h">
+      <Filter>Framebuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Framebuffer\Entity.h">
+      <Filter>Framebuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Framebuffer\EntityMngr.h">
+      <Filter>Framebuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Framebuffer\FontLib.h">
+      <Filter>Framebuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Framebuffer\FrameBuffer.h">
+      <Filter>Framebuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Framebuffer\Sprite.h">
+      <Filter>Framebuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Framebuffer\Types.h">
+      <Filter>Framebuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Components\Component.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Components\Physics.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Components\Properties.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Components\Utilities.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libs\png.h">
       <Filter>Libs</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sys\key.h">
+    <ClInclude Include="..\..\Sys\key.h">
       <Filter>Sys</Filter>
     </ClInclude>
-    <ClInclude Include="JalaGame.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Util\debug.h">
+    <ClInclude Include="..\..\Util\debug.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="..\Util\Tools.h">
+    <ClInclude Include="..\..\Util\format.h">
       <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Util\Tools.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\JalaGame.h">
+      <Filter>Games</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Pong.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\Framebuffer\CharSet.cpp">
-      <Filter>Framebuffer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Framebuffer\Entity.cpp">
-      <Filter>Framebuffer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Framebuffer\EntityMngr.cpp">
-      <Filter>Framebuffer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Framebuffer\FontLib.cpp">
-      <Filter>Framebuffer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Framebuffer\FrameBuffer.cpp">
-      <Filter>Framebuffer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Framebuffer\Sprite.cpp">
-      <Filter>Framebuffer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Util\format.c">
-      <Filter>Util</Filter>
-    </ClCompile>
     <ClCompile Include="PongGame.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\Libs\png.cpp">
-      <Filter>Libs</Filter>
+    <ClCompile Include="..\..\Framebuffer\CharSet.cpp">
+      <Filter>Framebuffer</Filter>
     </ClCompile>
-    <ClCompile Include="..\Framebuffer\Windows\Device.cpp">
+    <ClCompile Include="..\..\Framebuffer\Entity.cpp">
+      <Filter>Framebuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Framebuffer\EntityMngr.cpp">
+      <Filter>Framebuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Framebuffer\FontLib.cpp">
+      <Filter>Framebuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Framebuffer\FrameBuffer.cpp">
+      <Filter>Framebuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Framebuffer\Sprite.cpp">
+      <Filter>Framebuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Framebuffer\Windows\Device.cpp">
       <Filter>Framebuffer\Windows</Filter>
     </ClCompile>
-    <ClCompile Include="JalaGame.cpp">
-      <Filter>Sources</Filter>
+    <ClCompile Include="..\..\Libs\png.cpp">
+      <Filter>Libs</Filter>
     </ClCompile>
-    <ClCompile Include="debug.c">
-      <Filter>Sources</Filter>
+    <ClCompile Include="..\..\Util\debug.c">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Util\format.c">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\JalaGame.cpp">
+      <Filter>Games</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

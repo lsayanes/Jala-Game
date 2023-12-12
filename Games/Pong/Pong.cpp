@@ -17,7 +17,7 @@
 
 #include <Config.h>
 #include <Types.h>
-#include <Component.h>
+#include <Component.h>º
 #include <Physics.h>
 #include <Properties.h>
 

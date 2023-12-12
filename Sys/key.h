@@ -20,7 +20,7 @@
 
 #else
 
-#define VK_a			(81)
-#define VK_q			(65)
+#define VK_a			(65)
+#define VK_q			(81)
 
 #endif

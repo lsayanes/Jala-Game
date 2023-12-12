@@ -31,7 +31,7 @@
 
 #include <key.h>
 
-#include "JalaGame.h"
+#include <JalaGame.h>
 
 #include <debug.h>
 #include "PongGame.h"

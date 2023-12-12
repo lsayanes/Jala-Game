@@ -51,7 +51,7 @@ namespace draw
 
 				sprintf(ret, "Properties component id:%d, w:%d h:%d bpp:%d, comp:%d size:%lu, lineSize:%lu alpha:%d",
 					componentID(), width, height, Properties::bpp, m_components,
-					size, lineSize,
+					static_cast<unsigned long>(size), static_cast<unsigned long>(lineSize),
 					alpha);
 
 				return ret;

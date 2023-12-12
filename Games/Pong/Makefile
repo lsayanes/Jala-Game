@@ -2,12 +2,11 @@
 OUT 	:= Pong
 CCFLAGS	:= -std=c++17 -Wall -pedantic --debug -g
 CC		:= g++
-#CC		:= i686-w64-mingw32-g++
 MKDIR 	:= mkdir -p
-SRC		:= ./*.cpp ../Framebuffer/*.cpp  ../Framebuffer/Linux/*.cpp ../Libs/*.cpp ../Util/*.c ../Libs/tinyPTC/*.c
-INC		:= -I. -I../Components -I../Framebuffer -I../Libs -I../Util -I../Sys -I/usr/include/freetype2/ -I../Libs/tinyPTC/
-BIN		:= ./bin/
-OBJ		:= ./obj/
+SRC		:= ./*.cpp ../../Framebuffer/*.cpp  ../../Framebuffer/Linux/*.cpp ../../Libs/*.cpp ../../Util/*.c ../../Libs/tinyPTC/*.c
+INC		:= -I. -I../../Components -I../../Framebuffer -I/../Libs -I../../Util -I../../Sys -I/usr/include/freetype2/ -I../../Libs/tinyPTC/
+BIN		:= ../$(OUT)/bin/
+OBJ		:= ../$(OUT)/obj/
 LIBS	:= -lfreetype -lX11 -lXext -lXrandr
 
 .PHONY : copy
@@ -24,7 +23,7 @@ $(OBJ)%.o: %.c
 	$(MKDIR) $(@D)
 	$(CC) $(CCFLAGS) $(INC) -c -o $@ $<
 
-$(BIN):  
+$(BIN):
 	$(MKDIR) $(BIN)
 
 $(OBJ): copy
@@ -32,10 +31,9 @@ $(OBJ): copy
 
 copy:
 	$(shell cp -R Resources ${BIN})
-	
-clean: 
+
+clean:
 	$(shell rm -rf ./Framebuffer)
 	$(shell rm -rf ./Libs)
 	rm -rf $(BIN)
 	rm -rf $(OBJ)
-

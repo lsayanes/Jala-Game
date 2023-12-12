@@ -33,7 +33,7 @@ copy:
 	$(shell cp -R Resources ${BIN})
 
 clean:
-	$(shell rm -rf ./Framebuffer)
-	$(shell rm -rf ./Libs)
+	$(shell rm -rf ../Framebuffer)
+	$(shell rm -rf ../Libs)
 	rm -rf $(BIN)
 	rm -rf $(OBJ)

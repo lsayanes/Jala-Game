@@ -31,7 +31,7 @@
 
 #include <EntityMngr.h>
 
-#include "JalaGame.h"
+#include <JalaGame.h>
 #include "PongGame.h"
 
 #include <debug.h>
@@ -50,13 +50,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
-#else 
+#else
 
 
 int main()
 {
 
-#endif  
+#endif
 
     draw::draw_t w{1024};
     draw::draw_t h{600};
@@ -64,23 +64,22 @@ int main()
     pPong = new PongGame {w, h};
 
     if(pPong)
-    { 
+    {
         if(pPong->create())
         {
             dbg("Pong created w:%d, h:%d", w, h);
-    
+
             pPong->setFps(300);
 
             while (pPong->isRunning())
             {
-                pPong->render();          
+                pPong->render();
                 pPong->flip();
             }
         }
 
         delete pPong;
     }
-  
+
     return 0;
 }
-

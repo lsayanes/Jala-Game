@@ -13,7 +13,6 @@
 #include "../Components/Physics.h"
 #include "../Components/Properties.h"
 
-#include "Device.h"
 #include "Entity.h"
 #include "CharSet.h"
 
@@ -29,7 +28,7 @@ namespace draw
         m_Properties{ components::Properties{w, h, components::TC_MALLOC_BUFFER} }
 
     {
-    
+
         m_Line = std::make_unique<uint8_t[]>(m_Properties.lineSize);
         m_pbyBuffer = static_cast<uint8_t*>(malloc(w * h * components::Properties::bpp));
 
@@ -59,7 +58,7 @@ namespace draw
 	}
 
 
-    
+
     void FrameBuffer::put(Entity& e) const
     {
         auto &physicsRef = e.physics();
@@ -70,11 +69,11 @@ namespace draw
         size_t linSizeEnt = propRef.lineSize;
         size_t offset;
         size_t components = m_Properties.components();
-        
+
         unsigned char* pbyPix = m_pbyBuffer;
         const int x = (physicsRef.rc.left * components);
         int y = physicsRef.rc.top;
-        
+
         if (propRef.alpha && components > 3)
         {
             size_t i;
@@ -84,8 +83,8 @@ namespace draw
                 y = static_cast<int>((line + physicsRef.rc.top));
                 pdest = m_pbyBuffer + ((y * m_Properties.lineSize) + x);
                 psrc = data + (line * linSizeEnt);
-            
-               
+
+
                 for (i = 0; i < linSizeEnt; i+=components)
                 {
                     if (0 != *(psrc + i + 3))
@@ -95,7 +94,7 @@ namespace draw
                         *(pdest + i + 2) = *(psrc + i + 2);
                     }
                 }
-                
+
                 line++;
             }
         }
@@ -110,7 +109,7 @@ namespace draw
             }
         }
     }
-        
+
     void FrameBuffer::put(std::vector<Entity*> &v) const
     {
         std::for_each(v.begin(), v.end(), [&](Entity* it) { put(*it); });
@@ -148,7 +147,7 @@ namespace draw
 
     void FrameBuffer::fill(Entity& e, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
     {
-        
+
         size_t y = 0;
         size_t offset;
         components::Properties& prop = e.properties();
@@ -172,14 +171,14 @@ namespace draw
             std::memcpy(pbyPix + offset, pbyLine, lineSize);
             y++;
         }
-        
+
         //fill(e.properties(), e.data().get(), r, g, b, a);
     }
 
 
     void FrameBuffer::fill(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
     {
-   
+
         size_t y = 0;
         size_t offset;
         size_t lineSize = m_Properties.lineSize;
@@ -189,7 +188,7 @@ namespace draw
         unsigned char* pbyLine = m_Line.get();
 
         uint32_t pixel = buildPixel(r, g, b, a);
-        
+
 
         for (uint32_t ud = 0; ud < lineSize; ud += comp)
             std::memcpy(&pbyLine[ud], &pixel, comp);
@@ -200,7 +199,7 @@ namespace draw
             std::memcpy(pbyPix + offset, pbyLine, lineSize);
             y++;
         }
-    
+
 
         //fill(m_Properties, m_pbyBuffer, r, g, b, a);
     }

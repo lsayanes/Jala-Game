@@ -3,24 +3,10 @@
 
 namespace draw
 {
-	class CharSet 
+	class CharSet
 	{
 		std::vector<Entity*> m_vctText{};
 		void		*m_pFont;
-	
-	private:
-		/*
-		inline void deleteVct()
-		{
-			std::for_each(m_vctText.begin(), m_vctText.end(),
-				[&](auto it)
-				{
-					delete it;
-				});
-
-			m_vctText.clear();
-		}
-		*/
 	public:
 		explicit CharSet(void *pFont);
 		virtual ~CharSet();

@@ -4,8 +4,6 @@
 
 namespace draw
 {
-	class Device;
-
 	class FrameBuffer
 	{
 	private:
@@ -16,12 +14,12 @@ namespace draw
 
 	private:
 		void fill(components::Properties& Prop, draw_t w, draw_t h, uint8_t* pbySurface, uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255);
-	
+
 	public:
-		
+
 		explicit FrameBuffer(draw_t w, draw_t h);
 		explicit FrameBuffer(uint8_t *pBuffer, draw_t w, draw_t h);
-	
+
 		virtual ~FrameBuffer();
 
 		FrameBuffer(const FrameBuffer&) = delete;
@@ -29,13 +27,13 @@ namespace draw
 		FrameBuffer& operator=(const FrameBuffer&) = delete;
 		FrameBuffer& operator=(FrameBuffer&&) = delete;
 
-		
+
 		void	put(Entity& e) const;
 		void	put(std::vector<Entity*> &v) const;
 		void	put(CharSet& c) const;
 
 	    void	fill(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255);
-		
+
 		static void	fill(Entity &e, uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255);
 
 		[[nodiscard]]  inline const components::Properties& properties() const { return m_Properties; };
@@ -53,6 +51,4 @@ namespace draw
         }
 
 	};
-
-
 }//draw

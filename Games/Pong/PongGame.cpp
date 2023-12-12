@@ -37,13 +37,13 @@
 #include "PongGame.h"
 
 
-PongGame::PongGame(draw::draw_t w, draw::draw_t h) : 
+PongGame::PongGame(draw::draw_t w, draw::draw_t h) :
 	JalaGame(w, h),
 	m_mtxRender{},
 	m_mtxDbg{},
-	m_nBallDeltaX{1},	
+	m_nBallDeltaX{1},
 	m_nBallDeltaY{-1},
-	m_nBallUpdate{0}		
+	m_nBallUpdate{0}
 {
 
 }
@@ -55,7 +55,7 @@ PongGame::~PongGame()
 
 	if (m_pScoreLPlayer)
 		delete m_pScoreLPlayer;
-	
+
 	if (m_pScoreRPlayer)
 		delete m_pScoreRPlayer;
 }
@@ -64,7 +64,7 @@ PongGame::~PongGame()
 bool PongGame::create()
 {
 	bool bRet = false;
-	
+
 
 	m_pScoreLPlayer = createFont(SCOREFONTPATH, SCOREFONTSIZE);
 	m_pScoreRPlayer = createFont(SCOREFONTPATH, SCOREFONTSIZE);
@@ -81,12 +81,12 @@ bool PongGame::create()
 
 		//auto& bckprp = EnMan[BACKGROUND].properties();
 		m_pGameArea = new draw::Rect{ bckphy.rc };
-	
+
 		auto &ball = EnMan[BALL];
 		//auto& ballphy = ball.physics();
 		ball.renderWithAlpha();
 
-		auto init_player = [&](std::string szPlayer) 
+		auto init_player = [&](std::string szPlayer)
 		{
 			auto &phy = EnMan[szPlayer].physics();
 			phy.centery(PLAYERS_H, bckphy.rc.top, bckphy.rc.bottom);
@@ -124,7 +124,7 @@ void PongGame::updateScores()
 		auto vc = (*pFnt)->flatText(str.c_str(), x, m_pGameArea->top + 250);
 		EnMan.addText(name, vc);
 	};
-	
+
 	add_score(m_nScoreLPlayer, &m_pScoreLPlayer, "score L", m_pGameArea->left - 40);
 	add_score(m_nScoreRPlayer, &m_pScoreRPlayer, "score R", m_pGameArea->right + 20);
 }
@@ -159,7 +159,7 @@ void PongGame::moveUp(std::string szPlayer)
 	auto& plphy = EnMan[szPlayer].physics();
 	if (plphy.rc.top > m_pGameArea->top)
 		plphy.rc.moveUp(plphy.vy);
-	
+
 }
 
 void PongGame::moveDown(std::string szPlayer)
@@ -172,7 +172,7 @@ void PongGame::moveDown(std::string szPlayer)
 void PongGame::shot()
 {
 	if (
-		PLAY_STATUS::PLAYER_L_HOLD == m_nStatus || 
+		PLAY_STATUS::PLAYER_L_HOLD == m_nStatus ||
 		PLAY_STATUS::PLAYER_R_HOLD == m_nStatus
 		)
 	{
@@ -201,7 +201,7 @@ void PongGame::holdBall()
 }
 
 void PongGame::locateBall()
-{	
+{
 	if (m_nBallUpdate && 0 == (m_nBallUpdate % 3))
 	{
 
@@ -247,24 +247,24 @@ void PongGame::locateBall()
 		else if (ballphy.rc.bottom > m_pGameArea->bottom)
 		{
 			m_nBallDeltaY = -1;
-		}	
+		}
 	}
-	
+
 	m_nBallUpdate++;
 }
 
 
-void PongGame::onKeyDown(unsigned long ulKey) 
+void PongGame::onKeyDown(unsigned long ulKey)
 {
 
 	dbg("onKeydown %lu", ulKey);
 
 	switch(ulKey)
 	{
-	case VK_q:
+	case VK_a:
 		moveDown(PLAYER_L_SIDE);
 		break;
-	case VK_a:
+	case VK_q:
 		moveUp(PLAYER_L_SIDE);
 		break;
 	case VK_DOWN:

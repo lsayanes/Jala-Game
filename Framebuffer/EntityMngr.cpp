@@ -10,7 +10,6 @@
 #include <unordered_map>
 #include <stdint.h>
 #include <algorithm>
-//#include <optional>
 
 #include "Config.h"
 
@@ -20,7 +19,6 @@
 #include "../Components/Physics.h"
 #include "../Components/Properties.h"
 
-#include "Device.h"
 #include "Entity.h"
 #include "FontLib.h"
 #include "CharSet.h"

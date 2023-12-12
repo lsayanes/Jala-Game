@@ -29,5 +29,6 @@ __________________________________________________
   * Xrandr
   * I've been using tinyPTC until I can develop my own X11 library.
 * **Windows**
+    * freetype2
     * Visual Studio Community
   

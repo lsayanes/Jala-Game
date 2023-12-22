@@ -3,18 +3,18 @@
 #include <map>
 namespace draw
 {
-	class EntityMngr 
+	class EntityMngr
 	{
 	private:
-		std::unordered_map<std::string, Entity*>					m_Entities{};	 //render Unordered	
+		std::unordered_map<std::string, Entity*>					m_Entities{};	 //render Unordered
 		std::unordered_map<std::string, std::vector<Entity*>*>		m_Text{};
 		std::vector<Entity*>										m_RenderLayout{}; //render Ordered
 
 		FrameBuffer													&m_FrameBufferRef;
-	
+
 	private:
-		[[nodiscard]] const size_t add(std::string szName, Entity *pEntity); 
-	
+		[[nodiscard]] const size_t add(std::string szName, Entity *pEntity);
+
 	public:
 		static constexpr size_t INI_MAX_ENTITIES {1024};
 
@@ -27,7 +27,7 @@ namespace draw
 		void renderEntities() noexcept;
 		void render(const std::string name) noexcept;
 		void renderText() noexcept;
-	
+
 
 		inline void addText(std::string szName, std::vector<Entity*>* pVct) noexcept
 		{
@@ -36,7 +36,8 @@ namespace draw
 
 		[[nodiscard]] const size_t create(std::string szName, draw_t w, draw_t h) noexcept;
 		[[nodiscard]] const size_t create(std::string szName, draw_t w, draw_t h, std::string szPath) noexcept;
-		
+		[[nodiscard]] const size_t create(std::string szName, draw_t w, draw_t h, uint8_t *pData) noexcept;
+
 		Entity& operator[](std::string szName) const;
 
 		[[nodiscard]] inline Entity* get(std::string szName) const noexcept
@@ -48,6 +49,6 @@ namespace draw
 			return nullptr;
 		}
 
-		[[nodiscard]] inline size_t size() { return m_Entities.size(); }		
+		[[nodiscard]] inline size_t size() { return m_Entities.size(); }
 	};
 };// draw

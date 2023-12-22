@@ -121,6 +121,17 @@ namespace draw
 		return 0;
 	}
 
+	const size_t EntityMngr::create(std::string szName, draw_t w, draw_t h, uint8_t *pData) noexcept
+	{
+		if(pData)
+		{
+			draw::Entity *pEntity = new draw::Entity{ w, h, pData, components::TC_NONE };
+			return add(szName, pEntity);
+		}
+
+		return 0;
+	}
+
 	const size_t EntityMngr::add(std::string szName, Entity *pEntity)
 	{
 		m_Entities.emplace(std::make_pair(szName, pEntity));

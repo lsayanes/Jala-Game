@@ -13,14 +13,14 @@ private:
 
 	const std::string TXT_ID_DBG   {"dbg"};
 	const std::string DBGFONTPATH  {"Resources/WhiteOnBlack.ttf"};
-
+public:
 	/*
 			Error msg
 	*/
 
 	const std::string ERR_CREATING {"Error try to create "};
 
-	
+
 private:
 	inline void renderFPS();
 	inline bool isRenderTime();
@@ -36,7 +36,7 @@ protected:
 	int64_t										frameTime;
 public:
 
-	int	Fps;	
+	int	Fps;
 
 	const int DGB_X{0};
 	const int DGB_Y{height-20};
@@ -48,19 +48,18 @@ public:
 public:
 
 	explicit JalaGame(draw::draw_t w, draw::draw_t h);
-	virtual ~JalaGame();	
+	virtual ~JalaGame();
 
  	virtual void render();
 	virtual bool create();
-	
+
 	bool setFps(int fps);
 
 	draw::CharSet *createFont(std::string szPath, size_t size);
 
 	void updateDbg(std::string sz);
 
-	virtual void onClose() = 0; 
+	virtual void onClose() = 0;
 	virtual void onKeyDown(unsigned long  nKey) = 0;
 
 };
-

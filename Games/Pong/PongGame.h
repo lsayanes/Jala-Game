@@ -28,7 +28,7 @@ private:
 	const std::string DBGFONTPATH  { "Resources/verdana.ttf" };
 	const std::string SCOREFONTPATH{ "Resources/Minecraft.ttf" };
 	static constexpr size_t SCOREFONTSIZE{32};
-	
+
 	static constexpr size_t BALL_W{ 10 };
 	static constexpr size_t BALL_H{ 10 };
 	const std::string BALL{ "ball" };
@@ -36,7 +36,7 @@ private:
 
 	static constexpr size_t PLAYERS_W{ 10 };
 	static constexpr size_t PLAYERS_H{ 80 };
-	
+
 	static constexpr size_t BCKGRND_W{ 640 };
 	static constexpr size_t BCKGRND_H{ 480 };
 	const std::string BACKGROUND{ "background" };
@@ -50,7 +50,6 @@ private:
 			Error msg
 	*/
 
-	const std::string ERR_CREATING{ "Error try to create " };
 
 private:
 
@@ -81,8 +80,7 @@ public:
 	void shot();
 
  	void render();
-	void onClose(); 
+	void onClose();
 	void onKeyDown(unsigned long  nKey);
 
 };
-

@@ -11,13 +11,13 @@
 #include <vector>
 #include <algorithm>
 
-#include "../Util/Tools.h"
+#include "../Util/Utils.h"
 
 
 #include "png.h"
 
 /*
-I don't remember how and when I built this, but... I remember migrating it from C++ to C and now... I'm "migrating" back to C++... 
+I don't remember how and when I built this, but... I remember migrating it from C++ to C and now... I'm "migrating" back to C++...
 so I'm going to need some help rewriting this frankenstein...
 */
 
@@ -434,11 +434,11 @@ unsigned char pngHuffmanTreeMakeFromLengths1D( PngHuffmanTree *pTree )
         vctBitLenCount.resize((size_t)pTree->unMaxBitLen + 1);
         vctNextCode.resize(pTree->unMaxBitLen + 1 );
 
-        //contar el numero de instancas por cada lenth code 
+        //contar el numero de instancas por cada lenth code
         for ( bits = 0; bits < pTree->unNumCodes; bits++ )
             ++vctBitLenCount[pTree->punLengths[bits]];
 
-        //valores nextcode 
+        //valores nextcode
         for ( bits = 1; bits <= pTree->unMaxBitLen; ++bits )
             vctNextCode[ bits ] = ( vctNextCode[ bits - 1 ] + vctBitLenCount[ bits - 1 ] ) << 1;
 
@@ -450,7 +450,7 @@ unsigned char pngHuffmanTreeMakeFromLengths1D( PngHuffmanTree *pTree )
         }
 
         bRet = pngHuffmanTreeMake2DTree( pTree );
-        
+
 
     }
 
@@ -938,12 +938,12 @@ unsigned char pngInflate( unsigned char **psOut, size_t *pstOutSize, const unsig
     if ( 0 == bRet )
     {
         size_t i = 0;
-        std::for_each(vct.begin(), vct.end(), [&](std::vector<unsigned char>::value_type& it) 
-            { 
-                (*psOut)[i++] = it; 
+        std::for_each(vct.begin(), vct.end(), [&](std::vector<unsigned char>::value_type& it)
+            {
+                (*psOut)[i++] = it;
             }
         );
-        
+
         *pstOutSize = vct.size();
     }
 
@@ -972,8 +972,8 @@ unsigned char pngDecompress( unsigned char **pbOut, size_t *pstOutSize, const un
                 bRet = pngInflate( pbOut, pstOutSize, pbMem + 2, stMemSize - 2/*, pDecoder*/ );
                 if ( 0 == bRet && !pDecoder->bIgnoreAdler32 )
                 {
-                    uint32_t ADLER32 = draw::tools::to32bitData<uint32_t>( &pbMem[ stMemSize - 4 ] );
-                    uint32_t checksum = draw::tools::crcI32( 0, *pbOut, (unsigned short)(*pstOutSize ));
+                    uint32_t ADLER32 = draw::utils::to32bitData<uint32_t>( &pbMem[ stMemSize - 4 ] );
+                    uint32_t checksum = draw::utils::crcI32( 0, *pbOut, (unsigned short)(*pstOutSize ));
                     bRet = ( checksum == ADLER32 ) ? 0 : 1;
                 }
             }
@@ -1266,7 +1266,7 @@ unsigned char pngChunk_zTXt( PngState_t *pState, const unsigned char* pbData, si
     char *szKey = nullptr;
 
     std::vector<unsigned char> vctDecoded;
-  
+
     for ( stLength = 0; stLength < stDataSize && 0 != pbData[ stLength ]; ++stLength )
         ;
 
@@ -1416,9 +1416,9 @@ unsigned char pngReadChunk_iTXt( PngState_t *pState, const unsigned char *pbData
 
 unsigned char pngChunk_Crc( const unsigned char *pbChunk )
 {
-    uint32_t udLength = draw::tools::to32bitData<uint32_t>( pbChunk );
-    uint32_t udCRC = draw::tools::to32bitData<uint32_t>( &pbChunk[ udLength + 8 ] );
-    uint32_t udSum = draw::tools::crcI32( 0, &pbChunk[ 4 ], (uint16_t)( udLength + 4 ) );
+    uint32_t udLength = draw::utils::to32bitData<uint32_t>( pbChunk );
+    uint32_t udCRC = draw::utils::to32bitData<uint32_t>( &pbChunk[ udLength + 8 ] );
+    uint32_t udSum = draw::utils::crcI32( 0, &pbChunk[ 4 ], (uint16_t)( udLength + 4 ) );
 
     return ( udCRC != udSum ) ? 1 : 0;
 }
@@ -1426,7 +1426,7 @@ unsigned char pngChunk_Crc( const unsigned char *pbChunk )
 
 const unsigned char *pngChunk_NextConst( const unsigned char *pbChunk )
 {
-    uint32_t udChunkLength = draw::tools::to32bitData<uint32_t>( pbChunk ) + 12;
+    uint32_t udChunkLength = draw::utils::to32bitData<uint32_t>( pbChunk ) + 12;
     return &pbChunk[ udChunkLength ];
 }
 
@@ -1691,19 +1691,19 @@ unsigned char pngInspect( uint32_t *w, uint32_t *h, PngState_t *pState, const un
 
     if ( pbyMem[ 0 ] != 137 || pbyMem[ 1 ] != 80 || pbyMem[ 2 ] != 78 || pbyMem[ 3 ] != 71
          || pbyMem[ 4 ] != 13 || pbyMem[ 5 ] != 10 || pbyMem[ 6 ] != 26 || pbyMem[ 7 ] != 10 )
-    {       
+    {
         return 2;
     }
 
-    if ( 13 != draw::tools::to32bitData<uint32_t>( &pbyMem[ 8 ] ) )
+    if ( 13 != draw::utils::to32bitData<uint32_t>( &pbyMem[ 8 ] ) )
         return 3;
 
     if ( !pngIsChunk( pbyMem + 8, "IHDR" ) )
         return 4;
 
 
-    *w = (uint32_t)draw::tools::to32bitData<uint32_t>( &pbyMem[ 16 ] );
-    *h = (uint32_t)draw::tools::to32bitData<uint32_t>( &pbyMem[ 20 ] );
+    *w = (uint32_t)draw::utils::to32bitData<uint32_t>( &pbyMem[ 16 ] );
+    *h = (uint32_t)draw::utils::to32bitData<uint32_t>( &pbyMem[ 20 ] );
 
     if ( *w == 0 || *h == 0 )
         return 5;
@@ -1719,7 +1719,7 @@ unsigned char pngInspect( uint32_t *w, uint32_t *h, PngState_t *pState, const un
 
     if ( !pState->Decoder.bIgnoreCrc )
     {
-        if (draw::tools::to32bitData<uint32_t>( &pbyMem[ 29 ] ) != draw::tools::crcI32( 0, &pbyMem[ 12 ], 17 ) )
+        if (draw::utils::to32bitData<uint32_t>( &pbyMem[ 29 ] ) != draw::utils::crcI32( 0, &pbyMem[ 12 ], 17 ) )
             return 7;
     }
 
@@ -1755,7 +1755,7 @@ int pngIsPixelOverflow(
     if ( mulofl( stNumPixels, 8, &stTotal ) )
         return 1;
 
-    // una linea (w / 8) * bpp) + ((w & 7) * bpp + 7) / 8 
+    // una linea (w / 8) * bpp) + ((w & 7) * bpp + 7) / 8
     if ( mulofl( (size_t)( w / 8 ), stBpp, &stLine ) )
         return 1;
 
@@ -1997,7 +1997,7 @@ unsigned char pngPostProcessScanines( unsigned char *pbOut, unsigned char *pbyMe
 
             if ( stBpp < 8 )
             {
-                //Eliminar los bits de relleno en las lineas de exploracion, todav�a puede haber bits de relleno entre las diferentes im�genes reducidas 
+                //Eliminar los bits de relleno en las lineas de exploracion, todav�a puede haber bits de relleno entre las diferentes im�genes reducidas
                 pngRemovePaddingBits( &pbyMem[ passstart[ i ] ], &pbyMem[ padded_passstart[ i ] ], passw[ i ] * stBpp, ( ( passw[ i ] * stBpp + 7 ) / 8 ) * 8, passh[ i ] );
             }
         }
@@ -2032,7 +2032,7 @@ unsigned char pngDecode(
 
     *ppbOut = 0;
 
-   
+
 
     pState->bError = pngInspect( w, h, pState, pbyMem, stMemSize );
     if (
@@ -2042,7 +2042,7 @@ unsigned char pngDecode(
 
         if(0 == stCriticalPos ) //esto es porque el compilador dice que no lo uso...
             stCriticalPos = 1; //1 = IHDR, 2 = PLTE, 3 = IDAT*/
-        
+
         pbChunk = &pbyMem[ 33 ];
 
         /*
@@ -2052,15 +2052,15 @@ unsigned char pngDecode(
         while ( !IEND && !pState->bError )
         {
             if ( (size_t)( ( pbChunk - pbyMem ) + 12 ) > stMemSize || pbChunk < pbyMem )
-            {         
+            {
                 if ( pState->Decoder.bIgnoreEnd )
                     break;
 
                 pState->bError = 1; //TODO: especificar si es necesario..
             }
 
-            udChunkLength = draw::tools::to32bitData<uint32_t>( pbChunk );
-            if ( ( udChunkLength = draw::tools::to32bitData<uint32_t>( pbChunk ) ) > 2147483647 )
+            udChunkLength = draw::utils::to32bitData<uint32_t>( pbChunk );
+            if ( ( udChunkLength = draw::utils::to32bitData<uint32_t>( pbChunk ) ) > 2147483647 )
             {
                 if ( pState->Decoder.bIgnoreEnd )
                     break;
@@ -2279,12 +2279,12 @@ bool  pngDecode_File(
             State.InfoRaw.ColorType = ColorType;
             State.InfoRaw.bBitdepth = bBitdepth;
 
-            bRet = (0 == pngDecode(ppbOut, w, h, &State, (const unsigned char*)(buffer.data()), size)); 
+            bRet = (0 == pngDecode(ppbOut, w, h, &State, (const unsigned char*)(buffer.data()), size));
 
             pngCleanup_Palette(&State.InfoRaw);
             pngCleanup_Info(&State.Info);
         }
-    
+
         file.close();
 
     }
@@ -2305,7 +2305,7 @@ Png::~Png()
 bool Png::load(const char* szFile, unsigned char bpp, unsigned char byBitdepth)
 {
     unsigned char* pbImgData{nullptr};
-    
+
     if (pngDecode_File(&pbImgData, &ulWidth, &ulHeight, szFile, LCT_RGBA, byBitdepth)) //asumo que todas tienen canal alpha
     {
         byBpp = bpp;
@@ -2316,5 +2316,3 @@ bool Png::load(const char* szFile, unsigned char bpp, unsigned char byBitdepth)
 
     return false;
 }
-
-

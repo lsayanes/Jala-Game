@@ -1,10 +1,10 @@
 
-OUT 	:= Pong
+OUT 	:= Rotate
 CCFLAGS	:= -std=c++17 -Wall -pedantic --debug -g
 CC		:= g++
 MKDIR 	:= mkdir -p
-SRC		:= ./*.cpp ../*.cpp ../../Framebuffer/*.cpp  ../../Components/*.cpp  ../../Framebuffer/Linux/*.cpp ../../Libs/*.cpp  ../../Util/*.c ../../Libs/tinyPTC/*.c
-INC		:= -I. -I../ -I../../Components -I../../Framebuffer -I/../Libs -I../../Util -I../../Sys -I/usr/include/freetype2/ -I../../Libs/tinyPTC/
+SRC		:= ./*.cpp ../*.cpp ../../Framebuffer/*.cpp  ../../Components/*.cpp  ../../Framebuffer/Linux/*.cpp ../../Libs/*.cpp ../../Tools/*.cpp ../../Util/*.c ../../Libs/tinyPTC/*.c
+INC		:= -I. -I../ -I../../Components -I../../Framebuffer -I/../Libs -I../../Util -I../../Tools -I../../Sys -I/usr/include/freetype2/ -I../../Libs/tinyPTC/
 BIN		:= ../$(OUT)/bin/
 OBJ		:= ../$(OUT)/obj/
 LIBS	:= -lfreetype -lX11 -lXext -lXrandr

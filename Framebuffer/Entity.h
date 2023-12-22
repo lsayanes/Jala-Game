@@ -3,7 +3,7 @@
 
 namespace draw
 {
-	class Entity 
+	class Entity
 	{
 	protected:
 		components::Physics					m_Physics;
@@ -12,6 +12,7 @@ namespace draw
 
 	public:
 		explicit Entity(draw_t w, draw_t h, components::TYPE_COMPONENT typeID);
+		explicit Entity(draw_t w, draw_t h, uint8_t *pData, components::TYPE_COMPONENT typeID);
 		virtual ~Entity();
 
 		Entity(const Entity&) = delete;
@@ -24,7 +25,7 @@ namespace draw
 		[[nodiscard]] inline components::Physics&			physics()		{ return m_Physics; };
 		[[nodiscard]] inline components::Properties&		properties()	{ return m_Properties; };
 		[[nodiscard]] inline std::unique_ptr<uint8_t[]>&	data()				{ return m_Data; };
-		
+
 		inline void renderWithAlpha() { m_Properties.alpha = 1; };
 
 	};

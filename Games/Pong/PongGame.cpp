@@ -107,7 +107,7 @@ bool PongGame::create()
 	}
 	else
 	{
-		dbg("%s", std::string{ ERR_CREATING + " some entities could not be created" }.c_str());
+		dbg("%s", std::string{ JalaGame::ERR_CREATING + " some entities could not be created" }.c_str());
 	}
 
 	(true == bRet) && (bRet = JalaGame::create());

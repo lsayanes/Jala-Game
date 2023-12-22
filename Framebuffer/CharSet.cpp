@@ -27,7 +27,7 @@
 #include "../Components/Properties.h"
 
 
-#include "../Util/Tools.h"
+#include "../Util/Utils.h"
 
 #include "Entity.h"
 
@@ -51,15 +51,15 @@ namespace draw
 
 	CharSet::~CharSet()
 	{
-		tools::deletePtrVct<std::vector<Entity*>>(m_vctText);
+		utils::deletePtrVct<std::vector<Entity*>>(m_vctText);
 	}
-	
+
 	std::vector<Entity*>* CharSet::flatText(const char* sText, int x, int y)
 	{
 		FT_Face face = static_cast<FT_Face>(m_pFont);
 
-		tools::deletePtrVct<std::vector<Entity*>>(m_vctText);
-		
+		utils::deletePtrVct<std::vector<Entity*>>(m_vctText);
+
 		size_t	stLen = strlen(sText);
 
 		int32_t nY = y;
@@ -70,10 +70,10 @@ namespace draw
 		Entity* pEntity;
 		uint8_t* pbyData;
 		int nGlyphIndexCmp;
-			
+
 		//bool bRgb = !(face->glyph->bitmap.pixel_mode == FT_PIXEL_MODE_BGRA);
 
-			
+
 		m_vctText.resize(stLen);
 		for (size_t n = 0; n < stLen; n++)
 		{
@@ -88,7 +88,7 @@ namespace draw
 			dAdvance = face->glyph->metrics.horiAdvance >> 6;
 			pbyData = pEntity->data().get();
 			auto& phyRef = pEntity->physics();
-		 
+
 			for (int i = 0; i < (int)face->glyph->bitmap.rows; i++)
 			{
 				for (int j = 0; j < (int)face->glyph->bitmap.width; j++)

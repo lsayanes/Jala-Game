@@ -10,26 +10,24 @@
 #include "Config.h"
 #include "Types.h"
 
-#include "../Components/Component.h"
-#include "../Components/Physics.h"
-#include "../Components/Properties.h"
+#include <Component.h>
+#include <Physics.h>
+#include <Properties.h>
 
-#include "Device.h"
-#include "Entity.h"
+#include <Device.h>
+#include <Entity.h>
 
 #include "Sprite.h"
 //#include "FrameBuffer.h"
 
 namespace draw
 {
-	Sprite::Sprite(draw_t w, draw_t h, size_t stTotal):
-		m_Entities {stTotal}
+	Sprite::Sprite(draw_t w, draw_t h):
+		width{w},
+		height{h},
+		curr{0}
 	{
-		if(0 == stTotal)
-			throw std::invalid_argument("Total entities==0");
-
-		for (size_t i = 0; i < stTotal; i++)
-			m_Entities[i] = new Entity{ w, h, components::TC_NONE };
+		m_Entities.reserve(1024);
 	}
 
 	Sprite::~Sprite()
@@ -38,38 +36,9 @@ namespace draw
 		m_Entities.clear();
 	}
 
-	bool Sprite::load(size_t stIndex, const char* szPath)
+	void Sprite::add(Entity *pEntity)
 	{
-		/*
-		if (stIndex < m_Entities.size())
-		{
-			std::ifstream file(szPath, std::ios::binary | std::ios::ate);
-			if (file.is_open())
-			{
-				std::vector<unsigned char> img{};
-				std::streamsize size = file.tellg();
-				std::vector<char> buffer(static_cast<int>(size));
-				file.seekg(0, std::ios::beg);
-
-				if (file.read(buffer.data(), size))
-				{
-					Entity* pe{ m_Entities[stIndex] };
-					uint32_t w{ pe->properties().w }, h{ pe->properties().h };
-					char* p{ buffer.data() };
-					unsigned char* pEntData = pe->data().get();
-				
-					if (0 == decodePNG(img, w, h, (unsigned char*)(p), pe->properties().size))
-					{
-						std::copy(begin(img), end(img), pEntData);
-						draw::tools::bgraToRgba(pEntData, pe->properties().size);
-						return true;
-					}
-				}
-			}
-
-		}
-		*/
-		return false;
+		m_Entities.push_back(pEntity);
 	}
 
 	void Sprite::pos(int x, int y)
@@ -81,10 +50,18 @@ namespace draw
 			});
 	}
 
+	Entity &Sprite::get()
+	{
+		//is it time to increment ?
+		curr++;
+		curr%=m_Entities.size();
+
+		return *m_Entities.at(curr);
+	}
+/*
 	const Entity& Sprite::operator[](size_t i) const
 	{
 		return reinterpret_cast<const Entity&>(*m_Entities.at(i));
 	}
-
+*/
 }//draw
-

@@ -24,7 +24,7 @@
 #include <FrameBuffer.h>
 
 #include <EntityMngr.h>
-#include <Tools.h>
+#include <Utils.h>
 
 #include <debug.h>
 
@@ -79,6 +79,7 @@ void JalaGame::renderFPS()
 {
 	if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - lastTimeFpsCntrl).count() > 1000)
 	{
+
 		char str[1024];
 		sprintf(str,"fps:%4d", fpsCnt);
 		updateDbg(str);
@@ -95,8 +96,10 @@ bool JalaGame::isRenderTime()
 {
 
 	if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - lastTimeFps).count() > frameTime)
+	//if((std::chrono::high_resolution_clock::now() - lastTimeFps) >= frameTime)
 	{
 		lastTimeFps = std::chrono::steady_clock::now();
+		//lastTimeFps = std::chrono::high_resolution_clock::now();
 		return true;
 	}
 

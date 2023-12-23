@@ -35,5 +35,7 @@ copy:
 clean:
 	$(shell rm -rf ../Framebuffer)
 	$(shell rm -rf ../Libs)
+	$(shell rm -rf ../Tools)
 	rm -rf $(BIN)
 	rm -rf $(OBJ)
+	rm -f *.o

@@ -20,6 +20,7 @@
 #include "../Components/Properties.h"
 
 #include "Entity.h"
+#include <Sprite.h>
 #include "FontLib.h"
 #include "CharSet.h"
 
@@ -36,6 +37,7 @@ namespace draw
 	{
 		m_Entities.reserve(INI_MAX_ENTITIES);
 		m_Text.reserve(INI_MAX_ENTITIES);
+		m_Sprites.reserve(INI_MAX_ENTITIES);
 
 		m_RenderLayout.reserve(INI_MAX_ENTITIES);
 	}
@@ -50,6 +52,7 @@ namespace draw
 
 		m_Entities.clear();
 		m_RenderLayout.clear();
+		m_Sprites.clear();
 	}
 
 	void EntityMngr::renderUnordered() noexcept
@@ -79,6 +82,11 @@ namespace draw
 				m_FrameBufferRef.put(*txt.second);
 			});
 
+		std::for_each(m_Sprites.begin(), m_Sprites.end(),
+		[&](std::unordered_map <std::string, Sprite*>::value_type& spt)
+		{
+			m_FrameBufferRef.put(spt.second->get());
+		});
 	}
 
 	void EntityMngr::renderEntities() noexcept
@@ -99,6 +107,15 @@ namespace draw
 			{
 				m_FrameBufferRef.put(*txt.second);
 			});
+	}
+
+	void EntityMngr::renderSprites() noexcept
+	{
+		std::for_each(m_Sprites.begin(), m_Sprites.end(),
+		[&](std::unordered_map <std::string, Sprite*>::value_type& it)
+		{
+			m_FrameBufferRef.put(it.second->get());
+		});
 	}
 
 	void EntityMngr::render(const std::string name) noexcept
@@ -130,6 +147,36 @@ namespace draw
 		}
 
 		return 0;
+	}
+
+	const size_t EntityMngr::create(std::string szName, Sprite *pSprite) noexcept
+	{
+		m_Sprites.emplace(std::make_pair(szName, pSprite));
+		return m_Sprites.size();
+	}
+
+	const bool EntityMngr::remove(std::string szName) noexcept
+	{
+		Entity *pEntity;
+		auto it = m_Entities.find(szName);
+		if(it != m_Entities.end())
+		{
+			pEntity = it->second;
+
+			auto itLayout = std::find_if(m_RenderLayout.begin(), m_RenderLayout.end(),
+			[&](std::vector<Entity*>::value_type &ite)
+			{
+				return (pEntity == ite);
+			});
+
+			if(itLayout != m_RenderLayout.end())
+				m_RenderLayout.erase(itLayout);
+
+			m_Entities.erase(it);
+			return true;
+		}
+
+		return false;
 	}
 
 	const size_t EntityMngr::add(std::string szName, Entity *pEntity)

@@ -29,9 +29,11 @@ private:
 
 
 	const std::string TXT_ID_DBG{ "dbg" };
-	const std::string DBGFONTPATH  { "Resources/verdana.ttf" };
+	const std::string DBGFONTPATH  { "./Resources/verdana.ttf" };
 
     const std::string GHOST  {"ghost"};
+
+    draw::Sprite            *m_pGhost;
 
 private:
 
@@ -51,7 +53,9 @@ public:
 
 };
 
-Rotate::Rotate(draw::draw_t w, draw::draw_t h) : JalaGame(w, h)
+Rotate::Rotate(draw::draw_t w, draw::draw_t h) :
+    JalaGame(w, h),
+    m_pGhost{ new draw::Sprite{300, 300}}
 {
 
 }
@@ -59,6 +63,7 @@ Rotate::Rotate(draw::draw_t w, draw::draw_t h) : JalaGame(w, h)
 
 bool Rotate::create()
 {
+
     if(EnMan.create(GHOST, 300, 300, "Resources/ghost.png") > 0)
     {
         //center image
@@ -68,11 +73,25 @@ bool Rotate::create()
 
         //EnMan[GHOST].properties().alpha = 1;
 
-        uint8_t bckc[4] = {255, 255, 255, 1};
-        uint8_t *imgRotate = draw::Transform::rotate(EnMan[GHOST].data().get(), 300, 300, 20, bckc);
+        auto gw = m_pGhost->w();
+        auto gh = m_pGhost->h();
 
-        if(imgRotate && EnMan.create("gosth_rotate", 300, 300, imgRotate) > 0)
+        for(int i = 0; i < 360; i++)
         {
+            uint8_t bckc[4] = {255, 255, 255, 1};
+            uint8_t *imgRotate = draw::Transform::rotate(EnMan[GHOST].data().get(), 300, 300, i + 1, bckc);
+
+            m_pGhost->add(new draw::Entity { gw, gh, imgRotate, draw::components::TC_NONE });
+        }
+
+        if(m_pGhost->total() && EnMan.create("gosth1", m_pGhost) > 0)
+        {
+            m_pGhost->pos(200, 100);
+            if(!EnMan.remove(GHOST))
+            {
+                dbg("Removing %s error", GHOST.c_str());
+            }
+
             return JalaGame::create();
         }
     }

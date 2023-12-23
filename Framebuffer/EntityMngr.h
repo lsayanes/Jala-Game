@@ -5,10 +5,11 @@ namespace draw
 {
 	class EntityMngr
 	{
-	private:
+	public:
 		std::unordered_map<std::string, Entity*>					m_Entities{};	 //render Unordered
 		std::unordered_map<std::string, std::vector<Entity*>*>		m_Text{};
 		std::vector<Entity*>										m_RenderLayout{}; //render Ordered
+		std::unordered_map<std::string, Sprite*>					m_Sprites{};
 
 		FrameBuffer													&m_FrameBufferRef;
 
@@ -27,6 +28,7 @@ namespace draw
 		void renderEntities() noexcept;
 		void render(const std::string name) noexcept;
 		void renderText() noexcept;
+		void renderSprites() noexcept;
 
 
 		inline void addText(std::string szName, std::vector<Entity*>* pVct) noexcept
@@ -37,6 +39,9 @@ namespace draw
 		[[nodiscard]] const size_t create(std::string szName, draw_t w, draw_t h) noexcept;
 		[[nodiscard]] const size_t create(std::string szName, draw_t w, draw_t h, std::string szPath) noexcept;
 		[[nodiscard]] const size_t create(std::string szName, draw_t w, draw_t h, uint8_t *pData) noexcept;
+		[[nodiscard]] const size_t create(std::string szName, Sprite *pSprite) noexcept;
+
+		[[nodiscard]] const bool remove(std::string szName) noexcept;
 
 		Entity& operator[](std::string szName) const;
 

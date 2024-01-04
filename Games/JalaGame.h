@@ -21,7 +21,7 @@ public:
 	const std::string ERR_CREATING {"Error try to create "};
 
 
-private:
+protected:
 	inline void renderFPS();
 	inline bool isRenderTime();
 

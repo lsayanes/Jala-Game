@@ -47,6 +47,9 @@ private:
 
     draw::Sprite            *m_pGhost;
 
+    int         m_gx;
+    int         m_gy;
+
 private:
 
 public:
@@ -67,7 +70,9 @@ public:
 
 Rotate::Rotate(draw::draw_t w, draw::draw_t h) :
     JalaGame(w, h),
-    m_pGhost{ new draw::Sprite{300, 300}}
+    m_pGhost{ new draw::Sprite{300, 300}},
+    m_gx{600},
+    m_gy{200}
 {
 
 }
@@ -76,7 +81,11 @@ Rotate::Rotate(draw::draw_t w, draw::draw_t h) :
 bool Rotate::create()
 {
 
-    if(EnMan.create(GHOST, 300, 300, "Resources/ghost.png") > 0)
+
+    if(
+        EnMan.create("bck", 1024, 600, "Resources/bck.png") > 0 &&
+        EnMan.create(GHOST, 300, 300, "Resources/ghost_transparent.png") > 0
+        )
     {
         //center image
         auto& g = EnMan[GHOST].physics();
@@ -85,24 +94,21 @@ bool Rotate::create()
 
         auto gw = m_pGhost->w();
         auto gh = m_pGhost->h();
-
-        EnMan[GHOST].properties().alpha = 1;
-
-        //for(float f = 1.0; f < 360.0; f+=0.125)
-        for(float f = 360.0; f > 0.1; f-=0.125)
+        
+        for(float f = 0; f < 360.0; f+=1.0)
         {
-            uint8_t bckc[4] = {255, 255, 255, 1};
             m_pGhost->add(
-                            draw::Transform::rotate(EnMan[GHOST].data().get(), gw, gh, f, bckc),
-                            gw, gh
+                            draw::Transform::rotate(EnMan[GHOST].data().get(), gw, gh, f),
+                            gw, gh, true
                         );
         }
-
+        
+       
         dbg("pGhost total frames %u", m_pGhost->total());
 
         if(m_pGhost->total() && EnMan.create("gosth1", m_pGhost) > 0)
         {
-            m_pGhost->pos(200, 100);
+            m_pGhost->pos(m_gx, m_gy);
             if(!EnMan.remove(GHOST))
             {
                 dbg("Removing %s error", GHOST.c_str());
@@ -117,9 +123,13 @@ bool Rotate::create()
 
 void Rotate::render()
 {
+    if (isRenderTime())
+    {
+        renderFPS();
+        EnMan.renderOrdered();
+    }
 
-
-    JalaGame::render();
+    //JalaGame::render();
 }
 
 void Rotate::onClose()
@@ -136,6 +146,25 @@ void Rotate::onKeyDown(unsigned long  ulKey)
 	case VK_ESCAPE:
 		onClose();
 		break;
+
+    case VK_LEFT:
+        m_gx-=5;
+        m_pGhost->pos(m_gx, m_gy);
+        break;
+    case VK_UP:
+        m_gy -= 5;
+        m_pGhost->pos(m_gx, m_gy);
+
+        break;
+    case VK_RIGHT:
+        m_gx+=5;
+        m_pGhost->pos(m_gx, m_gy);
+        break;
+    case VK_DOWN:
+        m_gy += 5;
+        m_pGhost->pos(m_gx, m_gy);
+
+        break;
 	default:
 		break;
 	}

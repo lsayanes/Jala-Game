@@ -32,7 +32,7 @@ namespace draw
 		Sprite& operator=(Sprite&&) = delete;
 
 		void 	add(Entity *pEntity);
-		void 	add(uint8_t* prgbaData, int32_t width, int32_t height);
+		void 	add(uint8_t* prgbaData, int32_t width, int32_t height, bool useAlpha);
 		void	pos(int x, int y);
 
 		[[nodiscard]]  Entity &get();

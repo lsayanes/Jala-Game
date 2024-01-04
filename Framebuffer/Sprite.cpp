@@ -23,30 +23,37 @@
 
 namespace draw
 {
-	Sprite::Sprite(draw_t w, draw_t h):
-		width{w},
-		height{h},
-		curr{0},
-		lastTime {std::chrono::steady_clock::now()},
-		m_dElapsed {50}
+	Sprite::Sprite(draw_t w, draw_t h) :
+		width{ w },
+		height{ h },
+		curr{ 0 },
+		lastTime{ std::chrono::steady_clock::now() },
+		m_dElapsed{ 10 }
 	{
 		m_Entities.reserve(1024);
 	}
 
 	Sprite::~Sprite()
 	{
-		std::for_each(m_Entities.begin(), m_Entities.end(), [&](Entity *it) { delete it; it = nullptr; });
+		std::for_each(m_Entities.begin(), m_Entities.end(), [&](Entity* it) { delete it; it = nullptr; });
 		m_Entities.clear();
 	}
 
-	void Sprite::add(Entity *pEntity)
+	void Sprite::add(Entity* pEntity)
 	{
 		m_Entities.push_back(pEntity);
 	}
 
-	void Sprite::add(uint8_t* prgbaData, int32_t width, int32_t height)
+	void Sprite::add(uint8_t* prgbaData, int32_t width, int32_t height, bool useAlpha)
 	{
-		m_Entities.push_back(new draw::Entity { static_cast<draw_t>(width),  static_cast<draw_t>(height), prgbaData, draw::components::TC_NONE } );
+		draw::Entity* pNew = new draw::Entity{ static_cast<draw_t>(width),  static_cast<draw_t>(height), prgbaData, draw::components::TC_NONE };
+		if (pNew)
+		{
+			if(useAlpha)
+				pNew->properties().alpha = 1;
+
+			m_Entities.push_back(pNew);
+		}
 	}
 
 	void Sprite::pos(int x, int y)

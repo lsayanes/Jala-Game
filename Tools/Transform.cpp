@@ -5,6 +5,7 @@
 
 #include "Transform.h"
 
+#define M_PI           (3.14159265358979323846)
 
 namespace draw
 {
@@ -14,10 +15,13 @@ namespace draw
                         uint8_t     *prgbaData,
                         int32_t     width,
                         int32_t     height,
-                        float       angleToRotate,
-                        uint8_t     *backgroundColor
+                        float       angleToRotate
                         )
         {
+
+            //convert to radian
+            angleToRotate = static_cast<float>(static_cast<double>(angleToRotate) * M_PI / 180.0);
+
             // Calculate sine and cosine of the rotation angle
             float cosTheta = std::cos(angleToRotate);
             float sinTheta = std::sin(angleToRotate);
@@ -31,16 +35,11 @@ namespace draw
 
             if(pImageRotated)
             {
-                if(!backgroundColor)
-                {
-                    std::memset(pImageRotated, 0, size);
-                }
-                else
-                {
-                    //filling a pattern
-                    for(uint64_t f = 0; f < size; f+=4)
-                        std::memcpy(pImageRotated + f, backgroundColor, 4);
-                }
+
+                //fill transparent
+                uint8_t transparent[4] = { 0xFF, 0xFF, 0xFF, 0 };
+                for (uint64_t f = 0; f < size; f += 4)
+                    std::memcpy(pImageRotated + f, transparent, 4);
 
                 float offsetX, offsetY;
                 int32_t rotatedY, rotatedX;
@@ -63,11 +62,21 @@ namespace draw
                         {
                             dest = (y * width + x) * 4;
                             src = (rotatedY * width + rotatedX) * 4;
-
-                            pImageRotated[dest + 0] = prgbaData[src + 0];
-                            pImageRotated[dest + 1] = prgbaData[src + 1];
-                            pImageRotated[dest + 2] = prgbaData[src + 2];
-                            pImageRotated[dest + 3] = prgbaData[src + 3];
+                            if (0 == prgbaData[src + 3])
+                            {
+                                //alpha
+                                pImageRotated[dest + 0] = 0xFF;
+                                pImageRotated[dest + 1] = 0xFF;
+                                pImageRotated[dest + 2] = 0xFF;
+                                pImageRotated[dest + 3] = 0x00;
+                            }
+                            else
+                            {
+                                pImageRotated[dest + 0] = prgbaData[src + 0];
+                                pImageRotated[dest + 1] = prgbaData[src + 1];
+                                pImageRotated[dest + 2] = prgbaData[src + 2];
+                                pImageRotated[dest + 3] = prgbaData[src + 3];
+                            }
                         }
                     }
                 }

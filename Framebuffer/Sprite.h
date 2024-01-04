@@ -1,6 +1,9 @@
 
 
+
 #pragma once
+#include <iostream>
+#include <chrono>
 
 namespace draw
 {
@@ -13,6 +16,12 @@ namespace draw
 
 		std::vector<Entity*> m_Entities;
 
+
+		std::chrono::steady_clock::time_point	lastTime;
+
+	public:
+		int64_t	 	m_dElapsed ;
+
 	public:
 		explicit Sprite(draw_t w, draw_t h);
 		virtual ~Sprite();
@@ -23,6 +32,7 @@ namespace draw
 		Sprite& operator=(Sprite&&) = delete;
 
 		void 	add(Entity *pEntity);
+		void 	add(uint8_t* prgbaData, int32_t width, int32_t height);
 		void	pos(int x, int y);
 
 		[[nodiscard]]  Entity &get();

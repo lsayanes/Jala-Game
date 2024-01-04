@@ -64,25 +64,29 @@ Rotate::Rotate(draw::draw_t w, draw::draw_t h) :
 bool Rotate::create()
 {
 
-    if(EnMan.create(GHOST, 300, 300, "Resources/ghost.png") > 0)
+    if(EnMan.create(GHOST, 300, 300, "Resources/ghost_transparent.png") > 0)
     {
         //center image
         auto& g = EnMan[GHOST].physics();
         g.centerx(g.rc.right, 0, width);
         g.centery(g.rc.bottom, 0, height);
 
-        //EnMan[GHOST].properties().alpha = 1;
-
         auto gw = m_pGhost->w();
         auto gh = m_pGhost->h();
 
-        for(int i = 0; i < 360; i++)
+        EnMan[GHOST].properties().alpha = 1;
+
+        //for(float f = 1.0; f < 360.0; f+=0.125)
+        for(float f = 360.0; f > 0.1; f-=0.125)
         {
             uint8_t bckc[4] = {255, 255, 255, 1};
-            uint8_t *imgRotate = draw::Transform::rotate(EnMan[GHOST].data().get(), 300, 300, i + 1, bckc);
-
-            m_pGhost->add(new draw::Entity { gw, gh, imgRotate, draw::components::TC_NONE });
+            m_pGhost->add(
+                            draw::Transform::rotate(EnMan[GHOST].data().get(), gw, gh, f, bckc),
+                            gw, gh
+                        );
         }
+
+        dbg("pGhost total frames %u", m_pGhost->total());
 
         if(m_pGhost->total() && EnMan.create("gosth1", m_pGhost) > 0)
         {

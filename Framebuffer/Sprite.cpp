@@ -1,11 +1,12 @@
 
 
+#include <iostream>
 #include <memory>
 #include <vector>
 #include <stdint.h>
 #include <fstream>
 #include <algorithm>
-
+#include <chrono>
 
 #include "Config.h"
 #include "Types.h"
@@ -25,7 +26,9 @@ namespace draw
 	Sprite::Sprite(draw_t w, draw_t h):
 		width{w},
 		height{h},
-		curr{0}
+		curr{0},
+		lastTime {std::chrono::steady_clock::now()},
+		m_dElapsed {50}
 	{
 		m_Entities.reserve(1024);
 	}
@@ -41,6 +44,11 @@ namespace draw
 		m_Entities.push_back(pEntity);
 	}
 
+	void Sprite::add(uint8_t* prgbaData, int32_t width, int32_t height)
+	{
+		m_Entities.push_back(new draw::Entity { static_cast<draw_t>(width),  static_cast<draw_t>(height), prgbaData, draw::components::TC_NONE } );
+	}
+
 	void Sprite::pos(int x, int y)
 	{
 
@@ -52,9 +60,13 @@ namespace draw
 
 	Entity &Sprite::get()
 	{
-		//is it time to increment ?
-		curr++;
-		curr%=m_Entities.size();
+
+		if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - lastTime).count() > m_dElapsed)
+		{
+			curr++;
+			curr%=m_Entities.size();
+			lastTime = std::chrono::steady_clock::now();
+		}
 
 		return *m_Entities.at(curr);
 	}

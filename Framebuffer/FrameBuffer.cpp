@@ -71,7 +71,7 @@ namespace draw
         size_t components = m_Properties.components();
 
         unsigned char* pbyPix = m_pbyBuffer;
-        const int x = (physicsRef.rc.left * components);
+        const int x = static_cast<int>((physicsRef.rc.left * components));
         int y = physicsRef.rc.top;
 
         if (propRef.alpha && components > 3)

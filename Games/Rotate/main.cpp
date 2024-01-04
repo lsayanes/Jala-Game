@@ -2,6 +2,18 @@
 
 #include <iostream>
 
+
+#if defined(_WINDOWS)
+#include <Windows.h>
+#include <memory>
+#include <vector>
+#include <algorithm>
+#include <unordered_map>
+#include <chrono>
+#include <mutex>
+
+#endif
+
 #include <Config.h>
 #include <Types.h>
 #include <Component.h>
@@ -64,7 +76,7 @@ Rotate::Rotate(draw::draw_t w, draw::draw_t h) :
 bool Rotate::create()
 {
 
-    if(EnMan.create(GHOST, 300, 300, "Resources/ghost_transparent.png") > 0)
+    if(EnMan.create(GHOST, 300, 300, "Resources/ghost.png") > 0)
     {
         //center image
         auto& g = EnMan[GHOST].physics();
@@ -131,8 +143,23 @@ void Rotate::onKeyDown(unsigned long  ulKey)
 
 
 
+#if defined(_WINDOWS)
+
+int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
+    _In_opt_ HINSTANCE hPrevInstance,
+    _In_ LPWSTR    lpCmdLine,
+    _In_ int       nCmdShow)
+{
+
+    UNREFERENCED_PARAMETER(hPrevInstance);
+    UNREFERENCED_PARAMETER(lpCmdLine);
+#else
+
+
 int main()
 {
+#endif
+
 
     draw::draw_t w{1024};
     draw::draw_t h{600};

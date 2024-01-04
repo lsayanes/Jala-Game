@@ -39,7 +39,7 @@ namespace draw
 
 		[[nodiscard]] inline const draw_t h() const { return height; }
 		[[nodiscard]] inline const draw_t w() const { return width; }
-		[[nodiscard]] inline const uint32_t total() const  { return m_Entities.size(); }
+		[[nodiscard]] inline const uint32_t total() const  { return static_cast<uint32_t>(m_Entities.size()); }
 /*
 		[[nodiscard]] const Entity& operator[](size_t i) const;
 		[[nodiscard]] inline const Entity* at(size_t i) const { return m_Entities[i]; }

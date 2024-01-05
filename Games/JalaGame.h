@@ -22,8 +22,8 @@ public:
 
 
 protected:
-	inline void renderFPS();
-	inline bool isRenderTime();
+	void renderFPS();
+	bool isRenderTime();
 
 protected:
 	draw::CharSet						*pDbgFont{nullptr};

@@ -15,7 +15,6 @@
 
 #include "Types.h"
 
-#include "../Components/Component.h"
 #include "../Components/Physics.h"
 #include "../Components/Properties.h"
 
@@ -123,36 +122,65 @@ namespace draw
 		m_FrameBufferRef.put(*m_Entities.at(name));
 	}
 
-	const size_t EntityMngr::create(std::string szName, draw_t w, draw_t h) noexcept
+	Entity *EntityMngr::create(std::string szName, draw_t w, draw_t h) noexcept
 	{
-		auto *pEntity = new Entity{ w, h, components::TC_NONE };
-		return add(szName, pEntity);
-	}
-
-	const size_t EntityMngr::create(std::string szName, draw_t w, draw_t h, std::string szPath) noexcept
-	{
-		draw::Entity *img = new draw::Entity{ w, h, components::TC_NONE };
-		if (img->loadPng(szPath.c_str()))
-			return add(szName, img);
-
-		return 0;
-	}
-
-	const size_t EntityMngr::create(std::string szName, draw_t w, draw_t h, uint8_t *pData) noexcept
-	{
-		if(pData)
+		auto *pEntity = new Entity{ w, h, components::ATC_NONE, szName.c_str() };
+		if(pEntity)
 		{
-			draw::Entity *pEntity = new draw::Entity{ w, h, pData, components::TC_NONE };
-			return add(szName, pEntity);
+			auto currt = m_Entities.size();
+  			if(add(szName, pEntity) == currt)
+			{
+				delete pEntity;
+				pEntity = nullptr;
+			}
 		}
 
-		return 0;
+		return pEntity;
 	}
 
-	const size_t EntityMngr::create(std::string szName, Sprite *pSprite) noexcept
+	const Entity * EntityMngr::create(std::string szName, draw_t w, draw_t h, std::string szPath) noexcept
 	{
-		m_Sprites.emplace(std::make_pair(szName, pSprite));
-		return m_Sprites.size();
+		draw::Entity *img = new draw::Entity{ w, h, components::ATC_NONE, szName.c_str() };
+		if (img->loadPng(szPath.c_str()))
+		{
+			if(img)
+			{
+				auto currt = m_Entities.size();
+				if(add(szName, img) == currt)
+				{
+					delete img;
+					img = nullptr;
+				}
+			}
+		}
+
+		return img;
+	}
+
+	Entity * EntityMngr::create(std::string szName, draw_t w, draw_t h, uint8_t *pData) noexcept
+	{
+		draw::Entity *pEntity{nullptr};
+		if(pData)
+		{
+			pEntity = new draw::Entity{ w, h, pData, components::ATC_NONE, szName.c_str() };
+			if(pEntity)
+			{
+				auto currt = m_Entities.size();
+				if(add(szName, pEntity) == currt)
+				{
+					delete pEntity;
+					pEntity = nullptr;
+				}
+			}
+		}
+
+		return pEntity;
+	}
+
+	bool EntityMngr::create(std::string szName, Sprite *pSprite) noexcept
+	{
+		auto ret {m_Sprites.emplace(std::make_pair(szName, pSprite)) };
+		return ret.second;
 	}
 
 	const bool EntityMngr::remove(std::string szName) noexcept
@@ -184,7 +212,6 @@ namespace draw
 		m_Entities.emplace(std::make_pair(szName, pEntity));
 		m_RenderLayout.push_back(pEntity);
 		dbg("emplace :%s size: %lu", szName.c_str(), m_Entities.size());
-
 		return m_Entities.size();
 	}
 

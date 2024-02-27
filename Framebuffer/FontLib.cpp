@@ -12,7 +12,6 @@
 #include "Config.h"
 #include "Types.h"
 
-#include "../Components/Component.h"
 #include "../Components/Physics.h"
 #include "../Components/Properties.h"
 
@@ -53,7 +52,7 @@ namespace draw
 		if (0 == (err = FT_New_Face(g_ftLibrary, szFontPath, 0, &face)) && (0 == (err = FT_Set_Char_Size(face, (FT_F26Dot6)stSize << 6, (FT_F26Dot6)stSize << 6, 90, 90))))
 			pRet = static_cast<void*>(face);
 
-		
+
 		dbg("newFont path:%s size:%lu (ret:%p)", szFontPath, stSize, pRet);
 
 		return pRet;
@@ -71,5 +70,5 @@ namespace draw
 		return FontLib::m_pInst;
 	}
 
-	
+
 }

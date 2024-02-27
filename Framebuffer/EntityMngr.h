@@ -36,16 +36,16 @@ namespace draw
 			m_Text[szName] = pVct;
 		}
 
-		[[nodiscard]] const size_t create(std::string szName, draw_t w, draw_t h) noexcept;
-		[[nodiscard]] const size_t create(std::string szName, draw_t w, draw_t h, std::string szPath) noexcept;
-		[[nodiscard]] const size_t create(std::string szName, draw_t w, draw_t h, uint8_t *pData) noexcept;
-		[[nodiscard]] const size_t create(std::string szName, Sprite *pSprite) noexcept;
+		[[nodiscard]]  		Entity *create(std::string szName, draw_t w, draw_t h) noexcept;
+		[[nodiscard]] const Entity *create(std::string szName, draw_t w, draw_t h, std::string szPath) noexcept;
+		[[nodiscard]]  		Entity *create(std::string szName, draw_t w, draw_t h, uint8_t *pData) noexcept;
+		[[nodiscard]]  		bool 	create(std::string szName, Sprite *pSprite) noexcept;
 
 		[[nodiscard]] const bool remove(std::string szName) noexcept;
 
 		Entity& operator[](std::string szName) const;
 
-		[[nodiscard]] inline Entity* get(std::string szName) const noexcept
+		[[nodiscard]] inline const Entity* get(std::string szName) const noexcept
 		{
 			auto it = m_Entities.find(szName);
 			if (it != m_Entities.end())

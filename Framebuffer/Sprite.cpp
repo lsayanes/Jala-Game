@@ -11,7 +11,6 @@
 #include "Config.h"
 #include "Types.h"
 
-#include <Component.h>
 #include <Physics.h>
 #include <Properties.h>
 
@@ -46,7 +45,7 @@ namespace draw
 
 	void Sprite::add(uint8_t* prgbaData, int32_t width, int32_t height, bool useAlpha)
 	{
-		draw::Entity* pNew = new draw::Entity{ static_cast<draw_t>(width),  static_cast<draw_t>(height), prgbaData, draw::components::TC_NONE };
+		draw::Entity* pNew = new draw::Entity{ static_cast<draw_t>(width),  static_cast<draw_t>(height), prgbaData, draw::components::ATC_NONE, "Sprite" };
 		if (pNew)
 		{
 			if(useAlpha)

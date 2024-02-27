@@ -16,7 +16,6 @@
 
 #include <Config.h>
 #include <Types.h>
-#include <Component.h>
 #include <Physics.h>
 #include <Properties.h>
 #include <Utils.h>
@@ -37,7 +36,7 @@
 class Rotate : public JalaGame
 {
 private:
-	draw::Rect				*m_pGameArea{nullptr};
+	draw::types::Rect				*m_pGameArea{nullptr};
 
 
 	const std::string TXT_ID_DBG{ "dbg" };
@@ -83,8 +82,8 @@ bool Rotate::create()
 
 
     if(
-        EnMan.create("bck", 1024, 600, "Resources/bck.png") > 0 &&
-        EnMan.create(GHOST, 300, 300, "Resources/ghost_transparent.png") > 0
+        EnMan.create("bck", 1024, 600, "Resources/bck.png") &&
+        EnMan.create(GHOST, 300, 300, "Resources/ghost_transparent.png")
         )
     {
         //center image
@@ -94,16 +93,16 @@ bool Rotate::create()
 
         auto gw = m_pGhost->w();
         auto gh = m_pGhost->h();
-        
+
         for(float f = 0; f < 360.0; f+=1.0)
         {
             m_pGhost->add(
-                            draw::Transform::rotate(EnMan[GHOST].data().get(), gw, gh, f),
+                            draw::Transform::rotate(EnMan[GHOST].data(), gw, gh, f),
                             gw, gh, true
                         );
         }
-        
-       
+
+
         dbg("pGhost total frames %u", m_pGhost->total());
 
         if(m_pGhost->total() && EnMan.create("gosth1", m_pGhost) > 0)

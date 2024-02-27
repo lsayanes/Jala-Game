@@ -22,7 +22,6 @@
 #include "Config.h"
 #include "Types.h"
 
-#include "../Components/Component.h"
 #include "../Components/Physics.h"
 #include "../Components/Properties.h"
 
@@ -73,7 +72,7 @@ namespace draw
 
 		//bool bRgb = !(face->glyph->bitmap.pixel_mode == FT_PIXEL_MODE_BGRA);
 
-
+		char strName[2] = {0};
 		m_vctText.resize(stLen);
 		for (size_t n = 0; n < stLen; n++)
 		{
@@ -84,9 +83,10 @@ namespace draw
 
 			Slot = face->glyph;
 
-			pEntity = new Entity{ static_cast<draw_t>(face->glyph->bitmap.width), static_cast<draw_t>(face->glyph->bitmap.rows), components::TC_NONE };
+			strName[0] = sText[n];
+			pEntity = new Entity{ static_cast<draw_t>(face->glyph->bitmap.width), static_cast<draw_t>(face->glyph->bitmap.rows), components::ATC_NONE, strName };
 			dAdvance = face->glyph->metrics.horiAdvance >> 6;
-			pbyData = pEntity->data().get();
+			pbyData = pEntity->data();
 			auto& phyRef = pEntity->physics();
 
 			for (int i = 0; i < (int)face->glyph->bitmap.rows; i++)

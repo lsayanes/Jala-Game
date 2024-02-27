@@ -16,7 +16,6 @@
 #include <Config.h>
 
 #include <Types.h>
-#include <Component.h>
 #include <Physics.h>
 #include <Properties.h>
 
@@ -69,18 +68,18 @@ bool PongGame::create()
 	m_pScoreLPlayer = createFont(SCOREFONTPATH, SCOREFONTSIZE);
 	m_pScoreRPlayer = createFont(SCOREFONTPATH, SCOREFONTSIZE);
 
-	size_t t = EnMan.create(BACKGROUND, BCKGRND_W, BCKGRND_H, BCKGRNDTPATH);
-	t > 0 && (t = EnMan.create(BALL, BALL_W, BALL_H, BALLPATH));
-	t > 0 && (t = EnMan.create(PLAYER_L_SIDE, PLAYERS_W, PLAYERS_H));
-	t > 0 && (t = EnMan.create(PLAYER_R_SIDE, PLAYERS_W, PLAYERS_H));
-	if ((bRet = t > 0))
+	auto t = EnMan.create(BACKGROUND, BCKGRND_W, BCKGRND_H, BCKGRNDTPATH);
+	t && (t = EnMan.create(BALL, BALL_W, BALL_H, BALLPATH));
+	t && (t = EnMan.create(PLAYER_L_SIDE, PLAYERS_W, PLAYERS_H));
+	t && (t = EnMan.create(PLAYER_R_SIDE, PLAYERS_W, PLAYERS_H));
+	if ((bRet = nullptr != t))
 	{
 		//initial positions
 		auto& bckphy = EnMan[BACKGROUND].physics();
 		bckphy.rc.pos(static_cast<draw::draw_t>((width / 2) - (BCKGRND_W / 2)), 80);
 
 		//auto& bckprp = EnMan[BACKGROUND].properties();
-		m_pGameArea = new draw::Rect{ bckphy.rc };
+		m_pGameArea = new draw::types::Rect{ bckphy.rc };
 
 		auto &ball = EnMan[BALL];
 		//auto& ballphy = ball.physics();

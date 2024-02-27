@@ -11,7 +11,6 @@
 #include "Config.h"
 #include "Types.h"
 
-#include "../Components/Component.h"
 #include "../Components/Physics.h"
 #include "../Components/Properties.h"
 
@@ -24,17 +23,17 @@
 
 namespace draw
 {
-	Entity::Entity(draw_t w, draw_t h, components::TYPE_COMPONENT typeID):
-		m_Physics{ components::Physics{w, h, typeID} },
-		m_Properties{ components::Properties{w, h, typeID} },
+	Entity::Entity(draw_t w, draw_t h, components::ALLOC_TYPE_COMPONENT allocType, const char *szName):
+		m_Physics{ components::Physics{w, h} },
+		m_Properties{ components::Properties{w, h, allocType, szName} },
 		m_Data{ std::make_unique<uint8_t[]>(m_Properties.size) }
 	{
-		//dbg("Entity w:%d h:%d typeID:%d", w, h, typeID);
+		dbg("Entity %s w:%d h:%d allocType:%d", szName, w, h, allocType);
 	}
 
-	Entity::Entity(draw_t w, draw_t h, uint8_t *pData, components::TYPE_COMPONENT typeID) :
-		m_Physics{ components::Physics{w, h, typeID} },
-		m_Properties{ components::Properties{w, h, typeID} },
+	Entity::Entity(draw_t w, draw_t h, uint8_t *pData, components::ALLOC_TYPE_COMPONENT allocType, const char *szName) :
+		m_Physics{ components::Physics{w, h} },
+		m_Properties{ components::Properties{w, h, allocType, szName} },
 		m_Data{ std::unique_ptr<uint8_t[]>(pData) }
 	{
 
@@ -61,4 +60,5 @@ namespace draw
 		dbg("loadPng %s (ret:%d)", szPath, bRet);
 		return bRet;
 	}
+
 } //draw

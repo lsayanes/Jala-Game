@@ -17,7 +17,7 @@ private:
 	int m_nBallDeltaY;
 	int m_nBallUpdate; //it's to control the ball velocity
 
-	draw::Rect				*m_pGameArea{nullptr};
+	draw::types::Rect				*m_pGameArea{nullptr};
 
 	int	m_nStatus{ PLAY_STATUS::PLAYER_R_HOLD };
 

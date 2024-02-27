@@ -9,7 +9,6 @@
 #include "Config.h"
 #include "Types.h"
 
-#include "../Components/Component.h"
 #include "../Components/Physics.h"
 #include "../Components/Properties.h"
 
@@ -25,7 +24,7 @@ namespace draw
 
 
 	FrameBuffer::FrameBuffer(draw_t w, draw_t h) :
-        m_Properties{ components::Properties{w, h, components::TC_MALLOC_BUFFER} }
+        m_Properties{ components::Properties{w, h, components::ATC_MALLOC_BUFFER, "FrameBuffer - malloc Buffer"} }
 
     {
 
@@ -38,7 +37,7 @@ namespace draw
     }
 
     FrameBuffer::FrameBuffer(uint8_t* pBuffer, draw_t w, draw_t h) :
-        m_Properties{ components::Properties{w, h, components::TC_BUFFER_DEV} }
+        m_Properties{ components::Properties{w, h, components::ATC_BUFFER_DEV, "FrameBuffer - Dev Buffer"} }
     {
 
         m_Line = std::make_unique<uint8_t[]>(m_Properties.lineSize);
@@ -49,7 +48,7 @@ namespace draw
 
 	FrameBuffer::~FrameBuffer()
 	{
-        if (m_pbyBuffer && components::TC_MALLOC_BUFFER == m_Properties.componentID())
+        if (m_pbyBuffer && components::ATC_MALLOC_BUFFER == m_Properties.allocType())
         {
             free(m_pbyBuffer);
             m_pbyBuffer = nullptr;
@@ -63,7 +62,7 @@ namespace draw
     {
         auto &physicsRef = e.physics();
         auto &propRef = e.properties();
-        auto data = e.data().get();
+        auto data = e.data();
 
         size_t line = 0;
         size_t linSizeEnt = propRef.lineSize;
@@ -154,7 +153,7 @@ namespace draw
         components::Physics& phy = e.physics();
         size_t lineSize = prop.lineSize;
         unsigned char comp = prop.components();
-        unsigned char* pbyPix = e.data().get();
+        unsigned char* pbyPix = e.data();
 
 
         std::unique_ptr<unsigned char[]> line = std::make_unique<unsigned char[]>(prop.lineSize);

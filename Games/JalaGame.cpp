@@ -12,7 +12,6 @@
 #include <Config.h>
 
 #include <Types.h>
-#include <Component.h>
 #include <Physics.h>
 #include <Properties.h>
 

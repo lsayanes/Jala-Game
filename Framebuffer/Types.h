@@ -3,86 +3,97 @@
 
 namespace draw
 {
-    struct DBGW
+    namespace types
     {
-        draw_t x{ 0 };
-        draw_t y{ 0 };
-        void* pFont{ nullptr };
-    };
-
-
-    struct Rect
-    {
-        draw_t left{ 0 };
-        draw_t top{ 0 };
-        draw_t right{ 0 };
-        draw_t bottom{ 0 };
-        
-        const draw_t width;
-        const draw_t height;
-
-        explicit Rect(draw_t x, draw_t y, draw_t w, draw_t h):
-            width{w},
-            height{h}
+        struct DBGW
         {
-            left = x;
-            top = y;
-            right = left + w;
-            bottom = top + h;
-        }
+            draw_t x{ 0 };
+            draw_t y{ 0 };
+            void* pFont{ nullptr };
+        };
 
-        explicit Rect(const Rect& rc):
-            width{ static_cast<draw_t>(rc.right- rc.left) },
-            height{ static_cast<draw_t>(rc.bottom - rc.top) }
-        {
-            left = rc.left;
-            top = rc.top;
-            right = rc.right;
-            bottom = rc.bottom;
-        }
 
-        inline void pos(draw_t x, draw_t y)
+        struct Rect
         {
-            left = x;
-            top = y;
-            right = left + width;
-            bottom = top + height;
-        }
+            draw_t left{ 0 };
+            draw_t top{ 0 };
+            draw_t right{ 0 };
+            draw_t bottom{ 0 };
 
-        inline void posx(draw_t x)
-        {
-            left = x;
-            right = left + width;
-        }
+            const draw_t width;
+            const draw_t height;
 
-        inline void posy(draw_t y)
-        {
-            top = y;
-            bottom = top + height;
-        }
+            explicit Rect(draw_t x, draw_t y, draw_t w, draw_t h):
+                width{w},
+                height{h}
+            {
+                left = x;
+                top = y;
+                right = left + w;
+                bottom = top + h;
+            }
 
-        inline void moveUp(draw_t points)
-        {
-            top = top - points;
-            bottom = top + height;
-        }
+            explicit Rect(const Rect& rc):
+                width{ static_cast<draw_t>(rc.right- rc.left) },
+                height{ static_cast<draw_t>(rc.bottom - rc.top) }
+            {
+                left = rc.left;
+                top = rc.top;
+                right = rc.right;
+                bottom = rc.bottom;
+            }
 
-        inline void moveDown(draw_t points)
-        {
-            top = top + points;
-            bottom = top + height;
-        }
+            inline void pos(draw_t x, draw_t y)
+            {
+                left = x;
+                top = y;
+                right = left + width;
+                bottom = top + height;
+            }
 
-        inline void moveLeft(draw_t point)
-        {
-            left = left - point;
-            right = left + width;
-        }
+            inline void posx(draw_t x)
+            {
+                left = x;
+                right = left + width;
+            }
 
-        inline void moveRight(draw_t point)
+            inline void posy(draw_t y)
+            {
+                top = y;
+                bottom = top + height;
+            }
+
+            inline void moveUp(draw_t points)
+            {
+                top = top - points;
+                bottom = top + height;
+            }
+
+            inline void moveDown(draw_t points)
+            {
+                top = top + points;
+                bottom = top + height;
+            }
+
+            inline void moveLeft(draw_t point)
+            {
+                left = left - point;
+                right = left + width;
+            }
+
+            inline void moveRight(draw_t point)
+            {
+                left = left + point;
+                right = left + width;
+            }
+        };//Rect
+
+        struct Pixel
         {
-            left = left + point;
-            right = left + width;
-        }
-    };
-}
+            uint8_t r;
+            uint8_t g;
+            uint8_t b;
+            uint8_t a;
+        };
+    }//types
+}//draw

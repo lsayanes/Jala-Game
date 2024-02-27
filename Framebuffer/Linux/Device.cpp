@@ -19,7 +19,6 @@ extern "C"
 #include "../Config.h"
 #include "../Types.h"
 
-#include "../Components/Component.h"
 #include "../Components/Physics.h"
 #include "../Components/Properties.h"
 
@@ -33,18 +32,18 @@ namespace draw
 {
 
 
-	struct CallbackDeviceClass 
+	struct CallbackDeviceClass
 	{
 		static Device *pCallbackInstance;
 
-		
+
 		static void keyPress(unsigned long lParam)
 		{
 			pCallbackInstance->onKeyDown(lParam);
 		}
 	};
-	
-	Device *CallbackDeviceClass::pCallbackInstance{nullptr}; 
+
+	Device *CallbackDeviceClass::pCallbackInstance{nullptr};
 
 
 	Device::Device(void* pDevHandle):
@@ -59,7 +58,7 @@ namespace draw
 			throw "Device::getVideoMode FAIL";
 	}
 
-	Device::~Device() 
+	Device::~Device()
 	{
 
 		ptc_close();
@@ -74,13 +73,13 @@ namespace draw
 
 	}
 
-	
-	void *Device::beginPain() 
+
+	void *Device::beginPain()
 	{
 		return nullptr;
 	};
 
-	void Device::endPaint() 
+	void Device::endPaint()
 	{
 
 		if (m_DevHandle)
@@ -103,7 +102,7 @@ namespace draw
 	{
 	}
 
-	
+
 	bool Device::getVideoMode(draw_t &w, draw_t &h, draw_t &b)
 	{
 
@@ -114,14 +113,14 @@ namespace draw
 
 			XRRScreenResources *screen_resources = XRRGetScreenResources(display, root);
 			XRRCrtcInfo *crtc_info = XRRGetCrtcInfo(display, screen_resources, screen_resources->crtcs[0]);
-		
+
 			w = static_cast<draw_t>(crtc_info->width);
 			h = static_cast<draw_t>(crtc_info->height);
-			
+
 			b = static_cast<draw_t>(DefaultDepth(display, DefaultScreen(display)));
-		
+
 			dbg("getVideoMode : Video Resolution: %dx%d:%d", w, h, static_cast<int>(b));
-		
+
 			XRRFreeCrtcInfo(crtc_info);
 			XRRFreeScreenResources(screen_resources);
 
@@ -138,7 +137,7 @@ namespace draw
 		draw_t bpp {0};
 		return Device::getVideoMode(width, height, bpp);
 	}
-	
+
 	void *Device::createBackbuffer(draw_t w, draw_t h, draw_t bitPerPixel)
 	{
 
@@ -146,9 +145,9 @@ namespace draw
 		{
 			if(NULL == (m_BackBuffer = malloc(w * h * bitPerPixel)))
 			{
-				dbg("m_BackBuffer malloc == NULL w:%d h:%d bpp:%d", w, h, bitPerPixel);	
+				dbg("m_BackBuffer malloc == NULL w:%d h:%d bpp:%d", w, h, bitPerPixel);
 			}
-			
+
 		}
 
 		return m_BackBuffer;
@@ -166,12 +165,12 @@ namespace draw
 			CallbackDeviceClass::pCallbackInstance = this;
 
 			ptc_open("...", w, h);
-		  	
+
 			ptc_set_on_keypress(&CallbackDeviceClass::keyPress);
-    		//ptc_set_on_keyrelease(onKeyRelease);	
+    		//ptc_set_on_keyrelease(onKeyRelease);
 
 		}
-		
+
 		return pRet;
 	}
 
@@ -186,7 +185,7 @@ namespace draw
 	};
 
 
-	bool Device::isRunning() 
+	bool Device::isRunning()
 	{
 		m_mtxSync.lock();
 		int32_t ret = !ptc_process_events();

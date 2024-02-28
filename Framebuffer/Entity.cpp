@@ -28,7 +28,7 @@ namespace draw
 		m_Properties{ components::Properties{w, h, allocType, szName} },
 		m_Data{ std::make_unique<uint8_t[]>(m_Properties.size) }
 	{
-		dbg("Entity %s w:%d h:%d allocType:%d", szName, w, h, allocType);
+		//dbg("Entity name:%s w:%d h:%d allocType:%d", szName, w, h, allocType);
 	}
 
 	Entity::Entity(draw_t w, draw_t h, uint8_t *pData, components::ALLOC_TYPE_COMPONENT allocType, const char *szName) :
@@ -36,7 +36,7 @@ namespace draw
 		m_Properties{ components::Properties{w, h, allocType, szName} },
 		m_Data{ std::unique_ptr<uint8_t[]>(pData) }
 	{
-
+		//dbg("Entity from data name:%s w:%d h:%d allocType:%d", szName, w, h, allocType);
 	}
 
 

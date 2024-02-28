@@ -1,7 +1,7 @@
 
 
 #include <iostream>
-
+#include <iomanip>
 
 #if defined(_WINDOWS)
 #include <Windows.h>
@@ -71,41 +71,9 @@ Fire80s::Fire80s(draw::draw_t w, draw::draw_t h) :
 
 bool Fire80s::create()
 {
-    draw::draw_t w, h;
 
-    w = 800;
-    h = 400;
-
-    draw::Entity *pRet = EnMan.create("palette",  w, h);
-    uint8_t *pData = pRet->data();
-    //const uint8_t *pPalette = fire.palette();
-
-    uint16_t i, y = 0;
-    //for(int16_t p = 0; p < fire.totalPaletteElements; p+=4)
-    //{
-        for(y = 0; y < h; y++)
-        {
-            for(int16_t x = 0; x < w; x++)
-            {
-                i = (x + (y * w));
-                /*
-                pData[i + 0] = pPalette[p + 0]; //r
-                pData[i + 1] = pPalette[p + 1]; //g
-                pData[i + 2] = pPalette[p + 2]; //b
-                pData[i + 3] = pPalette[p + 3]; //a
-                */
-
-               pData[i + 0] = 0xFF;
-               pData[i + 1] = 0;
-               pData[i + 2] = 0;
-               pData[i + 3] = 0xFF;
-            }
-        }
-    //}
-
-
-    fire.printPalette();
-
+    draw::Entity *pRet = EnMan.create("palette",  width, height);
+    fire.drawPalette(pRet->data(), width, height);
 
     return JalaGame::create();
 }

@@ -37,3 +37,4 @@ clean:
 	$(shell rm -rf ../Libs)
 	rm -rf $(BIN)
 	rm -rf $(OBJ)
+	rm -f *.o

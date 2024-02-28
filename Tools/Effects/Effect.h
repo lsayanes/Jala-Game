@@ -11,6 +11,9 @@ namespace draw
                 std::unique_ptr<types::Pixel[]> m_Palette;
                 const uint16_t paletteElements {0};
 
+            protected:
+                void copyPalette(const types::Pixel *pPalette);
+
             public:
                 explicit Effect(const uint16_t maxPaletteElements);
 
@@ -25,11 +28,10 @@ namespace draw
 
                 virtual void createPalette() = 0;
 
-                void copyPalette(const types::Pixel *pPalette);
+                void            drawPalette(uint8_t *pDest, uint16_t widthDest, uint16_t heightDest);
+                const uint8_t   *palette() const;
 
-                const uint8_t *palette() const;
-
-                void printPalette() const;
+                void printOutPalette() const;
         };
     }; //effects
 }; //draw

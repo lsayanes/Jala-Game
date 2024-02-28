@@ -32,37 +32,33 @@ namespace draw
 
             types::Pixel palette[totalPaletteElements] = {};
 
-            uint16_t i = 0;
+            uint32_t i = 0;
+            uint32_t ulParts = totalPaletteElements / 3;
+            uint32_t ulThird = ulParts * 2;
+
             types::Pixel pixel = {};
 
-            pixel.a = 0xFF;
-            pixel.r = 0;
-            pixel.g = 0xFF;
-            pixel.b = 0;
-
-            for(; i < totalPaletteElements; i++)
-                palette[i] = pixel;
-/*
-            for(; i <= 84; i++)
+            for(; i <= ulParts; i++)
             {
-                pixel.r = i * (0xFF / 85);
+                pixel.r = i * (0xFF / ulParts);
                 palette[i] = pixel;
             }
 
             pixel.r = 0xFF;
-            for(i = 85; i <= 169; i++)
+            for(i = ulParts; i <= ulThird; i++)
             {
-                pixel.g = (i - 85) * (0xFF / 85);
+                pixel.g = (i - ulParts) * (0xFF / ulParts);
                 palette[i] = pixel;
             }
 
             pixel.g = 0xFF;
-            for(i = 170; i < 255; i++)
+            pixel.r = 0xFF;
+            for(i = ulThird; i < totalPaletteElements; i++)
             {
-                pixel.b = (i - 170) * (0xFF / 86);
+                pixel.b = (i - ulThird) * (0xFF / ulParts);
                 palette[i] = pixel;
             }
-*/
+
             copyPalette(palette);
 
         }

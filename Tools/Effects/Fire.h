@@ -10,7 +10,7 @@ namespace draw
         class Fire : public Effect
         {
             public:
-                static constexpr uint16_t totalPaletteElements {256};
+                static constexpr uint32_t totalPaletteElements {256};
                 explicit Fire();
                 ~Fire();
 

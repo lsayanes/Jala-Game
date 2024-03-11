@@ -42,7 +42,7 @@ private:
 	const std::string DBGFONTPATH  { "./Resources/verdana.ttf" };
 
 
-    draw::effects::Fire     fire;
+    draw::effects::Fire     *pFire;
 
 private:
 
@@ -63,7 +63,7 @@ public:
 };
 
 Fire80s::Fire80s(draw::draw_t w, draw::draw_t h) :
-    JalaGame(w, h), fire{ }
+    JalaGame(w, h)
 {
 
 }
@@ -73,13 +73,15 @@ bool Fire80s::create()
 {
 
     draw::Entity *pRet = EnMan.create("palette",  width, height);
-    fire.drawPalette(pRet->data(), width, height);
+    pFire = new draw::effects::Fire(*pRet);
+    //pFire->drawPalette();
 
     return JalaGame::create();
 }
 
 void Fire80s::render()
 {
+    pFire->doFrame();
     JalaGame::render();
 }
 

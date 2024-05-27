@@ -1,6 +1,6 @@
 
 OUT 	:= Fire
-CCFLAGS	:= -std=c++17 -Wall -pedantic --debug -g
+CCFLAGS	:= -std=c++20 -Wall -pedantic --debug -g
 CC		:= g++
 MKDIR 	:= mkdir -p
 SRC		:= ./*.cpp ../*.cpp ../../Framebuffer/*.cpp  ../../Components/*.cpp  ../../Framebuffer/Linux/*.cpp ../../Libs/*.cpp ../../Tools/*.cpp ../../Tools/Effects/*.cpp ../../Util/*.c ../../Libs/tinyPTC/*.c

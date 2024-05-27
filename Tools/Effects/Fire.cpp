@@ -133,16 +133,17 @@ namespace draw
                 {
                     i = pix + x;
                     m_pbyFireBuffer[i] = (uint8_t)((
-                    10 * m_pbyOldFireBuffer[i - 1]
-                    +  20 * m_pbyOldFireBuffer[i + 0]
-                    +  10 * m_pbyOldFireBuffer[i + 1]
-                    + 160 * m_pbyOldFireBuffer[i - 1 + prop.width]
-                    + 320 * m_pbyOldFireBuffer[i + 0 + prop.width]
-                    + 160 * m_pbyOldFireBuffer[i + 1 + prop.width]
-                    ) / 680);
+                    wiegth.upLeft * m_pbyOldFireBuffer[i - 1]
+                    +  wiegth.up * m_pbyOldFireBuffer[i + 0]
+                    +  wiegth.upRight * m_pbyOldFireBuffer[i + 1]
+                    + wiegth.downLeft * m_pbyOldFireBuffer[i - 1 + prop.width]
+                    + wiegth.down * m_pbyOldFireBuffer[i + 0 + prop.width]
+                    + wiegth.downRight * m_pbyOldFireBuffer[i + 1 + prop.width]
+                    ) / wiegth.calc());
                 }
-            }
 
+                std::cout << " DOWN VAL " << wiegth.down << std::endl;
+            }
 
             for(i = 0; i < m_ullFireSize; i++)
             {

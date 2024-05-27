@@ -60,6 +60,9 @@ public:
 	void onClose();
 	void onKeyDown(unsigned long  nKey);
 
+
+    draw::effects::Weighting *wiegth() { return &pFire->wiegth; }
+
 };
 
 Fire80s::Fire80s(draw::draw_t w, draw::draw_t h) :
@@ -137,6 +140,9 @@ int main()
             dbg("pFire80s created w:%d, h:%d", w, h);
 
             pFire80s->setFps(1000);
+
+            //to test the weighting
+            //auto wiegth = pFire80s->wiegth();
 
             while (pFire80s->isRunning())
             {

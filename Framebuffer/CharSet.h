@@ -5,6 +5,7 @@ namespace draw
 {
 	class CharSet
 	{
+		Memory<uint64_t>		m_mem;
 		std::vector<Entity*> m_vctText{};
 		void		*m_pFont;
 	public:

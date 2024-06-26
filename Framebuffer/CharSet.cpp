@@ -28,6 +28,8 @@
 
 #include "../Util/Utils.h"
 
+#include <Memory.h>
+
 #include "Entity.h"
 
 #include "Sprite.h"
@@ -39,6 +41,7 @@ namespace draw
 {
 
 	CharSet::CharSet(void* pFont) :
+		m_mem{ Memory<uint64_t>::M512M },
 		m_pFont{pFont}
 	{
 		if(!m_pFont)
@@ -57,7 +60,10 @@ namespace draw
 	{
 		FT_Face face = static_cast<FT_Face>(m_pFont);
 
-		utils::deletePtrVct<std::vector<Entity*>>(m_vctText);
+		//utils::deletePtrVct<std::vector<Entity*>>(m_vctText);
+
+		m_vctText.clear();
+		m_mem.reset();
 
 		size_t	stLen = strlen(sText);
 
@@ -84,7 +90,15 @@ namespace draw
 			Slot = face->glyph;
 
 			strName[0] = sText[n];
-			pEntity = new Entity{ static_cast<draw_t>(face->glyph->bitmap.width), static_cast<draw_t>(face->glyph->bitmap.rows), components::ATC_NONE, strName };
+			//pEntity = new Entity{ static_cast<draw_t>(face->glyph->bitmap.width), static_cast<draw_t>(face->glyph->bitmap.rows), components::ATC_NONE, strName };
+			
+			Entity ent{ static_cast<draw_t>(face->glyph->bitmap.width), static_cast<draw_t>(face->glyph->bitmap.rows), strName };
+
+			pbyData = reinterpret_cast<uint8_t*> (m_mem.alloc(face->glyph->bitmap.width * face->glyph->bitmap.rows));
+			Entity ent{ static_cast<draw_t>(face->glyph->bitmap.width), static_cast<draw_t>(face->glyph->bitmap.rows), pbyData, strName };
+			pEntity = &ent;
+
+
 			dAdvance = face->glyph->metrics.horiAdvance >> 6;
 			pbyData = pEntity->data();
 			auto& phyRef = pEntity->physics();
@@ -100,9 +114,6 @@ namespace draw
 					pbyData++;
 				}
 			}
-
-			//phyRef.x = nWidth;
-			//phyRef.y = nY - Slot->bitmap_top;
 
 			phyRef.rc.pos(nWidth, nY - Slot->bitmap_top);
 

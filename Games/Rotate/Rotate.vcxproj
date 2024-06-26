@@ -102,7 +102,7 @@
     <OutDir>$(SolutionDir)bin\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Jala-Game\Components;C:\freetype-windows-binaries\include;C:\Jala-Game\Framebuffer;C:\Jala-Game\Util;C:\Jala-Game\Tools;C:\Jala-Game\Sys;C:\Jala-Game\Libs;C:\Jala-Game\Games;$(IncludePath)</IncludePath>
+    <IncludePath>C:\GitHub\Jala-Game\Util;C:\GitHub\Jala-Game\Components;C:\freetype-windows-binaries\include;C:\GitHub\Jala-Game\Framebuffer;C:\GitHub\Jala-Game\Tools;C:\GitHub\Jala-Game\Sys;C:\GitHub\Jala-Game\Libs;C:\GitHub\Jala-Game\Games;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)bin\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -222,6 +222,7 @@
     <ClInclude Include="..\..\Framebuffer\Types.h" />
     <ClInclude Include="..\..\Libs\png.h" />
     <ClInclude Include="..\..\Sys\key.h" />
+    <ClInclude Include="..\..\Sys\Memory.h" />
     <ClInclude Include="..\..\Tools\Transform.h" />
     <ClInclude Include="..\..\Util\debug.h" />
     <ClInclude Include="..\..\Util\format.h" />

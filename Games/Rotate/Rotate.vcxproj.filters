@@ -137,6 +137,9 @@
     <ClInclude Include="..\..\Util\Utils.h">
       <Filter>Util</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Sys\Memory.h">
+      <Filter>Sys</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="Resources\Windows\freetype.lib" />

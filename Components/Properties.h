@@ -8,7 +8,7 @@ namespace draw
 {
 	namespace components
 	{
-		enum ALLOC_TYPE_COMPONENT { ATC_BUFFER_DEV, ATC_MALLOC_BUFFER, ATC_NONE };
+		enum ALLOC_TYPE_COMPONENT { ATC_BUFFER_DEV, ATC_MALLOC_BUFFER, ATC_EXTERNAL_MALLOC_BUFFER, ATC_NONE };
 
 		struct Properties
 		{

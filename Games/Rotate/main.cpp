@@ -36,13 +36,13 @@
 class Rotate : public JalaGame
 {
 private:
-	draw::types::Rect				*m_pGameArea{nullptr};
+    draw::types::Rect* m_pGameArea{ nullptr };
 
 
-	const std::string TXT_ID_DBG{ "dbg" };
-	const std::string DBGFONTPATH  { "./Resources/verdana.ttf" };
+    static constexpr  const char * const TXT_ID_DBG{ "dbg" };
+    static constexpr  const char* const  DBGFONTPATH  { "./Resources/verdana.ttf" };
 
-    const std::string GHOST  {"ghost"};
+    static constexpr  const char* const  GHOST  {"ghost"};
 
     draw::Sprite            *m_pGhost;
 
@@ -110,7 +110,7 @@ bool Rotate::create()
             m_pGhost->pos(m_gx, m_gy);
             if(!EnMan.remove(GHOST))
             {
-                dbg("Removing %s error", GHOST.c_str());
+                dbg("Removing %s error", GHOST);
             }
 
             return JalaGame::create();

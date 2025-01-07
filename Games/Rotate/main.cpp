@@ -138,7 +138,7 @@ void Rotate::onClose()
 
 void Rotate::onKeyDown(unsigned long  ulKey)
 {
-	//dbg("onKeydown %lu", ulKey);
+	dbg("onKeydown %lu", ulKey);
 
 	switch(ulKey)
 	{
